@@ -1,33 +1,33 @@
 package config
 
-import "runtime"
+import (
+	"fmt"
+	"git.iotserv.com/iotserv/utils/models"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+)
 
-var Setting = make(map[string]string)
+var ConfigMode models.ServerConfig
 
 func init() {
-	//可以修改的配置参数
-
-	//管理API的认证
-	Setting["explorerWebUser"] = ""
-	Setting["explorerWebPass"] = ""
-	//用来访问管理API的域名
-	Setting["apiHost"] = "mcunode.com"
-	//是否提供流量转发能力
-	Setting["canForward"] = "true"
-	//不可修改的配置参数
-	Setting["AppName"] = "nat-explorer"
-	//设置api的监听端口和beego应用的运行模式
-	Setting["apiPort"] = "1081"
-	if runtime.GOOS == "android" {
-		//用于代理http的http出口端口
-		Setting["proxyHttpPort"] = "1080"
-		//用于代理http的https出口端口
-		Setting["proxyHttpsPort"] = "1443"
-	} else {
-		//用于代理http的http出口端口
-		Setting["proxyHttpPort"] = "80"
-		//用于代理http的https出口端口
-		Setting["proxyHttpsPort"] = "43"
+	var err error
+	ConfigMode, err = GetConfig("./server.yaml")
+	if err != nil {
+		fmt.Printf(err.Error())
+		return
 	}
+}
 
+func GetConfig(configFilePath string) (configMode models.ServerConfig, err error) {
+	content, err := ioutil.ReadFile(configFilePath)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	err = yaml.Unmarshal(content, &configMode)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	return
 }

@@ -3,6 +3,7 @@ package session
 import (
 	//"github.com/xtaci/smux"
 	"fmt"
+	"git.iotserv.com/iotserv/server/config"
 	"git.iotserv.com/iotserv/utils/crypto"
 	"git.iotserv.com/iotserv/utils/models"
 	"git.iotserv.com/iotserv/utils/msg"
@@ -43,12 +44,15 @@ func connHdl(conn net.Conn) {
 	var session *mux.Session
 	var token *crypto.TokenClaims
 	var err error
-	rawMsg, _ := msg.ReadMsg(conn)
+	rawMsg, err := msg.ReadMsg(conn)
+	if err != nil {
+		return
+	}
 	switch m := rawMsg.(type) {
 	case *models.Login:
 		{
 			fmt.Println(m.Token)
-			token, err = crypto.DecodeToken(m.Token)
+			token, err = crypto.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			if err != nil {
 				fmt.Printf(err.Error())
 				conn.Close()
@@ -87,7 +91,7 @@ func connHdl(conn net.Conn) {
 
 	case *models.ConnectToLogin:
 		{
-			token, err = crypto.DecodeToken(m.Token)
+			token, err = crypto.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			if err != nil {
 				fmt.Printf(err.Error())
 				conn.Close()

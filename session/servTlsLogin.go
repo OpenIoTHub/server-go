@@ -8,17 +8,17 @@ import (
 )
 
 func RunTLS(port int) {
-	_, err := os.Stat(config.TlsCertFilePath)
+	_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
 	if err != nil {
-		fmt.Printf("File Path:%s Not Exist! So tls server NOT Available!\n", config.TlsCertFilePath)
+		fmt.Printf("File Path:%s Not Exist! So tls server NOT Available!\n", config.ConfigMode.Security.TlsCertFilePath)
 		return
 	}
-	_, err = os.Stat(config.TlsKeyFilePath)
+	_, err = os.Stat(config.ConfigMode.Security.TlsKeyFilePath)
 	if err != nil {
-		fmt.Printf("File Path:%s Not Exist!  So tls server NOT Available!\n", config.TlsKeyFilePath)
+		fmt.Printf("File Path:%s Not Exist!  So tls server NOT Available!\n", config.ConfigMode.Security.TlsKeyFilePath)
 		return
 	}
-	cer, err := tls.LoadX509KeyPair(config.TlsCertFilePath, config.TlsKeyFilePath)
+	cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)
 	//cer, err := tls.LoadX509KeyPair("./cert.pem", "./key.pem")
 	if err != nil {
 		fmt.Println(err)
