@@ -6,6 +6,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 var ConfigMode models.ServerConfig
@@ -13,6 +14,10 @@ var ConfigMode models.ServerConfig
 func init() {
 	var err error
 	var configFilePath = "./server.yaml"
+	appDataPath, havaAppDataPath := os.LookupEnv("SNAP_USER_DATA")
+	if havaAppDataPath {
+		configFilePath = filepath.Join(appDataPath, "server.yaml")
+	}
 	_, err = os.Stat(configFilePath)
 	if err != nil {
 		fmt.Println("没有找到配置文件：", configFilePath)
@@ -29,8 +34,11 @@ func init() {
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
+		fmt.Println("配置文件写入成功,路径为：", configFilePath)
+		fmt.Println("你也可以修改上述配置文件后在运行")
 		os.Exit(1)
 	}
+	fmt.Println("使用配置文件：", configFilePath)
 	ConfigMode, err = GetConfig(configFilePath)
 	if err != nil {
 		fmt.Printf(err.Error())
