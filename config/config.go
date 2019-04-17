@@ -17,6 +17,12 @@ func init() {
 	if err != nil {
 		fmt.Println("没有找到配置文件：", configFilePath)
 		fmt.Println("开始生成默认的空白配置文件，请填写配置文件后重复运行本程序")
+		ConfigMode.Common.BindAddr = "0.0.0.0"
+		ConfigMode.Common.KcpPort = 7200
+		ConfigMode.Common.TcpPort = 7200
+		ConfigMode.Common.TlsPort = 7300
+		ConfigMode.Common.UdpApiPort = 7300
+		ConfigMode.Security.LoginKey = "SETByYourSelf."
 		//	生成配置文件模板
 		err = writeConfigFile(ConfigMode, configFilePath)
 		if err != nil {
