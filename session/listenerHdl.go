@@ -30,7 +30,7 @@ func kcpListenerHdl(listener *kcp.Listener) {
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		//conn.SetStreamMode(true)
+		conn.SetStreamMode(true)
 		conn.SetWriteDelay(false)
 		conn.SetNoDelay(0, 40, 2, 1)
 		conn.SetWindowSize(1024, 1024)
