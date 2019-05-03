@@ -2,11 +2,13 @@ package session
 
 import (
 	//"github.com/xtaci/smux"
+	"errors"
 	"fmt"
 	"git.iotserv.com/iotserv/utils/io"
 	"git.iotserv.com/iotserv/utils/models"
 	"git.iotserv.com/iotserv/utils/msg"
 	"net"
+	"time"
 )
 
 //:TODO 恢复的没有用，为什么会panic，为什么恢复没用
@@ -77,8 +79,15 @@ func sessionConnHdl(id string, conn net.Conn) {
 		return
 	}
 	if _, ok := sessions[id]; ok {
-		workConn = <-sessions[id].WorkConn
-		respOk()
+		//超时返回错误
+		select {
+		case workConn = <-sessions[id].WorkConn:
+			respOk()
+		case <-time.After(time.Second * 3):
+			respNotOk(errors.New("获取内网连接超时"))
+			return
+		}
+
 	} else {
 		fmt.Println(err.Error())
 		respNotOk(err)
