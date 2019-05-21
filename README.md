@@ -1,6 +1,5 @@
 # server
-nat-cloud内网访问工具服务端
+## 内网穿透服务端
 
-如果你有自建转发服务端的需求则可以自建此服务端，服务器需要同时开启7000-7001的TCP，UDP端口
-
-内网端client需要使用此自建服务器可以为内网端client指定参数-host yourdomainorip 运行，生成的token则是包含自建服务器信息的token，访问器explorer不需要做改变
+### 如果你有自建转发服务端的需求则可以自建此服务端，服务器需要同时开启指定的TCP，UDP端口
+#### 建好此服务器之后，内网端（https://github.com/nat-cloud/client/releases）就可以连接自建的服务器了！
