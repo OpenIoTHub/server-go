@@ -68,6 +68,14 @@ set GOMIPS=softfloat
 go build -ldflags -w main.go
 ren main LinuxMipsle
 upx LinuxMipsle
+
+set GOARCH=mips
+set GOOS=linux
+set CGO_ENABLED=0
+set GOMIPS=softfloat
+go build -ldflags -w main.go
+ren main LinuxMips
+upx LinuxMips
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 set GOARCH=amd64
 set GOOS=windows

@@ -84,6 +84,15 @@ go build -ldflags -w main.go
 ren main serverLinuxMipsle
 upx serverLinuxMipsle
 mv serverLinuxMipsle %GODIST%/natcloud/server/
+
+set GOARCH=mips
+set GOOS=linux
+set CGO_ENABLED=0
+set GOMIPS=softfloat
+go build -ldflags -w main.go
+ren main serverLinuxMips
+upx serverLinuxMips
+mv serverLinuxMips %GODIST%/natcloud/server/
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 set GOARCH=amd64
 set GOOS=windows
