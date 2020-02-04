@@ -4,9 +4,9 @@ import (
 	//"github.com/xtaci/smux"
 	"errors"
 	"fmt"
-	"git.iotserv.com/iotserv/utils/io"
-	"git.iotserv.com/iotserv/utils/models"
-	"git.iotserv.com/iotserv/utils/msg"
+	"github.com/OpenIoTHub/utils/io"
+	"github.com/OpenIoTHub/utils/models"
+	"github.com/OpenIoTHub/utils/msg"
 	"net"
 	"time"
 )

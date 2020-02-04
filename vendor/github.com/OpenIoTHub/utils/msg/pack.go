@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"reflect"
 
-	"git.iotserv.com/iotserv/utils/errors"
-	"git.iotserv.com/iotserv/utils/models"
+	"github.com/OpenIoTHub/utils/errors"
+	"github.com/OpenIoTHub/utils/models"
 )
 
 func unpack(typeByte byte, buffer []byte, msgIn models.Message) (msg models.Message, err error) {

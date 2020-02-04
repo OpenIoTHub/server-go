@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"git.iotserv.com/iotserv/utils/models"
+	"github.com/OpenIoTHub/utils/models"
 	"io"
 	"time"
 )

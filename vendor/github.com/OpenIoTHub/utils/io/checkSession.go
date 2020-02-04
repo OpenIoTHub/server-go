@@ -2,9 +2,9 @@ package io
 
 import (
 	"fmt"
-	"git.iotserv.com/iotserv/utils/models"
-	"git.iotserv.com/iotserv/utils/msg"
-	"git.iotserv.com/iotserv/utils/mux"
+	"github.com/OpenIoTHub/utils/models"
+	"github.com/OpenIoTHub/utils/msg"
+	"github.com/OpenIoTHub/utils/mux"
 	"github.com/pkg/errors"
 	"time"
 )

@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"git.iotserv.com/iotserv/server/config"
-	"git.iotserv.com/iotserv/server/session"
-	"git.iotserv.com/iotserv/server/udpapi"
+	"github.com/OpenIoTHub/Server/config"
+	"github.com/OpenIoTHub/Server/session"
+	"github.com/OpenIoTHub/Server/udpapi"
 	"time"
 )
 

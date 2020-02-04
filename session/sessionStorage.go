@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 	//"github.com/xtaci/smux"
-	"git.iotserv.com/iotserv/utils/mux"
+	"github.com/OpenIoTHub/utils/mux"
 	"net"
 	//"time"
-	//"git.iotserv.com/iotserv/utils/msg"
-	//"git.iotserv.com/iotserv/utils/models"
+	//"github.com/OpenIoTHub/utils/msg"
+	//"github.com/OpenIoTHub/utils/models"
 )
 
 type Session struct {
