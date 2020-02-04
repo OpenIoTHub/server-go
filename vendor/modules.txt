@@ -1,11 +1,11 @@
-# git.iotserv.com/iotserv/utils v0.0.0-20191012073945-e4e2a2dac5b8
-git.iotserv.com/iotserv/utils/models
-git.iotserv.com/iotserv/utils/crypto
-git.iotserv.com/iotserv/utils/io
-git.iotserv.com/iotserv/utils/msg
-git.iotserv.com/iotserv/utils/mux
-git.iotserv.com/iotserv/utils/pool
-git.iotserv.com/iotserv/utils/errors
+# github.com/OpenIoTHub/utils v0.0.0-20200204134506-7026a158e050
+github.com/OpenIoTHub/utils/crypto
+github.com/OpenIoTHub/utils/errors
+github.com/OpenIoTHub/utils/io
+github.com/OpenIoTHub/utils/models
+github.com/OpenIoTHub/utils/msg
+github.com/OpenIoTHub/utils/mux
+github.com/OpenIoTHub/utils/pool
 # github.com/cenkalti/backoff v2.2.1+incompatible
 github.com/cenkalti/backoff
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -35,21 +35,21 @@ github.com/xtaci/kcp-go
 # golang.org/x/crypto v0.0.0-20190923035154-9ee001bba392 => github.com/golang/crypto v0.0.0-20191011191535-87dc89f01550
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
+golang.org/x/crypto/ed25519
+golang.org/x/crypto/ed25519/internal/edwards25519
+golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/salsa20
+golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/tea
 golang.org/x/crypto/twofish
 golang.org/x/crypto/xtea
-golang.org/x/crypto/internal/subtle
-golang.org/x/crypto/salsa20/salsa
-golang.org/x/crypto/ed25519
-golang.org/x/crypto/ed25519/internal/edwards25519
 # golang.org/x/net v0.0.0-20190923162816-aa69164e4478 => github.com/golang/net v0.0.0-20191011234655-491137f69257
-golang.org/x/net/ipv4
-golang.org/x/net/ipv6
 golang.org/x/net/bpf
 golang.org/x/net/internal/iana
 golang.org/x/net/internal/socket
+golang.org/x/net/ipv4
+golang.org/x/net/ipv6
 # golang.org/x/sys v0.0.0-20190924154521-2837fb4f24fe => github.com/golang/sys v0.0.0-20191010194322-b09406accb47
 golang.org/x/sys/unix
 golang.org/x/sys/windows

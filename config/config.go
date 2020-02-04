@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"git.iotserv.com/iotserv/utils/models"
+	"github.com/OpenIoTHub/utils/models"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"

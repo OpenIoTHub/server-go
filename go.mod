@@ -1,4 +1,4 @@
-module git.iotserv.com/iotserv/server
+module github.com/OpenIoTHub/Server
 
 go 1.12
 
@@ -13,16 +13,10 @@ replace (
 )
 
 require (
-	git.iotserv.com/iotserv/utils v0.0.0-20191012073945-e4e2a2dac5b8
-	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
-	github.com/golang/snappy v0.0.1 // indirect
+	github.com/OpenIoTHub/utils v0.0.0-20200204134506-7026a158e050
 	github.com/iotdevice/zeroconf v0.0.0-20190527085138-7225942b5495 // indirect
-	github.com/jacobsa/go-serial v0.0.0-20180131005756-15cf729a72d4 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/klauspost/reedsolomon v1.9.3 // indirect
-	github.com/miekg/dns v1.1.22 // indirect
-	github.com/pkg/errors v0.8.1 // indirect
 	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/templexxx/xor v0.0.0-20181023030647-4e92f724b73b // indirect
 	github.com/tjfoc/gmsm v1.0.1 // indirect

@@ -3,11 +3,11 @@ package session
 import (
 	//"github.com/xtaci/smux"
 	"fmt"
-	"git.iotserv.com/iotserv/server/config"
-	"git.iotserv.com/iotserv/utils/crypto"
-	"git.iotserv.com/iotserv/utils/models"
-	"git.iotserv.com/iotserv/utils/msg"
-	"git.iotserv.com/iotserv/utils/mux"
+	"github.com/OpenIoTHub/Server/config"
+	"github.com/OpenIoTHub/utils/crypto"
+	"github.com/OpenIoTHub/utils/models"
+	"github.com/OpenIoTHub/utils/msg"
+	"github.com/OpenIoTHub/utils/mux"
 	"github.com/xtaci/kcp-go"
 	"net"
 )
