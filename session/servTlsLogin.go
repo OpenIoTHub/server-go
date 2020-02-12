@@ -3,7 +3,7 @@ package session
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/OpenIoTHub/Server/config"
+	"github.com/OpenIoTHub/server-go/config"
 	"os"
 )
 
