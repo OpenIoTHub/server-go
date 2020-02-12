@@ -67,7 +67,7 @@ func writeConfigFile(configMode models.ServerConfig, path string) (err error) {
 		return
 	}
 	if ioutil.WriteFile(path, configByte, 0644) == nil {
-		fmt.Println("写入配置文件文件成功！\n")
+		fmt.Println("写入配置文件文件成功!")
 		return
 	}
 	return
