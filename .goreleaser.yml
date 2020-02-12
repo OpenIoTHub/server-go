@@ -1,0 +1,100 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+before:
+  hooks:
+    # you may remove this if you don't use vgo
+#    - go mod tidy
+#    - go mod vendor
+builds:
+- env:
+    - CGO_ENABLED=0
+    - GO111MODULE=on
+  goos:
+    - linux
+    - darwin
+    - windows
+  goarch:
+    - 386
+    - amd64
+    - arm
+    - arm64
+    - mips64
+    - mips64le
+    - mips
+    - mipsle
+  gomips:
+    - hardfloat
+    - softfloat
+  ignore:
+    - goos: darwin
+      goarch: 386
+archives:
+- replacements:
+    darwin: Darwin
+    linux: Linux
+    windows: Windows
+    386: i386
+    amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+brews:
+  - github:
+      owner: OpenIoTHub
+      name: homebrew-tap
+    folder: Formula
+    homepage:  http://github.com/OpenIoTHub
+    description: OpenIoTHub Server
+    test: |
+      system "#{bin}/server-go -v"
+scoop:
+  bucket:
+    owner: OpenIoTHub
+    name: scoop-bucket
+  homepage:  http://github.com/OpenIoTHub
+  description: OpenIoTHub Server
+  license: MIT
+nfpms:
+  - name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    homepage:  https://github.com/OpenIoTHub
+    description: OpenIoTHub Server
+    maintainer: OpenIoTHub <newfarry@126.com>
+    license: MIT
+    vendor: server-go
+    formats:
+      - deb
+      - rpm
+snapcrafts:
+  - name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    summary: OpenIoTHub Server
+    description: |
+      OpenIoTHub Server
+    grade: stable
+#    confinement: classic
+    publish: true
+dockers:
+  - image_templates:
+      - 'openiothub/server:{{ .Tag }}'
+      - 'openiothub/server:v{{ .Major }}.{{ .Minor }}'
+      - 'openiothub/server:latest'
+    dockerfile: Dockerfile
+    binaries:
+      - gateway-go
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--label=com.github.actions.name={{.ProjectName}}"
+
+    extra_files:
+      - scripts/entrypoint.sh
