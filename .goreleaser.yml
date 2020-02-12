@@ -81,9 +81,9 @@ snapcrafts:
     publish: true
 dockers:
   - image_templates:
-      - 'openiothub/server:{{ .Tag }}'
-      - 'openiothub/server:v{{ .Major }}.{{ .Minor }}'
-      - 'openiothub/server:latest'
+      - 'openiothub/server-go:{{ .Tag }}'
+      - 'openiothub/server-go:v{{ .Major }}.{{ .Minor }}'
+      - 'openiothub/server-go:latest'
     dockerfile: Dockerfile
     binaries:
       - gateway-go
