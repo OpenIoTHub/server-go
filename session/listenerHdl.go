@@ -3,7 +3,7 @@ package session
 import (
 	//"github.com/xtaci/smux"
 	"fmt"
-	"github.com/OpenIoTHub/Server/config"
+	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/utils/crypto"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"

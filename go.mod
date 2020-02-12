@@ -1,4 +1,4 @@
-module github.com/OpenIoTHub/Server
+module github.com/OpenIoTHub/server-go
 
 go 1.12
 
