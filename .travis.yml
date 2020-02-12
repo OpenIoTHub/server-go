@@ -1,0 +1,33 @@
+language: go
+go: 1.13.x
+env:
+  matrix:
+  - GO111MODULE=on
+  global:
+  - secure: H3Iii/ctkRZFWL0KrnOpVEUPvm37GMFulMzYt6QoUkVPG03wTbSKvtFyaKY3Wipt7if5hljgVAw+r57/uBhpg0W9blDx+RbY2TjrZyScaF3bCEVSu6LI6W/v4myfHPB/0Cevo0VnCDHX3Tk6fqKiYhSU+cXgbNdUW30R+UehDRJLiNcqVuOkkx6A6GCtRCmMSFDJrytIDbvQHEAyuWeheCoEUGFc7W4xe0W4ZLflBXj288QedFkZhZI0RBuJGdXfdt5tX3XHX9cQ+tViEQzWeQtRPU3MleaOru51uMu6By5VPVwzjXgAj5BTr/bnuiDLGUWsKB5PivYjfI26L/pp/zkespXKY7KHyn3voT72V06SN+VHN54ZvP9j28ol9+Rpt5GgcncHD4Qrnui6+45ToJEvNXtxcJyZhc6v5yTGxI8mYDSa8Wxbfe5vdIKjceYmCJhSs1tsnCLpeEtqygToT5FQI3uDr52jopK2wGR3pNZmeoM25C/Yzv/RoaEoUbkYFDJ99xW1CS4Pg1d8UG0c0E1eHH0Ur+coQ41WkRlHTBpZyT0tbPp6WOsOZzyqX0r1HvqlqUZIoNvckcd2D+zMq0MboaDbMWTSHvf59dzCMKlpVVCIvtiWsW8HXZZ2kS/JoLMyHW5/ts2Wul66eOq/d/0r/Deso6puWM/hLSNGUi4=
+  - secure: M8BJYKjBGBPX+ovjLoVVFgF1P3y832Lz/Yk9KIK2ojeNtZKr08aF4+SH/DmRyPkzHcKijXJKHmJhJDYZzEtlQaVg1eoomYqXf9z+EYLtNf12Vv9DR1Q3ErerxYPq96NcugZj6UqZ1Mgtcau40w7ZfQy7PZe38OC62LiCaQajqAKd3yd1bP8uYOq3HEbaEPCBEt2IIEVOajlf37uM6GUDR4D1KVp1pn85AoCuBWEDDyf1VGDiU7TrCMT9sm3QzZsBo/fFbct+0X2OYVd4QHnNADk0XLq9f+ZPs18ZJEUnMOMfVC7yH2ljMbhgTd2ZRJlt/81Uep4wVd7JJlqxHvgKln5TjnmFTkdUdcqCnnIBP3Pd/mFaiYVrrl+xUpQb5sVfxF6F0lGNm0oDHua87P7eB+T/KHtNRJH7OUQj7cVc4dVrookc+aQ/r8nL7cehEvTwXv5dBjP185xOUxBHOqiAqKEqiHFOgb1UJ35TyoTmAAL57ribEBNybr8+nMP2nngmBbDdWuoirOHnloHMI6MsmvQZdCVanghuDmzbVCPeLc0zBqInhgbXUax3Ay3iCfEmhFS8rzkdW3FpFKGsY/rovAxSO/cl8fjMnuLExNITYlOfOoBasGVNqYieD+7K3lCfE1vAgFWNDLA3LbCVkpeVbY/EiKE/GVcMf/6Vga0iLe0=
+notifications:
+  email:
+    recipients:
+    - newfarry@126.com
+    on_success: always
+addons:
+  apt:
+    packages:
+    - snapcraft
+services:
+- docker
+after_success:
+- test -n "$TRAVIS_TAG" && docker login -u=openiothub -p="$DOCKER_PASSWORD"
+- test -n "$TRAVIS_TAG" && snapcraft login --with snap.login
+- test -n "$TRAVIS_TAG" && rm snap.login
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: curl -sL https://git.io/goreleaser | bash
+  on:
+    tags: true
+    condition: "$TRAVIS_OS_NAME = linux"
+before_install:
+- openssl aes-256-cbc -K $encrypted_219439784b94_key -iv $encrypted_219439784b94_iv
+  -in snap.login.enc -out snap.login -d
