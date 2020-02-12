@@ -86,7 +86,7 @@ dockers:
       - 'openiothub/server-go:latest'
     dockerfile: Dockerfile
     binaries:
-      - gateway-go
+      - server-go
     build_flag_templates:
       - "--pull"
       - "--label=org.opencontainers.image.created={{.Date}}"
