@@ -62,7 +62,7 @@ scoop:
   description: OpenIoTHub Server
   license: MIT
 nfpms:
-  - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
+  - name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
     homepage:  https://github.com/OpenIoTHub
     description: OpenIoTHub Server
     maintainer: OpenIoTHub <newfarry@126.com>
@@ -72,7 +72,7 @@ nfpms:
       - deb
       - rpm
 snapcrafts:
-  - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
+  - name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
     summary: OpenIoTHub Server
     description: |
       OpenIoTHub Server
