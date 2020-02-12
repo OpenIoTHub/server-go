@@ -22,9 +22,9 @@ builds:
     - mips64le
     - mips
     - mipsle
-  gomips:
-    - hardfloat
-    - softfloat
+#  gomips:
+#    - hardfloat
+#    - softfloat
   ignore:
     - goos: darwin
       goarch: 386
