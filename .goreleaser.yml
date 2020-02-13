@@ -73,7 +73,7 @@ nfpms:
       - rpm
 snapcrafts:
   - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
-    summary: OpenIoTHub Server
+    summary: OpenIoTHub Server.
     description: |
       OpenIoTHub Server
     grade: stable
