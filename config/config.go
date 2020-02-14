@@ -10,13 +10,14 @@ import (
 )
 
 var ConfigMode models.ServerConfig
+var ConfigFileName = "server.yaml"
 var ConfigFilePath = "./server.yaml"
 
 func LoadConfig() (err error) {
 	//是否是snapcraft应用，如果是则从snapcraft指定的工作目录保存配置文件
 	appDataPath, havaAppDataPath := os.LookupEnv("SNAP_USER_DATA")
 	if havaAppDataPath {
-		ConfigFilePath = filepath.Join(appDataPath, "server.yaml")
+		ConfigFilePath = filepath.Join(appDataPath, ConfigFileName)
 	}
 	_, err = os.Stat(ConfigFilePath)
 	if err != nil {
