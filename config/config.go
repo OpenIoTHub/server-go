@@ -10,42 +10,41 @@ import (
 )
 
 var ConfigMode models.ServerConfig
+var ConfigFilePath = "./server.yaml"
 
-func init() {
-	var err error
-	var configFilePath = "./server.yaml"
+func LoadConfig() (err error) {
+	//是否是snapcraft应用，如果是则从snapcraft指定的工作目录保存配置文件
 	appDataPath, havaAppDataPath := os.LookupEnv("SNAP_USER_DATA")
 	if havaAppDataPath {
-		configFilePath = filepath.Join(appDataPath, "server.yaml")
+		ConfigFilePath = filepath.Join(appDataPath, "server.yaml")
 	}
-	_, err = os.Stat(configFilePath)
+	_, err = os.Stat(ConfigFilePath)
 	if err != nil {
-		fmt.Println("没有找到配置文件：", configFilePath)
+		fmt.Println("没有找到配置文件：", ConfigFilePath)
 		fmt.Println("开始生成默认的空白配置文件，请填写配置文件后重复运行本程序")
 		ConfigMode.Common.BindAddr = "0.0.0.0"
-		ConfigMode.Common.KcpPort = 7200
-		ConfigMode.Common.TcpPort = 7200
-		ConfigMode.Common.TlsPort = 7300
-		ConfigMode.Common.UdpApiPort = 7300
-		ConfigMode.Security.LoginKey = "SETByYourSelf."
+		ConfigMode.Common.KcpPort = 34320
+		ConfigMode.Common.TcpPort = 34320
+		ConfigMode.Common.TlsPort = 34321
+		ConfigMode.Common.UdpApiPort = 34321
+		ConfigMode.Security.LoginKey = "HLLdsa544&*S"
 		//	生成配置文件模板
-		err = writeConfigFile(ConfigMode, configFilePath)
+		err = writeConfigFile(ConfigMode, ConfigFilePath)
 		if err != nil {
-			fmt.Println(err.Error())
-			os.Exit(1)
+			return
 		}
-		fmt.Println("配置文件写入成功,路径为：", configFilePath)
+		fmt.Println("配置文件写入成功,路径为：", ConfigFilePath)
 		fmt.Println("你也可以修改上述配置文件后在运行")
-		os.Exit(1)
 	}
-	fmt.Println("使用配置文件：", configFilePath)
-	ConfigMode, err = GetConfig(configFilePath)
+	fmt.Println("使用配置文件：", ConfigFilePath)
+	ConfigMode, err = GetConfig(ConfigFilePath)
 	if err != nil {
-		fmt.Printf(err.Error())
-		os.Exit(1)
+		return
 	}
+	return
 }
 
+//从配置文件路径解析配置文件的内容
 func GetConfig(configFilePath string) (configMode models.ServerConfig, err error) {
 	content, err := ioutil.ReadFile(configFilePath)
 	if err != nil {
@@ -60,6 +59,7 @@ func GetConfig(configFilePath string) (configMode models.ServerConfig, err error
 	return
 }
 
+//将配置内容写入指定的配置文件
 func writeConfigFile(configMode models.ServerConfig, path string) (err error) {
 	configByte, err := yaml.Marshal(configMode)
 	if err != nil {
