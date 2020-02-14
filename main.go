@@ -5,7 +5,7 @@ import (
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/server-go/session"
 	"github.com/OpenIoTHub/server-go/udpapi"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	"os"
 	"time"
 )
@@ -24,11 +24,12 @@ func main() {
 	myApp.Version = fmt.Sprintf("%s(commit:%s,build on:%s,buildBy:%s)", version, commit, date, builtBy)
 	myApp.Flags = []cli.Flag{
 		//TODO 应该设置工作目录，各组件共享
-		cli.StringFlag{
-			Name:        "config,c",
+		&cli.StringFlag{
+			Name:        "config",
+			Aliases:     []string{"c"},
 			Value:       config.ConfigFilePath,
-			Usage:       "配置文件路径",
-			EnvVar:      "ConfigFilePath",
+			Usage:       "config file path",
+			EnvVars:     []string{"ServerConfigFilePath"},
 			Destination: &config.ConfigFilePath,
 		},
 	}
