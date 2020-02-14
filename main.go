@@ -10,11 +10,18 @@ import (
 	"time"
 )
 
+var (
+	version = "dev"
+	commit  = ""
+	date    = ""
+	builtBy = ""
+)
+
 func main() {
 	myApp := cli.NewApp()
 	myApp.Name = "server-go"
 	myApp.Usage = "-c [config File Path]"
-	myApp.Version = "v1.0.1"
+	myApp.Version = fmt.Sprintf("%s(commit:%s,build on:%s,buildBy:%s)", version, commit, date, builtBy)
 	myApp.Flags = []cli.Flag{
 		//TODO 应该设置工作目录，各组件共享
 		cli.StringFlag{
