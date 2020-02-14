@@ -79,6 +79,10 @@ snapcrafts:
     grade: stable
 #    confinement: classic
     publish: true
+    apps:
+      server-go:
+        plugs: ["network", "network-bind"]
+        daemon: simple
 dockers:
   - image_templates:
       - 'openiothub/server-go:{{ .Tag }}'
