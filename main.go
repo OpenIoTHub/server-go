@@ -5,17 +5,38 @@ import (
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/server-go/session"
 	"github.com/OpenIoTHub/server-go/udpapi"
+	"github.com/urfave/cli"
 	"os"
 	"time"
 )
 
 func main() {
-	err := run()
-	if err != nil {
-		os.Exit(1)
+	myApp := cli.NewApp()
+	myApp.Name = "server-go"
+	myApp.Usage = "-c [config File Path]"
+	myApp.Version = "v1.0.1"
+	myApp.Flags = []cli.Flag{
+		//TODO 应该设置工作目录，各组件共享
+		cli.StringFlag{
+			Name:        "config,c",
+			Value:       config.ConfigFilePath,
+			Usage:       "配置文件路径",
+			EnvVar:      "ConfigFilePath",
+			Destination: &config.ConfigFilePath,
+		},
 	}
-	for {
-		time.Sleep(time.Hour * 99999)
+	myApp.Action = func(c *cli.Context) error {
+		err := run()
+		if err != nil {
+			os.Exit(1)
+		}
+		for {
+			time.Sleep(time.Hour)
+		}
+	}
+	err := myApp.Run(os.Args)
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 }
 

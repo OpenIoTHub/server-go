@@ -22,7 +22,7 @@ func LoadConfig() (err error) {
 	_, err = os.Stat(ConfigFilePath)
 	if err != nil {
 		fmt.Println("没有找到配置文件：", ConfigFilePath)
-		fmt.Println("开始生成默认的空白配置文件，请填写配置文件后重复运行本程序")
+		fmt.Println("开始生成默认的空白配置文件")
 		ConfigMode.Common.BindAddr = "0.0.0.0"
 		ConfigMode.Common.KcpPort = 34320
 		ConfigMode.Common.TcpPort = 34320
@@ -32,6 +32,7 @@ func LoadConfig() (err error) {
 		//	生成配置文件模板
 		err = writeConfigFile(ConfigMode, ConfigFilePath)
 		if err != nil {
+			fmt.Printf("写入默认的配置文件失败：%s\n", err.Error())
 			return
 		}
 		fmt.Println("配置文件写入成功,路径为：", ConfigFilePath)
@@ -67,9 +68,10 @@ func writeConfigFile(configMode models.ServerConfig, path string) (err error) {
 		fmt.Println(err.Error())
 		return
 	}
-	if ioutil.WriteFile(path, configByte, 0644) == nil {
-		fmt.Println("写入配置文件文件成功!")
+	err = os.MkdirAll(filepath.Dir(path), 0644)
+	if err != nil {
 		return
 	}
+	err = ioutil.WriteFile(path, configByte, 0644)
 	return
 }
