@@ -63,3 +63,4 @@ $ docker run openiothub/server:latest
 
 Note that the image will almost always have the last stable Go version.
 
+[releases]: https://github.com/goreleaser/goreleaser/releases
