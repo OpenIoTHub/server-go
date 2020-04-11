@@ -10,36 +10,34 @@ import (
 )
 
 var ConfigMode models.ServerConfig
-var ConfigFileName = "server.yaml"
-var ConfigFilePath = "./server.yaml"
 
 func LoadConfig() (err error) {
 	//是否是snapcraft应用，如果是则从snapcraft指定的工作目录保存配置文件
 	appDataPath, havaAppDataPath := os.LookupEnv("SNAP_USER_DATA")
 	if havaAppDataPath {
-		ConfigFilePath = filepath.Join(appDataPath, ConfigFileName)
+		DefaultConfigFilePath = filepath.Join(appDataPath, DefaultConfigFileName)
 	}
-	_, err = os.Stat(ConfigFilePath)
+	_, err = os.Stat(DefaultConfigFilePath)
 	if err != nil {
-		fmt.Println("没有找到配置文件：", ConfigFilePath)
+		fmt.Println("没有找到配置文件：", DefaultConfigFilePath)
 		fmt.Println("开始生成默认的空白配置文件")
-		ConfigMode.Common.BindAddr = "0.0.0.0"
-		ConfigMode.Common.KcpPort = 34320
-		ConfigMode.Common.TcpPort = 34320
-		ConfigMode.Common.TlsPort = 34321
-		ConfigMode.Common.UdpApiPort = 34321
-		ConfigMode.Security.LoginKey = "HLLdsa544&*S"
+		ConfigMode.Common.BindAddr = DefaultBindAddr
+		ConfigMode.Common.KcpPort = DefaultKcpPort
+		ConfigMode.Common.TcpPort = DefaultTcpPort
+		ConfigMode.Common.TlsPort = DefaultTlsPort
+		ConfigMode.Common.UdpApiPort = DefaultUdpApiPort
+		ConfigMode.Security.LoginKey = DefaultLoginKey
 		//	生成配置文件模板
-		err = writeConfigFile(ConfigMode, ConfigFilePath)
+		err = writeConfigFile(ConfigMode, DefaultConfigFilePath)
 		if err != nil {
 			fmt.Printf("写入默认的配置文件失败：%s\n", err.Error())
 			return
 		}
-		fmt.Println("配置文件写入成功,路径为：", ConfigFilePath)
+		fmt.Println("配置文件写入成功,路径为：", DefaultConfigFilePath)
 		fmt.Println("你也可以修改上述配置文件后在运行")
 	}
-	fmt.Println("使用配置文件：", ConfigFilePath)
-	ConfigMode, err = GetConfig(ConfigFilePath)
+	fmt.Println("使用配置文件：", DefaultConfigFilePath)
+	ConfigMode, err = GetConfig(DefaultConfigFilePath)
 	if err != nil {
 		return
 	}
