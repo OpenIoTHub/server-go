@@ -27,10 +27,10 @@ func main() {
 		&cli.StringFlag{
 			Name:        "config",
 			Aliases:     []string{"c"},
-			Value:       config.ConfigFilePath,
+			Value:       config.DefaultConfigFilePath,
 			Usage:       "config file path",
 			EnvVars:     []string{"ServerConfigFilePath"},
-			Destination: &config.ConfigFilePath,
+			Destination: &config.DefaultConfigFilePath,
 		},
 	}
 	myApp.Action = func(c *cli.Context) error {
