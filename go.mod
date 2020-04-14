@@ -13,15 +13,11 @@ replace (
 )
 
 require (
-	github.com/OpenIoTHub/utils v0.0.0-20200414170632-11eec4db06c5
+	github.com/OpenIoTHub/utils v0.0.0-20200414181646-9c66d356b2b9
 	github.com/iotdevice/zeroconf v0.0.0-20190527085138-7225942b5495 // indirect
-	github.com/klauspost/cpuid v1.2.1 // indirect
-	github.com/klauspost/reedsolomon v1.9.3 // indirect
 	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/templexxx/xor v0.0.0-20181023030647-4e92f724b73b // indirect
-	github.com/tjfoc/gmsm v1.0.1 // indirect
 	github.com/urfave/cli/v2 v2.1.1
 	github.com/xtaci/kcp-go v5.4.11+incompatible
-	github.com/xtaci/lossyconn v0.0.0-20190602105132-8df528c0c9ae // indirect
 	gopkg.in/yaml.v2 v2.2.4
 )
