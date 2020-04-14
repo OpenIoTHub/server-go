@@ -9,6 +9,7 @@ import (
 	"github.com/OpenIoTHub/utils/msg"
 	"github.com/OpenIoTHub/utils/mux"
 	"github.com/xtaci/kcp-go"
+	"log"
 	"net"
 )
 
@@ -17,7 +18,7 @@ func listenerHdl(listener net.Listener) {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 		}
 		go connHdl(conn)
 	}
@@ -28,7 +29,7 @@ func kcpListenerHdl(listener *kcp.Listener) {
 	for {
 		conn, err := listener.AcceptKCP()
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 		}
 		conn.SetStreamMode(true)
 		conn.SetWriteDelay(false)
@@ -51,7 +52,7 @@ func connHdl(conn net.Conn) {
 	switch m := rawMsg.(type) {
 	case *models.Login:
 		{
-			//fmt.Println(m.Token)
+			//log.Println(m.Token)
 			token, err = crypto.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			if err != nil {
 				fmt.Printf(err.Error())
@@ -71,7 +72,7 @@ func connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			fmt.Println("新内网客户端登录： runId：" + token.RunId + " 系统：" + m.Os + "芯片架构：" + m.Arch)
+			log.Println("新内网客户端登录： runId：" + token.RunId + " 系统：" + m.Os + "芯片架构：" + m.Arch)
 			//sessions[token.RunId]=session
 			sess := &Session{Id: token.RunId, Conn: &conn, Ssession: session, WorkConn: make(chan net.Conn, 5)}
 			//:TODO 新的登录存储之前先清除旧的同id登录
@@ -81,7 +82,7 @@ func connHdl(conn net.Conn) {
 	case *models.NewWorkConn:
 		{
 			//:TODO	内网主动新创建的用来接收数据传输业务的连接
-			fmt.Println("获取到一个内网主动发起的工作连接")
+			log.Println("获取到一个内网主动发起的工作连接")
 			if _, ok := sessions[m.RunId]; ok {
 				sessions[m.RunId].WorkConn <- conn
 			} else {
@@ -102,7 +103,7 @@ func connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			fmt.Println("新访问器登录上线： runId：" + token.RunId + " 系统：" + m.Os + "芯片架构：" + m.Arch)
+			log.Println("新访问器登录上线： runId：" + token.RunId + " 系统：" + m.Os + "芯片架构：" + m.Arch)
 			//sessions[token.RunId]=session
 			//sess := &Session{Id: token.RunId, Conn: &conn, Ssession: session}
 			//SetSession(token.RunId, sess)
@@ -111,7 +112,7 @@ func connHdl(conn net.Conn) {
 	default:
 		{
 			//:TODO 为什么重连会跑到
-			fmt.Println("从端口获取两种登录类别之一错误")
+			log.Println("从端口获取两种登录类别之一错误")
 			conn.Close()
 		}
 	}

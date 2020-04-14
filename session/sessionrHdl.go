@@ -7,6 +7,7 @@ import (
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
+	"log"
 	"net"
 	"time"
 )
@@ -21,13 +22,13 @@ func sessionHdl(id string, sessionIn net.Listener) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Printf("panic 恢复")
-			fmt.Println(err)
-			fmt.Println("结束一个explorer的访问")
+			log.Println(err)
+			log.Println("结束一个explorer的访问")
 		}
 		if sessionIn != nil {
 			err := sessionIn.Close()
 			if err != nil {
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 			}
 		}
 	}()
@@ -49,7 +50,7 @@ func sessionConnHdl(id string, conn net.Conn) {
 			Message: "",
 		})
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 		}
 	}
 	respNotOk := func(err error) {
@@ -58,14 +59,14 @@ func sessionConnHdl(id string, conn net.Conn) {
 			Message: err.Error(),
 		})
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 		}
 		conn.Close()
 	}
 	var workConn net.Conn
 	stream, err := GetStream(id)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		respNotOk(err)
 		return
 	}
@@ -74,7 +75,7 @@ func sessionConnHdl(id string, conn net.Conn) {
 		Config: "",
 	})
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		respNotOk(err)
 		return
 	}
@@ -89,7 +90,7 @@ func sessionConnHdl(id string, conn net.Conn) {
 		}
 
 	} else {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		respNotOk(err)
 		return
 	}

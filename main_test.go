@@ -6,5 +6,5 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	fmt.Println("ok!!!")
+	log.Println("ok!!!")
 }
