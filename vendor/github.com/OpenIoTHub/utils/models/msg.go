@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/jacobsa/go-serial/serial"
+	"net"
 	"reflect"
 )
 
@@ -33,6 +34,10 @@ var (
 		reflect.TypeOf(RequestNewWorkConn{}),
 		reflect.TypeOf(NewWorkConn{}),
 		reflect.TypeOf(JsonResponse{}),
+		// UDP API
+		reflect.TypeOf(GetMyUDPPublicAddr{}),
+		reflect.TypeOf(net.UDPAddr{}),
+		reflect.TypeOf(Error{}),
 	}
 )
 
@@ -190,4 +195,11 @@ type RespInstalledPlugin struct{}
 type Msg struct {
 	MsgType    string `json:"msg_type"`
 	MsgContent string `json:"msg_content"`
+}
+
+type GetMyUDPPublicAddr struct{}
+
+type Error struct {
+	Code    int
+	Message string
 }

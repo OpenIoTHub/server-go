@@ -1,9 +1,10 @@
-# github.com/OpenIoTHub/utils v0.0.0-20200414170632-11eec4db06c5
+# github.com/OpenIoTHub/utils v0.0.0-20200414181646-9c66d356b2b9
 github.com/OpenIoTHub/utils/crypto
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
 github.com/OpenIoTHub/utils/msg
 github.com/OpenIoTHub/utils/mux
+github.com/OpenIoTHub/utils/net
 github.com/OpenIoTHub/utils/pool
 # github.com/cenkalti/backoff v2.2.1+incompatible
 github.com/cenkalti/backoff
@@ -17,7 +18,7 @@ github.com/golang/snappy
 github.com/iotdevice/zeroconf
 # github.com/jacobsa/go-serial v0.0.0-20180131005756-15cf729a72d4
 github.com/jacobsa/go-serial/serial
-# github.com/klauspost/cpuid v1.2.1
+# github.com/klauspost/cpuid v1.2.2
 github.com/klauspost/cpuid
 # github.com/klauspost/reedsolomon v1.9.3
 github.com/klauspost/reedsolomon
@@ -31,19 +32,27 @@ github.com/miekg/dns
 github.com/pkg/errors
 # github.com/russross/blackfriday/v2 v2.0.1
 github.com/russross/blackfriday/v2
+# github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
+github.com/satori/go.uuid
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
+# github.com/templexxx/cpu v0.0.1
+github.com/templexxx/cpu
 # github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161
 github.com/templexxx/cpufeat
 # github.com/templexxx/xor v0.0.0-20181023030647-4e92f724b73b
 github.com/templexxx/xor
+# github.com/templexxx/xorsimd v0.4.1
+github.com/templexxx/xorsimd
 # github.com/tjfoc/gmsm v1.0.1
 github.com/tjfoc/gmsm/sm4
 # github.com/urfave/cli/v2 v2.1.1
 github.com/urfave/cli/v2
 # github.com/xtaci/kcp-go v5.4.11+incompatible
 github.com/xtaci/kcp-go
-# golang.org/x/crypto v0.0.0-20190923035154-9ee001bba392 => github.com/golang/crypto v0.0.0-20191011191535-87dc89f01550
+# github.com/xtaci/kcp-go/v5 v5.5.12
+github.com/xtaci/kcp-go/v5
+# golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413 => github.com/golang/crypto v0.0.0-20191011191535-87dc89f01550
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
 golang.org/x/crypto/ed25519
@@ -55,13 +64,13 @@ golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/tea
 golang.org/x/crypto/twofish
 golang.org/x/crypto/xtea
-# golang.org/x/net v0.0.0-20190923162816-aa69164e4478 => github.com/golang/net v0.0.0-20191011234655-491137f69257
+# golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553 => github.com/golang/net v0.0.0-20191011234655-491137f69257
 golang.org/x/net/bpf
 golang.org/x/net/internal/iana
 golang.org/x/net/internal/socket
 golang.org/x/net/ipv4
 golang.org/x/net/ipv6
-# golang.org/x/sys v0.0.0-20190924154521-2837fb4f24fe => github.com/golang/sys v0.0.0-20191010194322-b09406accb47
+# golang.org/x/sys v0.0.0-20191228213918-04cbcbbfeed8 => github.com/golang/sys v0.0.0-20191010194322-b09406accb47
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 # gopkg.in/yaml.v2 v2.2.4
