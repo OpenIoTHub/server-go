@@ -2,13 +2,14 @@ package udpapi
 
 import (
 	"fmt"
+	"log"
 	"net"
 )
 
 func RunApiServer(port int) {
 	listener, err := net.ListenUDP("udp", &net.UDPAddr{IP: net.ParseIP("0.0.0.0"), Port: port})
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	go udpListener(listener)

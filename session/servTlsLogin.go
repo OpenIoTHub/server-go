@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
+	"log"
 	"os"
 )
 
@@ -21,13 +22,13 @@ func RunTLS(port int) {
 	cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)
 	//cer, err := tls.LoadX509KeyPair("./cert.pem", "./key.pem")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	tlsConfig := &tls.Config{Certificates: []tls.Certificate{cer}}
 	listener, err := tls.Listen("tcp", fmt.Sprintf(":%d", port), tlsConfig)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 	listenerHdl(listener)

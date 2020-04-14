@@ -5,6 +5,7 @@ import (
 	"github.com/OpenIoTHub/utils/models"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -19,8 +20,8 @@ func LoadConfig() (err error) {
 	}
 	_, err = os.Stat(DefaultConfigFilePath)
 	if err != nil {
-		fmt.Println("没有找到配置文件：", DefaultConfigFilePath)
-		fmt.Println("开始生成默认的空白配置文件")
+		log.Println("没有找到配置文件：", DefaultConfigFilePath)
+		log.Println("开始生成默认的空白配置文件")
 		ConfigMode.Common.BindAddr = DefaultBindAddr
 		ConfigMode.Common.KcpPort = DefaultKcpPort
 		ConfigMode.Common.TcpPort = DefaultTcpPort
@@ -33,10 +34,10 @@ func LoadConfig() (err error) {
 			fmt.Printf("写入默认的配置文件失败：%s\n", err.Error())
 			return
 		}
-		fmt.Println("配置文件写入成功,路径为：", DefaultConfigFilePath)
-		fmt.Println("你也可以修改上述配置文件后在运行")
+		log.Println("配置文件写入成功,路径为：", DefaultConfigFilePath)
+		log.Println("你也可以修改上述配置文件后在运行")
 	}
-	fmt.Println("使用配置文件：", DefaultConfigFilePath)
+	log.Println("使用配置文件：", DefaultConfigFilePath)
 	ConfigMode, err = GetConfig(DefaultConfigFilePath)
 	if err != nil {
 		return
@@ -48,12 +49,12 @@ func LoadConfig() (err error) {
 func GetConfig(configFilePath string) (configMode models.ServerConfig, err error) {
 	content, err := ioutil.ReadFile(configFilePath)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 	err = yaml.Unmarshal(content, &configMode)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 	return
@@ -63,7 +64,7 @@ func GetConfig(configFilePath string) (configMode models.ServerConfig, err error
 func writeConfigFile(configMode models.ServerConfig, path string) (err error) {
 	configByte, err := yaml.Marshal(configMode)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 	err = os.MkdirAll(filepath.Dir(path), 0644)
