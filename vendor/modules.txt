@@ -1,6 +1,5 @@
-# github.com/OpenIoTHub/utils v0.0.0-20200204134506-7026a158e050
+# github.com/OpenIoTHub/utils v0.0.0-20200414170632-11eec4db06c5
 github.com/OpenIoTHub/utils/crypto
-github.com/OpenIoTHub/utils/errors
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
 github.com/OpenIoTHub/utils/msg
@@ -22,6 +21,10 @@ github.com/jacobsa/go-serial/serial
 github.com/klauspost/cpuid
 # github.com/klauspost/reedsolomon v1.9.3
 github.com/klauspost/reedsolomon
+# github.com/libp2p/go-buffer-pool v0.0.1
+github.com/libp2p/go-buffer-pool
+# github.com/libp2p/go-msgio v0.0.4
+github.com/libp2p/go-msgio
 # github.com/miekg/dns v1.1.22
 github.com/miekg/dns
 # github.com/pkg/errors v0.8.1

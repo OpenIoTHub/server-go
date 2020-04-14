@@ -1,70 +1,49 @@
 package msg
 
 import (
-	"encoding/binary"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/OpenIoTHub/utils/models"
+	"github.com/libp2p/go-msgio"
 	"io"
+	"reflect"
 	"time"
 )
 
-var (
-	MaxMsgLength int64 = 10240
-)
-
-func readMsg(c io.Reader) (typeByte byte, buffer []byte, err error) {
-	buffer = make([]byte, 1)
+func readMsg(c io.Reader) (typeString string, buffer []byte, err error) {
 	if c == nil {
-		return byte('a'), nil, fmt.Errorf("conn is nil")
+		return "", nil, fmt.Errorf("conn is nil")
 	}
-	_, err = c.Read(buffer)
-	if err != nil {
-		return
+	mrdr := msgio.NewReader(c)
+	typeByte, err := mrdr.ReadMsg()
+	if err != nil || typeByte == nil {
+		return "", nil, err
 	}
-	typeByte = buffer[0]
-	if _, ok := models.TypeMap[typeByte]; !ok {
+	typeString = string(typeByte)
+	if _, ok := models.TypeMap[typeString]; !ok {
 		err = fmt.Errorf("Message type error")
 		return
 	}
-
-	var length int64
-	err = binary.Read(c, binary.BigEndian, &length)
-	if err != nil {
-		return
-	}
-	if length > MaxMsgLength {
-		err = fmt.Errorf("Message length exceed the limit")
-		return
-	}
-
-	buffer = make([]byte, length)
-	n, err := io.ReadFull(c, buffer)
-	if err != nil {
-		return
-	}
-
-	if int64(n) != length {
-		err = fmt.Errorf("Message format error")
-	}
+	buffer, err = mrdr.ReadMsg()
 	return
 }
 
 func ReadMsg(c io.Reader) (msg models.Message, err error) {
-	typeByte, buffer, err := readMsg(c)
+	typeString, buffer, err := readMsg(c)
 	if err != nil {
 		return
 	}
-	return UnPack(typeByte, buffer)
+	return UnPack(typeString, buffer)
 }
 
 //读取Msg超时错误返回
 func ReadMsgWithTimeOut(c io.Reader, t time.Duration) (msg models.Message, err error) {
-	var typeByte byte
+	var typeString string
 	var buffer []byte
 	var ch = make(chan struct{}, 1)
 	go func() {
-		typeByte, buffer, err = readMsg(c)
+		typeString, buffer, err = readMsg(c)
 		if err != nil {
 			return
 		}
@@ -72,7 +51,7 @@ func ReadMsgWithTimeOut(c io.Reader, t time.Duration) (msg models.Message, err e
 	}()
 	select {
 	case <-ch:
-		return UnPack(typeByte, buffer)
+		return UnPack(typeString, buffer)
 	case <-time.After(time.Second * 3):
 		return nil, errors.New("Read Msg TimeOut")
 	}
@@ -87,16 +66,23 @@ func ReadMsgInto(c io.Reader, msg models.Message) (err error) {
 }
 
 func WriteMsg(c io.Writer, msg interface{}) (err error) {
-	buffer, err := Pack(msg)
-	if err != nil {
-		return
-	}
 	if c == nil {
 		return fmt.Errorf("写入消息的连接为nil")
 	}
-	if _, err = c.Write(buffer); err != nil {
-		return
+	typeString, ok := models.TypeStringMap[reflect.TypeOf(msg).Elem()]
+	if !ok {
+		return errors.New("message type not found")
+	}
+	mwtr := msgio.NewWriter(c)
+	err = mwtr.WriteMsg([]byte(typeString))
+	if err != nil {
+		return err
 	}
 
-	return nil
+	content, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+	err = mwtr.WriteMsg(content)
+	return
 }

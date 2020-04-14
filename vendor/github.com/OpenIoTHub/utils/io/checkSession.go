@@ -1,11 +1,11 @@
 package io
 
 import (
-	"fmt"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
 	"github.com/OpenIoTHub/utils/mux"
 	"github.com/pkg/errors"
+	"log"
 	"time"
 )
 
@@ -17,7 +17,7 @@ func CheckSession(muxSession *mux.Session) error {
 		go func() {
 			_, err := msg.ReadMsg(stream)
 			if err != nil {
-				fmt.Println(err)
+				log.Println(err)
 				return
 			}
 			ch <- struct{}{}

@@ -5,71 +5,44 @@ import (
 	"reflect"
 )
 
-const (
-	//////1
-	TypeLogin                 = 'l'
-	TypeConnectTCP            = 't'
-	TypeConnectSTCP           = 's'
-	TypeConnectUDP            = 'u'
-	TypeConnectWs             = '1'
-	TypeConnectWss            = '2'
-	TypeConnectSerialPort     = 'p'
-	TypeConnectToLogin        = 'c'
-	TypePing                  = '3'
-	TypePong                  = '4'
-	TypeNewSubSession         = 'n'
-	TypeReqNewP2PCtrl         = 'a'
-	TypeRemoteNetInfo         = 'b'
-	TypeReqNewP2PCtrlAsClient = 'd'
-	TypeOK                    = 'e'
-	TypeCheckStatusRequest    = 'f'
-	TypeCheckStatusResponse   = 'g'
-	TypeNewService            = 'h'
-	TypeConnectSSH            = 'i'
-	TypeRequestNewWorkConn    = 'j'
-	TypeNewWorkConn           = 'k'
-	TypeJsonResponse          = 'm'
-)
-
 var (
-	TypeMap       map[byte]reflect.Type
-	TypeStringMap map[reflect.Type]byte
+	TypeMap       = make(map[string]reflect.Type)
+	TypeStringMap = make(map[reflect.Type]string)
+
+	Types = []reflect.Type{
+		reflect.TypeOf(Login{}),
+		reflect.TypeOf(ConnectTCP{}),
+		reflect.TypeOf(ConnectSTCP{}),
+		reflect.TypeOf(ConnectUDP{}),
+		reflect.TypeOf(ConnectWs{}),
+		reflect.TypeOf(ConnectWss{}),
+		reflect.TypeOf(ConnectSerialPort{}),
+		reflect.TypeOf(ConnectToLogin{}),
+		reflect.TypeOf(Ping{}),
+		reflect.TypeOf(Pong{}),
+		reflect.TypeOf(NewSubSession{}),
+		reflect.TypeOf(ReqNewP2PCtrl{}),
+		reflect.TypeOf(RemoteNetInfo{}),
+		reflect.TypeOf(ReqNewP2PCtrlAsClient{}),
+		reflect.TypeOf(OK{}),
+		reflect.TypeOf(CheckStatusRequest{}),
+		reflect.TypeOf(CheckStatusResponse{}),
+		//新的服务
+		reflect.TypeOf(NewService{}),
+		reflect.TypeOf(ConnectSSH{}),
+		reflect.TypeOf(RequestNewWorkConn{}),
+		reflect.TypeOf(NewWorkConn{}),
+		reflect.TypeOf(JsonResponse{}),
+	}
 )
 
 func init() {
-	TypeMap = make(map[byte]reflect.Type)
-	TypeStringMap = make(map[reflect.Type]byte)
-	////////2
-	TypeMap[TypeLogin] = reflect.TypeOf(Login{})
-
-	TypeMap[TypeConnectTCP] = reflect.TypeOf(ConnectTCP{})
-	TypeMap[TypeConnectSTCP] = reflect.TypeOf(ConnectSTCP{})
-	TypeMap[TypeConnectUDP] = reflect.TypeOf(ConnectUDP{})
-	TypeMap[TypeConnectWs] = reflect.TypeOf(ConnectWs{})
-	TypeMap[TypeConnectWss] = reflect.TypeOf(ConnectWss{})
-	TypeMap[TypeConnectSerialPort] = reflect.TypeOf(ConnectSerialPort{})
-	TypeMap[TypeConnectToLogin] = reflect.TypeOf(ConnectToLogin{})
-	TypeMap[TypePing] = reflect.TypeOf(Ping{})
-	TypeMap[TypePong] = reflect.TypeOf(Pong{})
-	TypeMap[TypeNewSubSession] = reflect.TypeOf(NewSubSession{})
-	TypeMap[TypeReqNewP2PCtrl] = reflect.TypeOf(ReqNewP2PCtrl{})
-	TypeMap[TypeRemoteNetInfo] = reflect.TypeOf(RemoteNetInfo{})
-	TypeMap[TypeReqNewP2PCtrlAsClient] = reflect.TypeOf(ReqNewP2PCtrlAsClient{})
-	TypeMap[TypeOK] = reflect.TypeOf(OK{})
-	TypeMap[TypeCheckStatusRequest] = reflect.TypeOf(CheckStatusRequest{})
-	TypeMap[TypeCheckStatusResponse] = reflect.TypeOf(CheckStatusResponse{})
-	//新的服务
-	TypeMap[TypeNewService] = reflect.TypeOf(NewService{})
-	TypeMap[TypeConnectSSH] = reflect.TypeOf(ConnectSSH{})
-	TypeMap[TypeRequestNewWorkConn] = reflect.TypeOf(RequestNewWorkConn{})
-	TypeMap[TypeNewWorkConn] = reflect.TypeOf(NewWorkConn{})
-	TypeMap[TypeJsonResponse] = reflect.TypeOf(JsonResponse{})
-	for k, v := range TypeMap {
-		TypeStringMap[v] = k
+	for _, v := range Types {
+		TypeMap[v.String()] = v
+		TypeStringMap[v] = v.String()
 	}
 }
 
-// Message wraps socket packages for communicating between frpc and frps.
 type Message interface{}
 
 // login

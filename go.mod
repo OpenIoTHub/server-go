@@ -13,7 +13,7 @@ replace (
 )
 
 require (
-	github.com/OpenIoTHub/utils v0.0.0-20200204134506-7026a158e050
+	github.com/OpenIoTHub/utils v0.0.0-20200414170632-11eec4db06c5
 	github.com/iotdevice/zeroconf v0.0.0-20190527085138-7225942b5495 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/klauspost/reedsolomon v1.9.3 // indirect

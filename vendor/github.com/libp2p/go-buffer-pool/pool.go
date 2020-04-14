@@ -11,8 +11,8 @@
 //
 //	small2 := p.Get(1024)
 //	large2 := p.Get(4194304)
-//	log.Println("small2 len:", len(small2))
-//	log.Println("large2 len:", len(large2))
+//	fmt.Println("small2 len:", len(small2))
+//	fmt.Println("large2 len:", len(large2))
 //
 //	// Output:
 //	// small2 len: 1024

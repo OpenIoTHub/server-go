@@ -3,6 +3,7 @@ package crypto
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"log"
 	"time"
 )
 
@@ -53,11 +54,11 @@ func DecodeToken(salt, tokenStr string) (*TokenClaims, error) {
 		return []byte(salt), nil
 	})
 	if err != nil {
-		fmt.Println("错误")
+		log.Println("错误")
 		return &TokenClaims{}, err
 	}
 	if claims, ok := token.Claims.(*TokenClaims); ok && token.Valid {
-		//fmt.Println(claims["foo"], claims["nbf"])
+		//log.Println(claims["foo"], claims["nbf"])
 		return claims, nil
 	} else {
 		return &TokenClaims{}, fmt.Errorf("jwt decode err")
@@ -76,7 +77,7 @@ func DecodeUnverifiedToken(tokenStr string) (*TokenClaims, error) {
 		return &TokenClaims{}, fmt.Errorf("token or token.Claims is nil")
 	}
 	if claims, ok := token.Claims.(*TokenClaims); ok {
-		//fmt.Println(claims["foo"], claims["nbf"])
+		//log.Println(claims["foo"], claims["nbf"])
 		return claims, nil
 	} else {
 		return &TokenClaims{}, fmt.Errorf("jwt decode err，not TokenClaims")
