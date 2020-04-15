@@ -1,4 +1,4 @@
-# github.com/OpenIoTHub/utils v0.0.0-20200414181646-9c66d356b2b9
+# github.com/OpenIoTHub/utils v0.0.0-20200414222244-74d2fefabd98
 github.com/OpenIoTHub/utils/crypto
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models

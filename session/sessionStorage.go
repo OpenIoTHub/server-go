@@ -3,12 +3,8 @@ package session
 import (
 	"errors"
 	"fmt"
-	//"github.com/xtaci/smux"
 	"github.com/OpenIoTHub/utils/mux"
 	"net"
-	//"time"
-	//"github.com/OpenIoTHub/utils/msg"
-	//"github.com/OpenIoTHub/utils/models"
 )
 
 type Session struct {
@@ -17,6 +13,10 @@ type Session struct {
 	Ssession *mux.Session
 	WorkConn chan net.Conn
 }
+
+type Sessions map[string]*Session
+
+var sessions = make(Sessions)
 
 //:TODO 存活检测
 func (sess *Session) Task() {
@@ -41,22 +41,20 @@ func (sess *Session) Task() {
 	fmt.Printf("end session Task")
 }
 
-var sessions = make(map[string]*Session)
-
-func GetSession(id string) (*Session, error) {
-	if _, ok := sessions[id]; ok {
-		if sessions[id].Ssession.IsClosed() {
-			DelSession(id)
+func (sess Sessions) GetSession(id string) (*Session, error) {
+	if _, ok := sess[id]; ok {
+		if sess[id].Ssession.IsClosed() {
+			sess.DelSession(id)
 			return nil, errors.New("sessions 处于断线状态")
 		}
-		return sessions[id], nil //存在
+		return sess[id], nil //存在
 	} else {
 		return nil, errors.New("sessions id未注册")
 	}
 }
 
-func GetStream(id string) (*mux.Stream, error) {
-	mysession, err := GetSession(id)
+func (sess Sessions) GetStream(id string) (*mux.Stream, error) {
+	mysession, err := sess.GetSession(id)
 	if err != nil {
 		fmt.Printf(err.Error())
 		return nil, err
@@ -71,20 +69,20 @@ func GetStream(id string) (*mux.Stream, error) {
 	return stream, err
 }
 
-func SetSession(id string, session *Session) {
-	DelSession(id)
-	sessions[id] = session
+func (sess Sessions) SetSession(id string, session *Session) {
+	sess.DelSession(id)
+	sess[id] = session
 }
 
-func DelSession(id string) {
-	if _, ok := sessions[id]; ok {
-		if sessions[id].Ssession != nil && !sessions[id].Ssession.IsClosed() {
-			sessions[id].Ssession.Close()
+func (sess Sessions) DelSession(id string) {
+	if _, ok := sess[id]; ok {
+		if sess[id].Ssession != nil && !sess[id].Ssession.IsClosed() {
+			sess[id].Ssession.Close()
 		}
-		if sessions[id].Conn != nil {
-			myconn := *sessions[id].Conn
+		if sess[id].Conn != nil {
+			myconn := *sess[id].Conn
 			myconn.Close()
 		}
 	}
-	delete(sessions, id)
+	delete(sess, id)
 }

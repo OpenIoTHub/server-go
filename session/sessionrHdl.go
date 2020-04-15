@@ -64,7 +64,7 @@ func sessionConnHdl(id string, conn net.Conn) {
 		conn.Close()
 	}
 	var workConn net.Conn
-	stream, err := GetStream(id)
+	stream, err := sessions.GetStream(id)
 	if err != nil {
 		log.Println(err.Error())
 		respNotOk(err)
