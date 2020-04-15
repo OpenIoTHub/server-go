@@ -53,19 +53,24 @@ func connHdl(conn *kcp.UDPSession) {
 		{
 			//:TODO 为什么重连会跑到
 			log.Println("从端口获取两种登录类别之一错误")
-			_ = msg.WriteMsg(conn, remoteAddr)
+			_ = msg.WriteMsg(conn, models.Error{
+				Code:    1,
+				Message: "未实现的UDP API",
+			})
 		}
 	}
 }
 
 //获取一个listener的外部地址和端口
 func GetExternalIpPort(listener *net.UDPConn, token *crypto.TokenClaims) (ip string, port int, err error) {
+	//TODO：使用给定的Listener
 	//udpaddr, err := net.ResolveUDPAddr("udp", token.Host+":"+strconv.Itoa(token.P2PApiPort))
-	conn, err := kcp.DialWithOptions(token.Host+":"+strconv.Itoa(token.P2PApiPort), nil, 10, 3)
+	conn, err := kcp.NewConn(token.Host+":"+strconv.Itoa(token.P2PApiPort), nil, 10, 3, listener)
 	if err != nil {
 		fmt.Printf("%s", err.Error())
 		return "", 0, err
 	}
+	defer conn.Close()
 
 	err = conn.SetDeadline(time.Now().Add(time.Duration(3 * time.Second)))
 	if err != nil {
@@ -80,7 +85,7 @@ func GetExternalIpPort(listener *net.UDPConn, token *crypto.TokenClaims) (ip str
 	}
 
 	log.Println("发送到服务器确定成功！等待确定外网ip和port")
-	addr, err := msg.ReadMsg(conn)
+	addr, err := msg.ReadMsgWithTimeOut(conn, time.Second)
 	log.Println("获取api的UDP包成功，开始解析自己listener出口地址和端口")
 	if err != nil {
 		fmt.Printf("获取listener的出口出错: %s", err.Error())
