@@ -79,21 +79,20 @@ func sessionConnHdl(id string, conn net.Conn) {
 		respNotOk(err)
 		return
 	}
-	if _, ok := sessions[id]; ok {
-		//超时返回错误
-		select {
-		case workConn = <-sessions[id].WorkConn:
-			respOk()
-		case <-time.After(time.Second * 3):
-			respNotOk(errors.New("获取内网连接超时"))
-			return
-		}
-
-	} else {
+	sess, err := sessions.GetSession(id)
+	if err != nil {
 		log.Println(err.Error())
 		respNotOk(err)
 		return
 	}
-
-	go io.Join(workConn, conn)
+	//超时返回错误
+	select {
+	case workConn = <-sess.WorkConn:
+		respOk()
+		go io.Join(workConn, conn)
+		return
+	case <-time.After(time.Second * 3):
+		respNotOk(errors.New("获取内网连接超时"))
+		return
+	}
 }
