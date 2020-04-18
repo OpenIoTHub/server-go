@@ -54,11 +54,12 @@ func connHdl(conn net.Conn) {
 		{
 			//:TODO	内网主动新创建的用来接收数据传输业务的连接
 			log.Println("获取到一个内网主动发起的工作连接")
-			if _, ok := sessions[m.RunId]; ok {
-				sessions[m.RunId].WorkConn <- conn
-			} else {
+			sess, err := sessions.GetSession(m.RunId)
+			if err != nil {
 				conn.Close()
+				return
 			}
+			sess.WorkConn <- conn
 		}
 
 	case *models.ConnectToLogin:
