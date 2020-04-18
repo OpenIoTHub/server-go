@@ -30,6 +30,7 @@ func sessionConnHdl(id string, conn net.Conn) {
 		if err != nil {
 			log.Println(err.Error())
 		}
+		time.Sleep(time.Millisecond * 100)
 		conn.Close()
 	}
 	var workConn net.Conn
