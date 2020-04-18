@@ -7,39 +7,9 @@ import (
 	"net"
 )
 
-type Session struct {
-	Id       string
-	Conn     *net.Conn
-	Ssession *mux.Session
-	WorkConn chan net.Conn
-}
-
 type Sessions map[string]*Session
 
 var sessions = make(Sessions)
-
-//:TODO 存活检测
-func (sess *Session) Task() {
-	//defer DelSession(sess.Id)
-	//Loop:
-	//for {
-	//	select {
-	//		case <-sess.heartbeat.C:
-	//			stream,err:=sess.Ssession.OpenStream()
-	//			if err != nil{
-	//				fmt.Printf(err.Error())
-	//				break Loop
-	//			}
-	//			err=msg.WriteMsg(stream, &models.Ping{})
-	//			if err != nil{
-	//				fmt.Printf(err.Error())
-	//				break Loop
-	//			}
-	//			stream.Close()
-	//		}
-	//}
-	fmt.Printf("end session Task")
-}
 
 func (sess Sessions) GetSession(id string) (*Session, error) {
 	if _, ok := sess[id]; ok {
@@ -85,4 +55,35 @@ func (sess Sessions) DelSession(id string) {
 		}
 	}
 	delete(sess, id)
+}
+
+//
+type Session struct {
+	Id       string
+	Conn     *net.Conn
+	Ssession *mux.Session
+	WorkConn chan net.Conn
+}
+
+//:TODO 存活检测
+func (sess *Session) Task() {
+	//defer DelSession(sess.Id)
+	//Loop:
+	//for {
+	//	select {
+	//		case <-sess.heartbeat.C:
+	//			stream,err:=sess.Ssession.OpenStream()
+	//			if err != nil{
+	//				fmt.Printf(err.Error())
+	//				break Loop
+	//			}
+	//			err=msg.WriteMsg(stream, &models.Ping{})
+	//			if err != nil{
+	//				fmt.Printf(err.Error())
+	//				break Loop
+	//			}
+	//			stream.Close()
+	//		}
+	//}
+	fmt.Printf("end session Task")
 }
