@@ -12,6 +12,7 @@ func listenerHdl(listener net.Listener) {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Println(err.Error())
+			continue
 		}
 		go connHdl(conn)
 	}
@@ -23,6 +24,7 @@ func kcpListenerHdl(listener *kcp.Listener) {
 		conn, err := listener.AcceptKCP()
 		if err != nil {
 			log.Println(err.Error())
+			continue
 		}
 		conn.SetStreamMode(true)
 		conn.SetWriteDelay(false)
