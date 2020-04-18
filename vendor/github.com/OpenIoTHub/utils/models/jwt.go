@@ -1,4 +1,4 @@
-package crypto
+package models
 
 import (
 	"fmt"
@@ -14,13 +14,13 @@ import (
 //var Salt string
 
 type TokenClaims struct {
-	RunId      string `json:"rid"`
-	Host       string `json:"hst"`
-	TcpPort    int    `json:"tcpt"`
-	KcpPort    int    `json:"kcpt"`
-	TlsPort    int    `json:"tlsp"`
-	P2PApiPort int    `json:"p2pt"`
-	Permission int    `json:"pm"`
+	RunId      string
+	Host       string
+	TcpPort    int
+	KcpPort    int
+	TlsPort    int
+	P2PApiPort int
+	Permission int
 	jwt.StandardClaims
 }
 

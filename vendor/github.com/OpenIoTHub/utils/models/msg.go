@@ -11,33 +11,41 @@ var (
 	TypeStringMap = make(map[reflect.Type]string)
 
 	Types = []reflect.Type{
-		reflect.TypeOf(Login{}),
+		//服务器需要处理的消息
+		reflect.TypeOf(GatewayLogin{}),
+		reflect.TypeOf(GatewayWorkConn{}),
+		reflect.TypeOf(OpenIoTHubLogin{}),
+		//连接的消息
 		reflect.TypeOf(ConnectTCP{}),
 		reflect.TypeOf(ConnectSTCP{}),
 		reflect.TypeOf(ConnectUDP{}),
 		reflect.TypeOf(ConnectWs{}),
 		reflect.TypeOf(ConnectWss{}),
 		reflect.TypeOf(ConnectSerialPort{}),
-		reflect.TypeOf(ConnectToLogin{}),
-		reflect.TypeOf(Ping{}),
-		reflect.TypeOf(Pong{}),
+		reflect.TypeOf(ConnectSSH{}),
+		//P2P相关的消息
 		reflect.TypeOf(NewSubSession{}),
 		reflect.TypeOf(ReqNewP2PCtrl{}),
 		reflect.TypeOf(RemoteNetInfo{}),
 		reflect.TypeOf(ReqNewP2PCtrlAsClient{}),
-		reflect.TypeOf(OK{}),
+		//状态验证消息
 		reflect.TypeOf(CheckStatusRequest{}),
 		reflect.TypeOf(CheckStatusResponse{}),
 		//新的服务
 		reflect.TypeOf(NewService{}),
-		reflect.TypeOf(ConnectSSH{}),
 		reflect.TypeOf(RequestNewWorkConn{}),
-		reflect.TypeOf(NewWorkConn{}),
-		reflect.TypeOf(JsonResponse{}),
+
 		// UDP API
 		reflect.TypeOf(GetMyUDPPublicAddr{}),
 		reflect.TypeOf(net.UDPAddr{}),
+
+		reflect.TypeOf(Ping{}),
+		reflect.TypeOf(Pong{}),
+
+		reflect.TypeOf(OK{}),
 		reflect.TypeOf(Error{}),
+
+		reflect.TypeOf(JsonResponse{}),
 	}
 )
 
@@ -51,56 +59,56 @@ func init() {
 type Message interface{}
 
 // login
-type Login struct {
-	Token string `json:"token"`
-	Os    string `json:"os"`
-	Arch  string `json:"arch"`
+type GatewayLogin struct {
+	Token string
+	Os    string
+	Arch  string
 }
 
 // Connect TO
-type ConnectToLogin struct {
-	Token string `json:"token"`
-	Os    string `json:"os"`
-	Arch  string `json:"arch"`
+type OpenIoTHubLogin struct {
+	Token string
+	Os    string
+	Arch  string
 }
 
 type NewSubSession struct{}
 
 // connect       //tcp,stcp,udp,serialport,ws,wss
 type ConnectTCP struct {
-	TargetIP   string `json:"target_ip"`
-	TargetPort int    `json:"target_port"`
+	TargetIP   string
+	TargetPort int
 }
 
 type ConnectSTCP struct {
-	TargetIP   string `json:"target_ip"`
-	TargetPort int    `json:"target_port"`
+	TargetIP   string
+	TargetPort int
 }
 
 type ConnectUDP struct {
-	TargetIP   string `json:"target_ip"`
-	TargetPort int    `json:"target_port"`
+	TargetIP   string
+	TargetPort int
 }
 
 type ConnectSerialPort serial.OpenOptions
 
 type ConnectWs struct {
-	TargetUrl string `json:"target_url"`
-	Protocol  string `json:"protocol"`
-	Origin    string `json:"origin"`
+	TargetUrl string
+	Protocol  string
+	Origin    string
 }
 
 type ConnectWss struct {
-	TargetUrl string `json:"target_url"`
-	Protocol  string `json:"protocol"`
-	Origin    string `json:"origin"`
+	TargetUrl string
+	Protocol  string
+	Origin    string
 }
 
 type ConnectSSH struct {
-	TargetIP   string `json:"target_ip"`
-	TargetPort int    `json:"target_port"`
-	UserName   string `json:"username"`
-	PassWord   string `json:"password"`
+	TargetIP   string
+	TargetPort int
+	UserName   string
+	PassWord   string
 }
 
 ///Ping
@@ -109,39 +117,37 @@ type Pong struct{}
 
 //P2P让远端以listener身份运行
 type ReqNewP2PCtrl struct {
-	IntranetIp   string `json:"intranet_ip"`
-	IntranetPort int    `json:"intranet_port"`
-	ExternalIp   string `json:"external_ip"`
-	ExternalPort int    `json:"external_port"`
+	IntranetIp   string
+	IntranetPort int
+	ExternalIp   string
+	ExternalPort int
 }
 
 //让内网端以dial的身份连接我
 type ReqNewP2PCtrlAsClient struct {
-	IntranetIp   string `json:"intranet_ip"`
-	IntranetPort int    `json:"intranet_port"`
-	ExternalIp   string `json:"external_ip"`
-	ExternalPort int    `json:"external_port"`
+	IntranetIp   string
+	IntranetPort int
+	ExternalIp   string
+	ExternalPort int
 }
 
 //TODO:NETINFO Model
 type RemoteNetInfo struct {
-	IntranetIp   string `json:"intranet_ip"`
-	IntranetPort int    `json:"intranet_port"`
-	ExternalIp   string `json:"external_ip"`
-	ExternalPort int    `json:"external_port"`
+	IntranetIp   string
+	IntranetPort int
+	ExternalIp   string
+	ExternalPort int
 }
 
-type OK struct{}
-
 type CheckStatusRequest struct {
-	Type string `json:"type"`
-	Addr string `json:"addr"`
+	Type string
+	Addr string
 }
 
 type CheckStatusResponse struct {
 	//Code:0:在线;1:离线
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Code    int
+	Message string
 }
 
 type NewService struct {
@@ -154,7 +160,7 @@ type RequestNewWorkConn struct {
 	Config string
 }
 
-type NewWorkConn struct {
+type GatewayWorkConn struct {
 	RunId  string
 	Secret string
 }
@@ -167,23 +173,23 @@ type JsonResponse struct {
 
 ///plugin
 type InstallPlugin struct {
-	TargetUrl string `json:"target_url"`
+	TargetUrl string
 }
 
 type UpgradePlugin struct {
-	TargetUrl string `json:"target_url"`
+	TargetUrl string
 }
 
 type RemovePlugin struct {
-	TargetUrl string `json:"target_url"`
+	TargetUrl string
 }
 
 type RunPlugin struct {
-	TargetUrl string `json:"target_url"`
+	TargetUrl string
 }
 
 type StopPlugin struct {
-	TargetUrl string `json:"target_url"`
+	TargetUrl string
 }
 
 ///query installed plugin
@@ -193,11 +199,13 @@ type RespInstalledPlugin struct{}
 ///rsponse Msg
 
 type Msg struct {
-	MsgType    string `json:"msg_type"`
-	MsgContent string `json:"msg_content"`
+	MsgType    string
+	MsgContent string
 }
 
 type GetMyUDPPublicAddr struct{}
+
+type OK struct{}
 
 type Error struct {
 	Code    int

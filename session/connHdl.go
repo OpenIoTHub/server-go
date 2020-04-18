@@ -4,7 +4,6 @@ import (
 	//"github.com/xtaci/smux"
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
-	"github.com/OpenIoTHub/utils/crypto"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
 	"github.com/OpenIoTHub/utils/mux"
@@ -14,17 +13,17 @@ import (
 
 func connHdl(conn net.Conn) {
 	var session *mux.Session
-	var token *crypto.TokenClaims
+	var token *models.TokenClaims
 	var err error
 	rawMsg, err := msg.ReadMsg(conn)
 	if err != nil {
 		return
 	}
 	switch m := rawMsg.(type) {
-	case *models.Login:
+	case *models.GatewayLogin:
 		{
 			//log.Println(m.Token)
-			token, err = crypto.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
+			token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			if err != nil {
 				fmt.Printf(err.Error())
 				conn.Close()
@@ -50,7 +49,7 @@ func connHdl(conn net.Conn) {
 			sessions.SetSession(token.RunId, sess)
 		}
 
-	case *models.NewWorkConn:
+	case *models.GatewayWorkConn:
 		{
 			//:TODO	内网主动新创建的用来接收数据传输业务的连接
 			log.Println("获取到一个内网主动发起的工作连接")
@@ -62,9 +61,9 @@ func connHdl(conn net.Conn) {
 			sess.WorkConn <- conn
 		}
 
-	case *models.ConnectToLogin:
+	case *models.OpenIoTHubLogin:
 		{
-			token, err = crypto.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
+			token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			if err != nil {
 				fmt.Printf(err.Error())
 				conn.Close()

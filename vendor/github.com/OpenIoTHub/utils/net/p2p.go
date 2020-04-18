@@ -1,7 +1,6 @@
 package nettool
 
 import (
-	"github.com/OpenIoTHub/utils/crypto"
 	"github.com/OpenIoTHub/utils/models"
 	"log"
 	"net"
@@ -11,7 +10,7 @@ import (
 )
 
 //获取一个随机UDP Dial的内部ip，端口，外部ip端口
-func GetDialIpPort(token *crypto.TokenClaims) (localAddr net.Addr, externalIp string, externalPort int, err error) {
+func GetDialIpPort(token *models.TokenClaims) (localAddr net.Addr, externalIp string, externalPort int, err error) {
 	udpaddr, err := net.ResolveUDPAddr("udp", token.Host+":"+strconv.Itoa(token.P2PApiPort))
 	//udpaddr, err := net.ResolveUDPAddr("udp", "tencent-shanghai-v1.host.nat-cloud.com:34321")
 	if err != nil {
@@ -47,7 +46,7 @@ func GetDialIpPort(token *crypto.TokenClaims) (localAddr net.Addr, externalIp st
 	return localAddr, ip, port, nil
 }
 
-func GetP2PListener(token *crypto.TokenClaims) (localIps string, localPort int, externalIp string, externalPort int, listener *net.UDPConn, err error) {
+func GetP2PListener(token *models.TokenClaims) (localIps string, localPort int, externalIp string, externalPort int, listener *net.UDPConn, err error) {
 	localIps = GetIntranetIp()
 	//localPort = randint.GenerateRangeNum(10000, 60000)
 	localPort = 0

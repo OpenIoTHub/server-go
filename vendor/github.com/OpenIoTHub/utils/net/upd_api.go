@@ -3,7 +3,6 @@ package nettool
 import (
 	"errors"
 	"fmt"
-	"github.com/OpenIoTHub/utils/crypto"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
 	"github.com/xtaci/kcp-go/v5"
@@ -62,7 +61,7 @@ func connHdl(conn *kcp.UDPSession) {
 }
 
 //获取一个listener的外部地址和端口
-func GetExternalIpPort(listener *net.UDPConn, token *crypto.TokenClaims) (ip string, port int, err error) {
+func GetExternalIpPort(listener *net.UDPConn, token *models.TokenClaims) (ip string, port int, err error) {
 	//TODO：使用给定的Listener
 	//udpaddr, err := net.ResolveUDPAddr("udp", token.Host+":"+strconv.Itoa(token.P2PApiPort))
 	conn, err := kcp.NewConn(token.Host+":"+strconv.Itoa(token.P2PApiPort), nil, 10, 3, listener)
