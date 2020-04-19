@@ -1,4 +1,4 @@
-# github.com/OpenIoTHub/utils v0.0.0-20200418155308-5dfa8066f4d6
+# github.com/OpenIoTHub/utils v0.0.0-20200419073446-65f594ffa254
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
 github.com/OpenIoTHub/utils/msg
