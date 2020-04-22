@@ -13,23 +13,17 @@ import (
 
 //访问器的登录处理 conn : 访问器 stream ： 内网端
 func openIoTHubLoginHdl(id string, conn net.Conn) {
-	respOk := func() {
-		err := msg.WriteMsg(conn, &models.CheckStatusResponse{
-			Code:    0,
-			Message: "",
-		})
+	resp := func(err error) {
+		code := 0
+		msgStr := ""
 		if err != nil {
-			log.Println(err.Error())
+			code = 1
+			msgStr = err.Error()
 		}
-	}
-	respNotOk := func(err error) {
-		err = msg.WriteMsg(conn, &models.CheckStatusResponse{
-			Code:    1,
-			Message: err.Error(),
+		msg.WriteMsg(conn, &models.CheckStatusResponse{
+			Code:    code,
+			Message: msgStr,
 		})
-		if err != nil {
-			log.Println(err.Error())
-		}
 		time.Sleep(time.Millisecond * 100)
 		conn.Close()
 	}
@@ -37,7 +31,7 @@ func openIoTHubLoginHdl(id string, conn net.Conn) {
 	stream, err := sessions.GetStream(id)
 	if err != nil {
 		log.Println(err.Error())
-		respNotOk(err)
+		resp(err)
 		return
 	}
 	err = msg.WriteMsg(stream, &models.RequestNewWorkConn{
@@ -46,23 +40,23 @@ func openIoTHubLoginHdl(id string, conn net.Conn) {
 	})
 	if err != nil {
 		log.Println(err.Error())
-		respNotOk(err)
+		resp(err)
 		return
 	}
 	sess, err := sessions.GetSession(id)
 	if err != nil {
 		log.Println(err.Error())
-		respNotOk(err)
+		resp(err)
 		return
 	}
 	//超时返回错误
 	select {
 	case workConn = <-sess.WorkConn:
-		respOk()
+		resp(nil)
 		go io.Join(workConn, conn)
 		return
 	case <-time.After(time.Second * 3):
-		respNotOk(errors.New("获取内网连接超时"))
+		resp(errors.New("获取内网连接超时"))
 		return
 	}
 }
