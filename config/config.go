@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/OpenIoTHub/utils/models"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -31,7 +30,7 @@ func LoadConfig() (err error) {
 		//	生成配置文件模板
 		err = writeConfigFile(ConfigMode, DefaultConfigFilePath)
 		if err != nil {
-			fmt.Printf("写入默认的配置文件失败：%s\n", err.Error())
+			log.Printf("写入默认的配置文件失败：%s\n", err.Error())
 			return
 		}
 		log.Println("配置文件写入成功,路径为：", DefaultConfigFilePath)

@@ -1,8 +1,8 @@
 package session
 
 import (
-	"fmt"
 	"github.com/OpenIoTHub/utils/mux"
+	"log"
 	"net"
 )
 
@@ -23,16 +23,16 @@ func (sess *Session) Task() {
 	//		case <-sess.heartbeat.C:
 	//			stream,err:=sess.GatewaySession.OpenStream()
 	//			if err != nil{
-	//				fmt.Printf(err.Error())
+	//				log.Printf(err.Error())
 	//				break Loop
 	//			}
 	//			err=msg.WriteMsg(stream, &models.Ping{})
 	//			if err != nil{
-	//				fmt.Printf(err.Error())
+	//				log.Printf(err.Error())
 	//				break Loop
 	//			}
 	//			stream.Close()
 	//		}
 	//}
-	fmt.Printf("end session Task")
+	log.Printf("end session Task")
 }
