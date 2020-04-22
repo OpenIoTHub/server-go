@@ -10,33 +10,33 @@ import (
 	"os"
 )
 
-func RunKCP(port int) {
+func (sess SessionsManager) RunKCP(port int) {
 	listener, err := kcp.ListenWithOptions(fmt.Sprintf(":%d", port), nil, 10, 3)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	kcpListenerHdl(listener)
+	sess.kcpListenerHdl(listener)
 }
 
-func RunTCP(port int) {
+func (sess SessionsManager) RunTCP(port int) {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	listenerHdl(listener)
+	sess.listenerHdl(listener)
 }
 
-func RunTLS(port int) {
+func (sess SessionsManager) RunTLS(port int) {
 	_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
 	if err != nil {
-		log.Println("warning:File Path:%s Not Exist! So tls server NOT Available!\n", config.ConfigMode.Security.TlsCertFilePath)
+		log.Println("warning:File Path:%s Not Exist! So tls server NOT Available!", config.ConfigMode.Security.TlsCertFilePath)
 		return
 	}
 	_, err = os.Stat(config.ConfigMode.Security.TlsKeyFilePath)
 	if err != nil {
-		log.Println("warning:File Path:%s Not Exist!  So tls server NOT Available!\n", config.ConfigMode.Security.TlsKeyFilePath)
+		log.Println("warning:File Path:%s Not Exist!  So tls server NOT Available!", config.ConfigMode.Security.TlsKeyFilePath)
 		return
 	}
 	cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)
@@ -51,7 +51,7 @@ func RunTLS(port int) {
 		log.Println(err)
 		return
 	}
-	listenerHdl(listener)
+	sess.listenerHdl(listener)
 }
 
 ///////////////////////////
@@ -59,7 +59,7 @@ func RunTLS(port int) {
 //////  Listenner处理
 //////
 ///////////////////////////
-func listenerHdl(listener net.Listener) {
+func (sess SessionsManager) listenerHdl(listener net.Listener) {
 	defer listener.Close()
 	for {
 		conn, err := listener.Accept()
@@ -67,11 +67,11 @@ func listenerHdl(listener net.Listener) {
 			log.Println(err.Error())
 			continue
 		}
-		go SessionsCtl.connHdl(conn)
+		go sess.connHdl(conn)
 	}
 }
 
-func kcpListenerHdl(listener *kcp.Listener) {
+func (sess SessionsManager) kcpListenerHdl(listener *kcp.Listener) {
 	defer listener.Close()
 	for {
 		conn, err := listener.AcceptKCP()
@@ -85,6 +85,6 @@ func kcpListenerHdl(listener *kcp.Listener) {
 		conn.SetWindowSize(1024, 1024)
 		conn.SetMtu(1472)
 		conn.SetACKNoDelay(true)
-		go SessionsCtl.connHdl(conn)
+		go sess.connHdl(conn)
 	}
 }
