@@ -31,12 +31,12 @@ func RunTCP(port int) {
 func RunTLS(port int) {
 	_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
 	if err != nil {
-		fmt.Printf("warning:File Path:%s Not Exist! So tls server NOT Available!\n", config.ConfigMode.Security.TlsCertFilePath)
+		log.Println("warning:File Path:%s Not Exist! So tls server NOT Available!\n", config.ConfigMode.Security.TlsCertFilePath)
 		return
 	}
 	_, err = os.Stat(config.ConfigMode.Security.TlsKeyFilePath)
 	if err != nil {
-		fmt.Printf("warning:File Path:%s Not Exist!  So tls server NOT Available!\n", config.ConfigMode.Security.TlsKeyFilePath)
+		log.Println("warning:File Path:%s Not Exist!  So tls server NOT Available!\n", config.ConfigMode.Security.TlsKeyFilePath)
 		return
 	}
 	cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)

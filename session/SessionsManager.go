@@ -2,7 +2,6 @@ package session
 
 import (
 	"errors"
-	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/models"
@@ -32,14 +31,14 @@ func (sess SessionsManager) GetSession(id string) (*Session, error) {
 func (sess SessionsManager) GetStream(id string) (*mux.Stream, error) {
 	mysession, err := sess.GetSession(id)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
-	fmt.Printf("get session ok")
+	log.Println("get session ok")
 	stream, err := mysession.GatewaySession.OpenStream()
-	fmt.Printf("open stream")
+	log.Println("open stream")
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	return stream, err
@@ -70,6 +69,7 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 	var err error
 	rawMsg, err := msg.ReadMsg(conn)
 	if err != nil {
+		log.Println(err)
 		return
 	}
 	switch m := rawMsg.(type) {
@@ -78,12 +78,12 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 			//log.Println(m.Token)
 			token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			if err != nil {
-				fmt.Printf(err.Error())
+				log.Println(err.Error())
 				conn.Close()
 				return
 			}
 			if token.Permission&1 != 1 {
-				fmt.Printf("token type err ,not n")
+				log.Println("token type err ,not n")
 				conn.Close()
 				return
 			}
@@ -91,7 +91,7 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 			//config.EnableKeepAlive = false
 			session, err = mux.Client(conn, config)
 			if err != nil {
-				fmt.Printf(err.Error())
+				log.Println(err.Error())
 				conn.Close()
 				return
 			}
@@ -118,12 +118,12 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 		{
 			token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			if err != nil {
-				fmt.Printf(err.Error())
+				log.Println(err.Error())
 				conn.Close()
 				return
 			}
 			if token.Permission != 2 {
-				fmt.Printf("token type err ,not n")
+				log.Println("token type err ,not n")
 				conn.Close()
 				return
 			}
