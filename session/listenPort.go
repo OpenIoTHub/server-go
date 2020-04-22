@@ -4,9 +4,29 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
+	"github.com/xtaci/kcp-go"
 	"log"
+	"net"
 	"os"
 )
+
+func RunKCP(port int) {
+	listener, err := kcp.ListenWithOptions(fmt.Sprintf(":%d", port), nil, 10, 3)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	kcpListenerHdl(listener)
+}
+
+func RunTCP(port int) {
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	listenerHdl(listener)
+}
 
 func RunTLS(port int) {
 	_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
