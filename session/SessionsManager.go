@@ -19,7 +19,7 @@ var SessionsCtl = make(SessionsManager)
 
 func (sess SessionsManager) GetSession(id string) (*Session, error) {
 	if _, ok := sess[id]; ok {
-		if sess[id].GatewaySession.IsClosed() {
+		if sess[id].GatewaySession == nil || sess[id].GatewaySession.IsClosed() {
 			sess.DelSession(id)
 			return nil, errors.New("Session 处于断线状态")
 		}
