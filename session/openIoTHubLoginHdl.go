@@ -12,7 +12,7 @@ import (
 )
 
 //访问器的登录处理 conn : 访问器 stream ： 内网端
-func sessionConnHdl(id string, conn net.Conn) {
+func openIoTHubLoginHdl(id string, conn net.Conn) {
 	respOk := func() {
 		err := msg.WriteMsg(conn, &models.CheckStatusResponse{
 			Code:    0,
