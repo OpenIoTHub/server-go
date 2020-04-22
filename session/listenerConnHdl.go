@@ -1,16 +1,48 @@
 package session
 
 import (
-	//"github.com/xtaci/smux"
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
 	"github.com/OpenIoTHub/utils/mux"
+	"github.com/xtaci/kcp-go"
 	"log"
 	"net"
 )
 
+//listenerHdl
+func listenerHdl(listener net.Listener) {
+	defer listener.Close()
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+		go connHdl(conn)
+	}
+}
+
+func kcpListenerHdl(listener *kcp.Listener) {
+	defer listener.Close()
+	for {
+		conn, err := listener.AcceptKCP()
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+		conn.SetStreamMode(true)
+		conn.SetWriteDelay(false)
+		conn.SetNoDelay(0, 40, 2, 1)
+		conn.SetWindowSize(1024, 1024)
+		conn.SetMtu(1472)
+		conn.SetACKNoDelay(true)
+		go connHdl(conn)
+	}
+}
+
+//connHdl
 func connHdl(conn net.Conn) {
 	var session *mux.Session
 	var token *models.TokenClaims
@@ -78,7 +110,7 @@ func connHdl(conn net.Conn) {
 			//sessions[token.RunId]=session
 			//sess := &Session{Id: token.RunId, Conn: &conn, Ssession: session}
 			//SetSession(token.RunId, sess)
-			go sessionConnHdl(token.RunId, conn)
+			go openIoTHubLoginHdl(token.RunId, conn)
 		}
 	default:
 		{
