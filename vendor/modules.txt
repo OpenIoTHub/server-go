@@ -21,10 +21,12 @@ github.com/jacobsa/go-serial/serial
 github.com/klauspost/cpuid
 # github.com/klauspost/reedsolomon v1.9.3
 github.com/klauspost/reedsolomon
-# github.com/libp2p/go-buffer-pool v0.0.1
+# github.com/libp2p/go-buffer-pool v0.0.2
 github.com/libp2p/go-buffer-pool
 # github.com/libp2p/go-msgio v0.0.4
 github.com/libp2p/go-msgio
+# github.com/libp2p/go-yamux v1.3.6
+github.com/libp2p/go-yamux
 # github.com/miekg/dns v1.1.22
 github.com/miekg/dns
 # github.com/pkg/errors v0.8.1

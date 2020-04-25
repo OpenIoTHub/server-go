@@ -1,7 +1,7 @@
 package session
 
 import (
-	"github.com/OpenIoTHub/utils/mux"
+	"github.com/libp2p/go-yamux"
 	"log"
 	"net"
 )
@@ -10,7 +10,7 @@ import (
 type Session struct {
 	Id             string
 	Conn           *net.Conn
-	GatewaySession *mux.Session
+	GatewaySession *yamux.Session
 	WorkConn       chan net.Conn
 }
 

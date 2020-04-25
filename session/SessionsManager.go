@@ -6,7 +6,7 @@ import (
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
-	"github.com/OpenIoTHub/utils/mux"
+	"github.com/libp2p/go-yamux"
 	"log"
 	"net"
 	"time"
@@ -28,7 +28,7 @@ func (sess SessionsManager) GetSession(id string) (*Session, error) {
 	}
 }
 
-func (sess SessionsManager) GetStream(id string) (*mux.Stream, error) {
+func (sess SessionsManager) GetStream(id string) (*yamux.Stream, error) {
 	mysession, err := sess.GetSession(id)
 	if err != nil {
 		log.Println(err.Error())
@@ -64,7 +64,7 @@ func (sess SessionsManager) DelSession(id string) {
 
 //connHdl
 func (sess SessionsManager) connHdl(conn net.Conn) {
-	var session *mux.Session
+	var session *yamux.Session
 	var token *models.TokenClaims
 	var err error
 	rawMsg, err := msg.ReadMsg(conn)
@@ -87,9 +87,9 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			config := mux.DefaultConfig()
+			config := yamux.DefaultConfig()
 			//config.EnableKeepAlive = false
-			session, err = mux.Client(conn, config)
+			session, err = yamux.Client(conn, config)
 			if err != nil {
 				log.Println(err.Error())
 				conn.Close()
