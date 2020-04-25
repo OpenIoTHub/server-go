@@ -3,15 +3,15 @@ package io
 import (
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
-	"github.com/OpenIoTHub/utils/mux"
+	"github.com/libp2p/go-yamux"
 	"github.com/pkg/errors"
 	"log"
 	"time"
 )
 
-func CheckSession(muxSession *mux.Session) error {
+func CheckSession(muxSession *yamux.Session) error {
 	//:TODO 当这个内网被删除时退出重连
-	readPong := func(stream *mux.Stream) error {
+	readPong := func(stream *yamux.Stream) error {
 		defer stream.Close()
 		var ch = make(chan struct{}, 1)
 		go func() {
