@@ -4,13 +4,14 @@ os:
 language: go
 
 go:
-  - 1.11.x
+  - 1.14.x
 
 env:
   global:
-    - GOTFLAGS="-race"
-  matrix:
     - BUILD_DEPTYPE=gomod
+  matrix:
+    - GOTFLAGS="-race"
+    - GOTFLAGS="-count 5"
 
 
 # disable travis install
