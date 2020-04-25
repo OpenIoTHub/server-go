@@ -1,8 +1,7 @@
-# github.com/OpenIoTHub/utils v0.0.0-20200419073446-65f594ffa254
+# github.com/OpenIoTHub/utils v0.0.0-20200425162102-eb80342aa986
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
 github.com/OpenIoTHub/utils/msg
-github.com/OpenIoTHub/utils/mux
 github.com/OpenIoTHub/utils/net
 github.com/OpenIoTHub/utils/pool
 # github.com/cenkalti/backoff v2.2.1+incompatible

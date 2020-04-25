@@ -8,7 +8,6 @@ import (
 	"github.com/xtaci/kcp-go/v5"
 	"log"
 	"net"
-	"strconv"
 	"time"
 )
 
@@ -63,8 +62,7 @@ func connHdl(conn *kcp.UDPSession) {
 //获取一个listener的外部地址和端口
 func GetExternalIpPort(listener *net.UDPConn, token *models.TokenClaims) (*net.UDPAddr, error) {
 	//TODO：使用给定的Listener
-	//udpaddr, err := net.ResolveUDPAddr("udp", token.Host+":"+strconv.Itoa(token.P2PApiPort))
-	conn, err := kcp.NewConn(token.Host+":"+strconv.Itoa(token.P2PApiPort), nil, 10, 3, listener)
+	conn, err := kcp.NewConn(fmt.Sprintf("%s:%d", token.Host, token.P2PApiPort), nil, 10, 3, listener)
 	if err != nil {
 		fmt.Printf("%s", err.Error())
 		return nil, err
