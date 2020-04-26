@@ -1,12 +1,16 @@
 package session
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
+	"github.com/OpenIoTHub/utils/file"
 	"github.com/xtaci/kcp-go"
+	"golang.org/x/crypto/acme/autocert"
 	"log"
 	"net"
+	"net/http"
 	"os"
 )
 
@@ -52,6 +56,63 @@ func (sess SessionsManager) RunTLS(port int) {
 		return
 	}
 	sess.listenerHdl(listener)
+}
+
+func (sess SessionsManager) StartHttpListenAndServ() {
+	var err error
+	m := &autocert.Manager{
+		Prompt:     autocert.AcceptTOS,
+		HostPolicy: func(_ context.Context, host string) error { return nil },
+	}
+	dir := file.CacheDir()
+	if err := os.MkdirAll(dir, 0700); err != nil {
+		fmt.Printf("没有使用缓存目录来存放https证书: %v", err)
+	} else {
+		m.Cache = autocert.DirCache(dir)
+	}
+
+	go func() {
+		serverHttp := http.Server{
+			Addr:    fmt.Sprintf(":%s", config.DefaultHttpPort),
+			Handler: &sess,
+		}
+		fmt.Printf("请访问浏览器访问http://127.0.0.1:%s/查看管理界面\n", config.DefaultHttpPort)
+		err = serverHttp.ListenAndServe()
+		if err != nil {
+			log.Println(err.Error())
+			serverHttp := http.Server{
+				Addr:    fmt.Sprintf(":%s", "1083"),
+				Handler: &sess,
+			}
+			fmt.Printf("%s端口被占用，请访问http://127.0.0.1:1083/\n", config.DefaultHttpPort)
+			err = serverHttp.ListenAndServe()
+			if err != nil {
+				log.Println(err.Error())
+			}
+		}
+	}()
+
+	go func() {
+		serverHttps := http.Server{
+			Addr:      fmt.Sprintf(":%s", config.DefaultHttpsPort),
+			Handler:   &sess,
+			TLSConfig: m.TLSConfig(),
+		}
+		err = serverHttps.ListenAndServeTLS("", "")
+		if err != nil {
+			log.Println(err.Error())
+			serverHttps := http.Server{
+				Addr:      fmt.Sprintf(":%s", "1443"),
+				Handler:   &sess,
+				TLSConfig: m.TLSConfig(),
+			}
+			log.Println("1443端口被占用，请访问http://127.0.0.1:1443/")
+			err = serverHttps.ListenAndServeTLS("", "")
+			if err != nil {
+				log.Println(err.Error())
+			}
+		}
+	}()
 }
 
 ///////////////////////////
