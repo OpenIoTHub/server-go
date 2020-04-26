@@ -105,7 +105,7 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 	case *models.GatewayWorkConn:
 		{
 			//:TODO	内网主动新创建的用来接收数据传输业务的连接
-			log.Println("获取到一个内网主动发起的工作连接")
+			log.Println("获取到一个Gateway主动发起的工作连接")
 			session, err := sess.GetSession(m.RunId)
 			if err != nil {
 				conn.Close()
