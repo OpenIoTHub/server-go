@@ -12,3 +12,5 @@ var DefaultLoginKey = "HLLdsa544&*S"
 
 var DefaultHttpPort = 80
 var DefaultHttpsPort = 443
+
+var DefaultGrpcPort = 34322
