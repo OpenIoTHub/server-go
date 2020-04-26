@@ -35,12 +35,12 @@ func (sess SessionsManager) RunTCP(port int) {
 func (sess SessionsManager) RunTLS(port int) {
 	_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
 	if err != nil {
-		log.Println("warning:File Path:%s Not Exist! So tls server NOT Available!", config.ConfigMode.Security.TlsCertFilePath)
+		log.Printf("warning:File Path:%s Not Exist! So tls server NOT Available!", config.ConfigMode.Security.TlsCertFilePath)
 		return
 	}
 	_, err = os.Stat(config.ConfigMode.Security.TlsKeyFilePath)
 	if err != nil {
-		log.Println("warning:File Path:%s Not Exist!  So tls server NOT Available!", config.ConfigMode.Security.TlsKeyFilePath)
+		log.Printf("warning:File Path:%s Not Exist!  So tls server NOT Available!", config.ConfigMode.Security.TlsKeyFilePath)
 		return
 	}
 	cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)
@@ -73,10 +73,10 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 
 	go func() {
 		serverHttp := http.Server{
-			Addr:    fmt.Sprintf(":%s", config.DefaultHttpPort),
+			Addr:    fmt.Sprintf(":%d", config.DefaultHttpPort),
 			Handler: &sess,
 		}
-		fmt.Printf("请访问浏览器访问http://127.0.0.1:%s/查看管理界面\n", config.DefaultHttpPort)
+		fmt.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.DefaultHttpPort)
 		err = serverHttp.ListenAndServe()
 		if err != nil {
 			log.Println(err.Error())
@@ -84,7 +84,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 				Addr:    fmt.Sprintf(":%s", "1083"),
 				Handler: &sess,
 			}
-			fmt.Printf("%s端口被占用，请访问http://127.0.0.1:1083/\n", config.DefaultHttpPort)
+			fmt.Printf("%d端口被占用，请访问http://127.0.0.1:1083/\n", config.DefaultHttpPort)
 			err = serverHttp.ListenAndServe()
 			if err != nil {
 				log.Println(err.Error())
@@ -94,7 +94,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 
 	go func() {
 		serverHttps := http.Server{
-			Addr:      fmt.Sprintf(":%s", config.DefaultHttpsPort),
+			Addr:      fmt.Sprintf(":%d", config.DefaultHttpsPort),
 			Handler:   &sess,
 			TLSConfig: m.TLSConfig(),
 		}
