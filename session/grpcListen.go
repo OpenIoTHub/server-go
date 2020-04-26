@@ -17,7 +17,7 @@ func (sm *SessionsManager) StartgRpcListenAndServ() {
 	go func() {
 		s := grpc.NewServer()
 		pb.RegisterHttpManagerServer(s, sm)
-		lis, err := net.Listen("tcp", fmt.Sprintf(":%s", config.DefaultGrpcPort))
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.DefaultGrpcPort))
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 			return
