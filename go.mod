@@ -11,6 +11,7 @@ require (
 	github.com/templexxx/xor v0.0.0-20181023030647-4e92f724b73b // indirect
 	github.com/urfave/cli/v2 v2.1.1
 	github.com/xtaci/kcp-go v5.4.11+incompatible
+	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553
 	gopkg.in/yaml.v2 v2.2.4
 )
