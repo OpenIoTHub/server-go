@@ -95,7 +95,7 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			log.Println("新内网客户端登录： runId：" + token.RunId + " 系统：" + m.Os + "芯片架构：" + m.Arch)
+			log.Printf("新Gateway登录： runId：%s 系统：%s 芯片架构：%s", token.RunId, m.Os, m.Arch)
 			//sess[token.RunId]=session
 			session := &Session{Id: token.RunId, Conn: &conn, GatewaySession: session, WorkConn: make(chan net.Conn, 5)}
 			//:TODO 新的登录存储之前先清除旧的同id登录
@@ -127,7 +127,7 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			log.Println("新访问器登录上线： runId：" + token.RunId + " 系统：" + m.Os + "芯片架构：" + m.Arch)
+			log.Printf("新OpenIoTHub登录： runId：%s 系统：%s 芯片架构：%s", token.RunId, m.Os, m.Arch)
 			//sess[token.RunId]=session
 			//sess := &Session{Id: token.RunId, Conn: &conn, GatewaySession: session}
 			//SetSession(token.RunId, sess)
