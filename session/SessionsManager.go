@@ -12,23 +12,29 @@ import (
 	"time"
 )
 
-type SessionsManager map[string]*Session
+type SessionsManager struct {
+	Session      map[string]*Session
+	HttpProxyMap map[string]*HttpProxy
+}
 
-var SessionsCtl = make(SessionsManager)
+var SessionsCtl = SessionsManager{
+	Session:      make(map[string]*Session),
+	HttpProxyMap: make(map[string]*HttpProxy),
+}
 
-func (sess SessionsManager) GetSession(id string) (*Session, error) {
-	if _, ok := sess[id]; ok {
-		if sess[id].GatewaySession == nil || sess[id].GatewaySession.IsClosed() {
+func (sess *SessionsManager) GetSession(id string) (*Session, error) {
+	if _, ok := sess.Session[id]; ok {
+		if sess.Session[id].GatewaySession == nil || sess.Session[id].GatewaySession.IsClosed() {
 			sess.DelSession(id)
 			return nil, errors.New("Session 处于断线状态")
 		}
-		return sess[id], nil //存在
+		return sess.Session[id], nil //存在
 	} else {
 		return nil, errors.New("Session id未注册")
 	}
 }
 
-func (sess SessionsManager) GetStream(id string) (*yamux.Stream, error) {
+func (sess *SessionsManager) GetStream(id string) (*yamux.Stream, error) {
 	mysession, err := sess.GetSession(id)
 	if err != nil {
 		log.Println(err.Error())
@@ -44,26 +50,26 @@ func (sess SessionsManager) GetStream(id string) (*yamux.Stream, error) {
 	return stream, err
 }
 
-func (sess SessionsManager) SetSession(id string, session *Session) {
+func (sess *SessionsManager) SetSession(id string, session *Session) {
 	sess.DelSession(id)
-	sess[id] = session
+	sess.Session[id] = session
 }
 
-func (sess SessionsManager) DelSession(id string) {
-	if _, ok := sess[id]; ok {
-		if sess[id].GatewaySession != nil && !sess[id].GatewaySession.IsClosed() {
-			sess[id].GatewaySession.Close()
+func (sess *SessionsManager) DelSession(id string) {
+	if _, ok := sess.Session[id]; ok {
+		if sess.Session[id].GatewaySession != nil && !sess.Session[id].GatewaySession.IsClosed() {
+			sess.Session[id].GatewaySession.Close()
 		}
-		if sess[id].Conn != nil {
-			myconn := *sess[id].Conn
+		if sess.Session[id].Conn != nil {
+			myconn := *sess.Session[id].Conn
 			myconn.Close()
 		}
 	}
-	delete(sess, id)
+	delete(sess.Session, id)
 }
 
 //connHdl
-func (sess SessionsManager) connHdl(conn net.Conn) {
+func (sess *SessionsManager) connHdl(conn net.Conn) {
 	var session *yamux.Session
 	var token *models.TokenClaims
 	var err error
@@ -143,7 +149,7 @@ func (sess SessionsManager) connHdl(conn net.Conn) {
 }
 
 //访问器的登录处理 conn : 访问器 stream ： 内网端
-func (sess SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
+func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 	resp := func(err error) {
 		code := 0
 		msgStr := ""
