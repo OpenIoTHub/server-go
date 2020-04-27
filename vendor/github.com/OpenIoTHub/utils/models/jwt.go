@@ -19,22 +19,22 @@ type TokenClaims struct {
 	jwt.StandardClaims
 }
 
-func GetToken(salt, id, host string, tcpPort, kcpPort, tlsPort, p2pApiPort, permission int, expiresecd int64) (token string, err error) {
+func GetToken(gatewayConfig GatewayConfig, permission int, expiresecd int64) (token string, err error) {
 	tokenModel := jwt.NewWithClaims(jwt.SigningMethodHS256, TokenClaims{
-		id,
-		host,
-		tcpPort,
-		kcpPort,
-		tlsPort,
-		12345,
-		p2pApiPort,
+		gatewayConfig.LastId,
+		gatewayConfig.Server.ServerHost,
+		gatewayConfig.Server.TcpPort,
+		gatewayConfig.Server.KcpPort,
+		gatewayConfig.Server.TlsPort,
+		gatewayConfig.Server.GrpcPort,
+		gatewayConfig.Server.UdpApiPort,
 		permission,
 		jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 8*60*60,
 			ExpiresAt: time.Now().Unix() + expiresecd,
 		},
 	})
-	tokenStr, err := tokenModel.SignedString([]byte(salt))
+	tokenStr, err := tokenModel.SignedString([]byte(gatewayConfig.Server.LoginKey))
 	if err != nil {
 		fmt.Printf(err.Error())
 		return "", err
