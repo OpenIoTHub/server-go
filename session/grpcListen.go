@@ -9,15 +9,11 @@ import (
 	"net"
 )
 
-func init() {
-	SessionsCtl.StartgRpcListenAndServ()
-}
-
 func (sm *SessionsManager) StartgRpcListenAndServ() {
 	go func() {
 		s := grpc.NewServer()
 		pb.RegisterHttpManagerServer(s, sm)
-		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.DefaultGrpcPort))
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.ConfigMode.Common.GrpcPort))
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 			return

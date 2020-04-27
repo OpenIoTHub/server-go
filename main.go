@@ -55,9 +55,11 @@ func run() (err error) {
 		log.Println(err)
 		return
 	}
-	go session.SessionsCtl.RunTLS(config.ConfigMode.Common.TlsPort)
-	go session.SessionsCtl.RunTCP(config.ConfigMode.Common.TcpPort)
-	go session.SessionsCtl.RunKCP(config.ConfigMode.Common.KcpPort)
+	go session.SessionsCtl.RunTLS()
+	go session.SessionsCtl.RunTCP()
+	go session.SessionsCtl.RunKCP()
+	go session.SessionsCtl.StartgRpcListenAndServ()
+	go session.SessionsCtl.StartHttpListenAndServ()
 	go nettool.RunApiServer(config.ConfigMode.Common.UdpApiPort)
 	log.Println("服务器正在运行，内网端配置请根据本服务器配置填写！")
 	return

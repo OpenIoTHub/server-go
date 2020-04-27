@@ -7,18 +7,13 @@ import (
 	"time"
 )
 
-//func init() {
-//	Salt = config.DefaultConnectToServerKey
-//}
-
-//var Salt string
-
 type TokenClaims struct {
 	RunId      string
 	Host       string
 	TcpPort    int
 	KcpPort    int
 	TlsPort    int
+	GrpcPort   int
 	P2PApiPort int
 	Permission int
 	jwt.StandardClaims
@@ -31,6 +26,7 @@ func GetToken(salt, id, host string, tcpPort, kcpPort, tlsPort, p2pApiPort, perm
 		tcpPort,
 		kcpPort,
 		tlsPort,
+		12345,
 		p2pApiPort,
 		permission,
 		jwt.StandardClaims{
