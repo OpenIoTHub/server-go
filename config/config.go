@@ -25,6 +25,9 @@ func LoadConfig() (err error) {
 		ConfigMode.Common.KcpPort = DefaultKcpPort
 		ConfigMode.Common.TcpPort = DefaultTcpPort
 		ConfigMode.Common.TlsPort = DefaultTlsPort
+		ConfigMode.Common.GrpcPort = DefaultGrpcPort
+		ConfigMode.Common.HttpPort = DefaultHttpPort
+		ConfigMode.Common.HttpsPort = DefaultHttpsPort
 		ConfigMode.Common.UdpApiPort = DefaultUdpApiPort
 		ConfigMode.Security.LoginKey = DefaultLoginKey
 		//	生成配置文件模板

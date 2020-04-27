@@ -10,49 +10,50 @@ var (
 	TypeMap       = make(map[string]reflect.Type)
 	TypeStringMap = make(map[reflect.Type]string)
 
-	Types = []reflect.Type{
+	Types = []interface{}{
 		//服务器需要处理的消息
-		reflect.TypeOf(GatewayLogin{}),
-		reflect.TypeOf(GatewayWorkConn{}),
-		reflect.TypeOf(OpenIoTHubLogin{}),
+		GatewayLogin{},
+		GatewayWorkConn{},
+		OpenIoTHubLogin{},
 		//连接的消息
-		reflect.TypeOf(ConnectTCP{}),
-		reflect.TypeOf(ConnectSTCP{}),
-		reflect.TypeOf(ConnectUDP{}),
-		reflect.TypeOf(ConnectWs{}),
-		reflect.TypeOf(ConnectWss{}),
-		reflect.TypeOf(ConnectSerialPort{}),
-		reflect.TypeOf(ConnectSSH{}),
+		ConnectTCP{},
+		ConnectSTCP{},
+		ConnectUDP{},
+		ConnectWs{},
+		ConnectWss{},
+		ConnectSerialPort{},
+		ConnectSSH{},
 		//P2P相关的消息
-		reflect.TypeOf(NewSubSession{}),
-		reflect.TypeOf(ReqNewP2PCtrl{}),
-		reflect.TypeOf(RemoteNetInfo{}),
-		reflect.TypeOf(ReqNewP2PCtrlAsClient{}),
+		NewSubSession{},
+		ReqNewP2PCtrl{},
+		RemoteNetInfo{},
+		ReqNewP2PCtrlAsClient{},
 		//状态验证消息
-		reflect.TypeOf(CheckStatusRequest{}),
-		reflect.TypeOf(CheckStatusResponse{}),
+		CheckStatusRequest{},
+		CheckStatusResponse{},
 		//新的服务
-		reflect.TypeOf(NewService{}),
-		reflect.TypeOf(RequestNewWorkConn{}),
+		NewService{},
+		RequestNewWorkConn{},
 
 		// UDP API
-		reflect.TypeOf(GetMyUDPPublicAddr{}),
-		reflect.TypeOf(net.UDPAddr{}),
+		GetMyUDPPublicAddr{},
+		net.UDPAddr{},
 
-		reflect.TypeOf(Ping{}),
-		reflect.TypeOf(Pong{}),
+		Ping{},
+		Pong{},
 
-		reflect.TypeOf(OK{}),
-		reflect.TypeOf(Error{}),
+		OK{},
+		Error{},
 
-		reflect.TypeOf(JsonResponse{}),
+		JsonResponse{},
 	}
 )
 
 func init() {
 	for _, v := range Types {
-		TypeMap[v.String()] = v
-		TypeStringMap[v] = v.String()
+		reflectType := reflect.TypeOf(v)
+		TypeMap[reflectType.String()] = reflectType
+		TypeStringMap[reflectType] = reflectType.String()
 	}
 }
 

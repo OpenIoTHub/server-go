@@ -7,11 +7,11 @@ import (
 	"reflect"
 )
 
-func unpack(typeByte string, buffer []byte, msgIn models.Message) (msg models.Message, err error) {
+func unpack(typeStr string, buffer []byte, msgIn models.Message) (msg models.Message, err error) {
 	if msgIn == nil {
-		t, ok := models.TypeMap[typeByte]
+		t, ok := models.TypeMap[typeStr]
 		if !ok {
-			err = fmt.Errorf("Unsupported message type %b", typeByte)
+			err = fmt.Errorf("Unsupported message type %b", typeStr)
 			return
 		}
 
@@ -29,6 +29,6 @@ func UnPackInto(buffer []byte, msg models.Message) (err error) {
 	return
 }
 
-func UnPack(typeByte string, buffer []byte) (msg models.Message, err error) {
-	return unpack(typeByte, buffer, nil)
+func UnPack(typeStr string, buffer []byte) (msg models.Message, err error) {
+	return unpack(typeStr, buffer, nil)
 }

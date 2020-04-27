@@ -14,8 +14,8 @@ import (
 	"os"
 )
 
-func (sess SessionsManager) RunKCP(port int) {
-	listener, err := kcp.ListenWithOptions(fmt.Sprintf(":%d", port), nil, 10, 3)
+func (sess SessionsManager) RunKCP() {
+	listener, err := kcp.ListenWithOptions(fmt.Sprintf(":%d", config.ConfigMode.Common.KcpPort), nil, 10, 3)
 	if err != nil {
 		log.Println(err)
 		return
@@ -23,8 +23,8 @@ func (sess SessionsManager) RunKCP(port int) {
 	sess.kcpListenerHdl(listener)
 }
 
-func (sess SessionsManager) RunTCP(port int) {
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+func (sess SessionsManager) RunTCP() {
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", config.ConfigMode.Common.TcpPort))
 	if err != nil {
 		log.Println(err)
 		return
@@ -32,7 +32,7 @@ func (sess SessionsManager) RunTCP(port int) {
 	sess.listenerHdl(listener)
 }
 
-func (sess SessionsManager) RunTLS(port int) {
+func (sess SessionsManager) RunTLS() {
 	_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
 	if err != nil {
 		log.Printf("warning:File Path:%s Not Exist! So tls server NOT Available!", config.ConfigMode.Security.TlsCertFilePath)
@@ -50,7 +50,7 @@ func (sess SessionsManager) RunTLS(port int) {
 		return
 	}
 	tlsConfig := &tls.Config{Certificates: []tls.Certificate{cer}}
-	listener, err := tls.Listen("tcp", fmt.Sprintf(":%d", port), tlsConfig)
+	listener, err := tls.Listen("tcp", fmt.Sprintf(":%d", config.ConfigMode.Common.TlsPort), tlsConfig)
 	if err != nil {
 		log.Println(err)
 		return
@@ -76,7 +76,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 			Addr:    fmt.Sprintf(":%d", config.DefaultHttpPort),
 			Handler: &sess,
 		}
-		fmt.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.DefaultHttpPort)
+		fmt.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.ConfigMode.Common.HttpPort)
 		err = serverHttp.ListenAndServe()
 		if err != nil {
 			log.Println(err.Error())
@@ -94,7 +94,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 
 	go func() {
 		serverHttps := http.Server{
-			Addr:      fmt.Sprintf(":%d", config.DefaultHttpsPort),
+			Addr:      fmt.Sprintf(":%d", config.ConfigMode.Common.HttpsPort),
 			Handler:   &sess,
 			TLSConfig: m.TLSConfig(),
 		}

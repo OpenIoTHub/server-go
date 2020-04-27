@@ -1,7 +1,7 @@
 package models
 
-type ClientConfig struct {
-	ExplorerTokenHttpPort int `yaml:"explorer_token_http_port"`
+type GatewayConfig struct {
+	ExplorerTokenHttpPort int `yaml:"http_api_port"`
 	Server                Srever
 	LastId                string `yaml:"last_id"`
 }
@@ -13,6 +13,7 @@ type Srever struct {
 	KcpPort        int    `yaml:"kcp_port"`
 	UdpApiPort     int    `yaml:"udp_p2p_port"`
 	TlsPort        int    `yaml:"tls_port"`
+	GrpcPort       int    `yaml:"grpc_port"`
 	LoginKey       string `yaml:"login_key"`
 }
 
@@ -23,6 +24,9 @@ type ServerConfig struct {
 		KcpPort    int    `yaml:"kcp_port"`
 		UdpApiPort int    `yaml:"udp_p2p_port"`
 		TlsPort    int    `yaml:"tls_port"`
+		GrpcPort   int    `yaml:"grpc_port"`
+		HttpPort   int    `yaml:"http_port"`
+		HttpsPort  int    `yaml:"https_port"`
 	}
 	Security struct {
 		LoginKey          string `yaml:"login_key"`
@@ -31,16 +35,4 @@ type ServerConfig struct {
 		HttpsCertFilePath string `yaml:"https_cert_file_path"`
 		HttpsKeyFilePath  string `yaml:"https_key_file_path"`
 	}
-}
-
-type ClientFlat struct {
-	ExplorerTokenHttpPort int    `yaml:"explorer_token_http_port"`
-	LastId                string `yaml:"last_id"`
-	ConnectionType        string `yaml:"connection_type"`
-	ServerHost            string `yaml:"server_host"`
-	TcpPort               string `yaml:"tcp_port"`
-	KcpPort               string `yaml:"kcp_port"`
-	UdpApiPort            string `yaml:"udp_p2p_port"`
-	TlsPort               string `yaml:"tls_port"`
-	LoginKey              string `yaml:"login_key"`
 }
