@@ -36,9 +36,9 @@ archives:
     386: i386
     amd64: x86_64
 checksum:
-  file_name_template: 'checksums.txt'
+  - file_name_template: 'checksums.txt'
 snapshot:
-  file_name_template: "{{ .Tag }}-next"
+  - file_name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
