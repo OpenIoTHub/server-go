@@ -1,11 +1,14 @@
 common:
-  bind_addr: "0.0.0.0"
+  bind_addr: 0.0.0.0
   tcp_port: 34320
   kcp_port: 34320
   udp_p2p_port: 34321
   tls_port: 34321
+  grpc_port: 34322
+  http_port: 80
+  https_port: 443
 security:
-  login_key: "HLLdsa544&*S"
+  login_key: HLLdsa544&*S
   tls_Cert_file_path: ""
   tls_key_file_path: ""
   https_cert_file_path: ""

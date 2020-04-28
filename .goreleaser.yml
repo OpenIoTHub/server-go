@@ -36,9 +36,9 @@ archives:
     386: i386
     amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  file_name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  file_name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
@@ -62,7 +62,7 @@ scoop:
   description: OpenIoTHub Server.
   license: MIT
 nfpms:
-  - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
+  - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
     homepage:  https://github.com/OpenIoTHub
     description: OpenIoTHub Server
     maintainer: OpenIoTHub <newfarry@126.com>
@@ -72,7 +72,7 @@ nfpms:
       - deb
       - rpm
 snapcrafts:
-  - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
+  - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
     summary: OpenIoTHub Server.
     description: |
       OpenIoTHub Server
