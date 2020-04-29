@@ -69,7 +69,7 @@ func WriteMsg(c io.Writer, msg interface{}) (err error) {
 	if c == nil {
 		return fmt.Errorf("写入消息的连接为nil")
 	}
-	typeString, ok := models.TypeStringMap[reflect.TypeOf(msg).Elem()]
+	typeString, ok := models.TypeStringMap[reflect.TypeOf(msg)]
 	if !ok {
 		return errors.New("message type not found")
 	}
