@@ -15,7 +15,7 @@ require (
 	github.com/Azure/go-autorest/autorest/to v0.3.0 // indirect
 	github.com/Azure/go-autorest/autorest/validation v0.2.0 // indirect
 	github.com/OpenIoTHub/grpc-api v0.0.0-20200426140008-076e7f18a1e2
-	github.com/OpenIoTHub/utils v0.0.0-20200427165850-2bada5984ef6
+	github.com/OpenIoTHub/utils v0.0.0-20200429154946-9ecf9fee46a2
 	github.com/apex/log v1.1.4 // indirect
 	github.com/aws/aws-sdk-go v1.30.15 // indirect
 	github.com/google/wire v0.4.0 // indirect
