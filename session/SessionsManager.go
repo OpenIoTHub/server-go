@@ -112,8 +112,11 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 		{
 			//:TODO	内网主动新创建的用来接收数据传输业务的连接
 			log.Println("获取到一个Gateway主动发起的工作连接")
+			log.Println(m.RunId)
+			log.Println(m.Secret)
 			session, err := sess.GetSession(m.RunId)
 			if err != nil {
+				log.Println(err)
 				conn.Close()
 				return
 			}
@@ -156,13 +159,14 @@ func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 		if err != nil {
 			code = 1
 			msgStr = err.Error()
+			defer conn.Close()
 		}
 		msg.WriteMsg(conn, &models.CheckStatusResponse{
 			Code:    code,
 			Message: msgStr,
 		})
 		time.Sleep(time.Millisecond * 100)
-		conn.Close()
+
 	}
 	var workConn net.Conn
 	stream, err := sess.GetStream(id)

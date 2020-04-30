@@ -51,7 +51,7 @@ func connHdl(conn *kcp.UDPSession) {
 		{
 			//:TODO 为什么重连会跑到
 			log.Println("从端口获取两种登录类别之一错误")
-			_ = msg.WriteMsg(conn, models.Error{
+			_ = msg.WriteMsg(conn, &models.Error{
 				Code:    1,
 				Message: "未实现的UDP API",
 			})
@@ -75,7 +75,7 @@ func GetExternalIpPort(listener *net.UDPConn, token *models.TokenClaims) (*net.U
 		return nil, err
 	}
 
-	err = msg.WriteMsg(conn, models.GetMyUDPPublicAddr{})
+	err = msg.WriteMsg(conn, &models.GetMyUDPPublicAddr{})
 	if err != nil {
 		fmt.Printf("%s", err.Error())
 		return nil, err

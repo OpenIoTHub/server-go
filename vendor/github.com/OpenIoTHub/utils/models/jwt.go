@@ -20,6 +20,16 @@ type TokenClaims struct {
 }
 
 func GetToken(gatewayConfig GatewayConfig, permission int, expiresecd int64) (token string, err error) {
+	fmt.Println("Get Token:")
+	fmt.Println(
+		gatewayConfig.LastId,
+		gatewayConfig.Server.ServerHost,
+		gatewayConfig.Server.TcpPort,
+		gatewayConfig.Server.KcpPort,
+		gatewayConfig.Server.TlsPort,
+		gatewayConfig.Server.GrpcPort,
+		gatewayConfig.Server.UdpApiPort,
+	)
 	tokenModel := jwt.NewWithClaims(jwt.SigningMethodHS256, TokenClaims{
 		gatewayConfig.LastId,
 		gatewayConfig.Server.ServerHost,
