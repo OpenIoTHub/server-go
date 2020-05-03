@@ -117,7 +117,7 @@ type Ping struct{}
 type Pong struct{}
 
 //P2P让远端以listener身份运行
-type ReqNewP2PCtrl struct {
+type ReqNewP2PCtrlAsServer struct {
 	IntranetIp   string
 	IntranetPort int
 	ExternalIp   string
