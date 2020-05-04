@@ -242,23 +242,31 @@ func New(dataShards, parityShards int, opts ...Option) (Encoder, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Calculate what we want per round
+	r.o.perRound = cpuid.CPU.Cache.L2
+	if r.o.perRound <= 0 {
+		// Set to 128K if undetectable.
+		r.o.perRound = 128 << 10
+	}
+
+	if cpuid.CPU.ThreadsPerCore > 1 && r.o.maxGoroutines > cpuid.CPU.PhysicalCores {
+		// If multiple threads per core, make sure they don't contend for cache.
+		r.o.perRound /= cpuid.CPU.ThreadsPerCore
+	}
+	// 1 input + parity must fit in cache, and we add one more to be safer.
+	r.o.perRound = r.o.perRound / (1 + parityShards)
+	// Align to 64 bytes.
+	r.o.perRound = ((r.o.perRound + 63) / 64) * 64
+
+	if r.o.perRound < r.o.minSplitSize {
+		r.o.perRound = r.o.minSplitSize
+	}
+
 	if r.o.shardSize > 0 {
-		cacheSize := cpuid.CPU.Cache.L2
-		if cacheSize <= 0 {
-			// Set to 128K if undetectable.
-			cacheSize = 128 << 10
-		}
 		p := runtime.NumCPU()
+		g := r.o.shardSize / r.o.perRound
 
-		// 1 input + parity must fit in cache, and we add one more to be safer.
-		shards := 1 + parityShards
-		g := (r.o.shardSize * shards) / (cacheSize - (cacheSize >> 4))
-
-		if cpuid.CPU.ThreadsPerCore > 1 {
-			// If multiple threads per core, make sure they don't contend for cache.
-			g *= cpuid.CPU.ThreadsPerCore
-		}
-		g *= 2
 		if g < p {
 			g = p
 		}
@@ -268,6 +276,20 @@ func New(dataShards, parityShards int, opts ...Option) (Encoder, error) {
 		g -= g % p
 
 		r.o.maxGoroutines = g
+	}
+
+	if r.o.minSplitSize <= 0 {
+		// Set minsplit as high as we can, but still have parity in L1.
+		cacheSize := cpuid.CPU.Cache.L1D
+		if cacheSize <= 0 {
+			cacheSize = 32 << 10
+		}
+
+		r.o.minSplitSize = cacheSize / (parityShards + 1)
+		// Min 1K
+		if r.o.minSplitSize < 1024 {
+			r.o.minSplitSize = 1024
+		}
 	}
 
 	// Inverted matrices are cached in a tree keyed by the indices
@@ -437,21 +459,38 @@ func (r reedSolomon) Verify(shards [][]byte) (bool, error) {
 // number of matrix rows used, is determined by
 // outputCount, which is the number of outputs to compute.
 func (r reedSolomon) codeSomeShards(matrixRows, inputs, outputs [][]byte, outputCount, byteCount int) {
-	if r.o.useAVX512 && len(inputs) >= 4 && len(outputs) >= 2 {
+	switch {
+	case r.o.useAVX512 && r.o.maxGoroutines > 1 && byteCount > r.o.minSplitSize && len(inputs) >= 4 && len(outputs) >= 2:
+		r.codeSomeShardsAvx512P(matrixRows, inputs, outputs, outputCount, byteCount)
+		return
+	case r.o.useAVX512 && len(inputs) >= 4 && len(outputs) >= 2:
 		r.codeSomeShardsAvx512(matrixRows, inputs, outputs, outputCount, byteCount)
 		return
-	} else if r.o.maxGoroutines > 1 && byteCount > r.o.minSplitSize {
+	case r.o.maxGoroutines > 1 && byteCount > r.o.minSplitSize:
 		r.codeSomeShardsP(matrixRows, inputs, outputs, outputCount, byteCount)
 		return
 	}
-	for c := 0; c < r.DataShards; c++ {
-		in := inputs[c]
-		for iRow := 0; iRow < outputCount; iRow++ {
-			if c == 0 {
-				galMulSlice(matrixRows[iRow][c], in, outputs[iRow], &r.o)
-			} else {
-				galMulSliceXor(matrixRows[iRow][c], in, outputs[iRow], &r.o)
+
+	// Process using no goroutines
+	start, end := 0, r.o.perRound
+	if end > len(inputs[0]) {
+		end = len(inputs[0])
+	}
+	for start < len(inputs[0]) {
+		for c := 0; c < r.DataShards; c++ {
+			in := inputs[c][start:end]
+			for iRow := 0; iRow < outputCount; iRow++ {
+				if c == 0 {
+					galMulSlice(matrixRows[iRow][c], in, outputs[iRow][start:end], &r.o)
+				} else {
+					galMulSliceXor(matrixRows[iRow][c], in, outputs[iRow][start:end], &r.o)
+				}
 			}
+		}
+		start = end
+		end += r.o.perRound
+		if end > len(inputs[0]) {
+			end = len(inputs[0])
 		}
 	}
 }
@@ -471,16 +510,28 @@ func (r reedSolomon) codeSomeShardsP(matrixRows, inputs, outputs [][]byte, outpu
 		if start+do > byteCount {
 			do = byteCount - start
 		}
+
 		wg.Add(1)
 		go func(start, stop int) {
-			for c := 0; c < r.DataShards; c++ {
-				in := inputs[c][start:stop]
-				for iRow := 0; iRow < outputCount; iRow++ {
-					if c == 0 {
-						galMulSlice(matrixRows[iRow][c], in, outputs[iRow][start:stop], &r.o)
-					} else {
-						galMulSliceXor(matrixRows[iRow][c], in, outputs[iRow][start:stop], &r.o)
+			lstart, lstop := start, start+r.o.perRound
+			if lstop > stop {
+				lstop = stop
+			}
+			for lstart < stop {
+				for c := 0; c < r.DataShards; c++ {
+					in := inputs[c][lstart:lstop]
+					for iRow := 0; iRow < outputCount; iRow++ {
+						if c == 0 {
+							galMulSlice(matrixRows[iRow][c], in, outputs[iRow][lstart:lstop], &r.o)
+						} else {
+							galMulSliceXor(matrixRows[iRow][c], in, outputs[iRow][lstart:lstop], &r.o)
+						}
 					}
+				}
+				lstart = lstop
+				lstop += r.o.perRound
+				if lstop > stop {
+					lstop = stop
 				}
 			}
 			wg.Done()
