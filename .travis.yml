@@ -18,13 +18,13 @@ addons:
 services:
 - docker
 after_success:
-- test -n "$TRAVIS_TAG" && docker login -u=openiothub -p="$DOCKER_PASSWORD"
-- test -n "$TRAVIS_TAG" && snapcraft login --with snap.login
-- test -n "$TRAVIS_TAG" && rm snap.login
+- docker login -u=openiothub -p="$DOCKER_PASSWORD"
+- snapcraft login --with snap.login
+- rm snap.login
 deploy:
 - provider: script
   skip_cleanup: true
-  script: curl -sL https://git.io/goreleaser | bash
+  script: git checkout . && curl -sL https://git.io/goreleaser | bash
   on:
     tags: true
     condition: "$TRAVIS_OS_NAME = linux"
