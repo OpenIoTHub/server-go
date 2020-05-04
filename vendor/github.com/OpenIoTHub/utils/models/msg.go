@@ -25,8 +25,8 @@ var (
 		ConnectSSH{},
 		//P2P相关的消息
 		NewSubSession{},
-		ReqNewP2PCtrl{},
 		RemoteNetInfo{},
+		ReqNewP2PCtrlAsServer{},
 		ReqNewP2PCtrlAsClient{},
 		//状态验证消息
 		CheckStatusRequest{},
