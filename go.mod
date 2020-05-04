@@ -7,7 +7,7 @@ require (
 	github.com/OpenIoTHub/utils v0.0.12
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/iotdevice/zeroconf v0.1.2 // indirect
-	github.com/klauspost/reedsolomon v1.9.5 // indirect
+	github.com/klauspost/reedsolomon v1.9.4 // indirect
 	github.com/libp2p/go-yamux v1.3.6
 	github.com/miekg/dns v1.1.29 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
