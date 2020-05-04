@@ -28,6 +28,7 @@ const (
 	IKCP_THRESH_MIN  = 2
 	IKCP_PROBE_INIT  = 7000   // 7 secs to probe window size
 	IKCP_PROBE_LIMIT = 120000 // up to 120 secs to probe window
+	IKCP_SN_OFFSET   = 12
 )
 
 // monotonic reference time point
@@ -1050,4 +1051,20 @@ func (kcp *KCP) remove_front(q []segment, n int) []segment {
 		return q[:newn]
 	}
 	return q[n:]
+}
+
+// Release all cached outgoing segments
+func (kcp *KCP) ReleaseTX() {
+	for k := range kcp.snd_queue {
+		if kcp.snd_queue[k].data != nil {
+			xmitBuf.Put(kcp.snd_queue[k].data)
+		}
+	}
+	for k := range kcp.snd_buf {
+		if kcp.snd_buf[k].data != nil {
+			xmitBuf.Put(kcp.snd_buf[k].data)
+		}
+	}
+	kcp.snd_queue = nil
+	kcp.snd_buf = nil
 }

@@ -16,22 +16,24 @@ type options struct {
 	usePAR1Matrix                         bool
 	useCauchy                             bool
 	shardSize                             int
+	perRound                              int
 }
 
 var defaultOptions = options{
 	maxGoroutines: 384,
-	minSplitSize:  1024,
+	minSplitSize:  -1,
+
+	// Detect CPU capabilities.
+	useSSSE3:  cpuid.CPU.SSSE3(),
+	useSSE2:   cpuid.CPU.SSE2(),
+	useAVX2:   cpuid.CPU.AVX2(),
+	useAVX512: cpuid.CPU.AVX512F() && cpuid.CPU.AVX512BW(),
 }
 
 func init() {
 	if runtime.GOMAXPROCS(0) <= 1 {
 		defaultOptions.maxGoroutines = 1
 	}
-	// Detect CPU capabilities.
-	defaultOptions.useSSSE3 = cpuid.CPU.SSSE3()
-	defaultOptions.useSSE2 = cpuid.CPU.SSE2()
-	defaultOptions.useAVX2 = cpuid.CPU.AVX2()
-	defaultOptions.useAVX512 = cpuid.CPU.AVX512F() && cpuid.CPU.AVX512BW() && amd64
 }
 
 // WithMaxGoroutines is the maximum number of goroutines number for encoding & decoding.
@@ -61,6 +63,7 @@ func WithAutoGoroutines(shardSize int) Option {
 }
 
 // WithMinSplitSize is the minimum encoding size in bytes per goroutine.
+// By default this parameter is determined by CPU cache characteristics.
 // See WithMaxGoroutines on how jobs are split.
 // If n <= 0, it is ignored.
 func WithMinSplitSize(n int) Option {
@@ -71,7 +74,7 @@ func WithMinSplitSize(n int) Option {
 	}
 }
 
-func withSSE3(enabled bool) Option {
+func withSSSE3(enabled bool) Option {
 	return func(o *options) {
 		o.useSSSE3 = enabled
 	}
