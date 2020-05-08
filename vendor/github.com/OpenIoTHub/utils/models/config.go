@@ -1,20 +1,20 @@
 package models
 
 type GatewayConfig struct {
-	ExplorerTokenHttpPort int `yaml:"http_api_port"`
-	Server                Srever
+	ConnectionType        string `yaml:"connection_type"`
 	LastId                string `yaml:"last_id"`
+	ExplorerTokenHttpPort int    `yaml:"http_api_port"`
+	Server                Srever
 }
 
 type Srever struct {
-	ConnectionType string `yaml:"connection_type"`
-	ServerHost     string `yaml:"server_host"`
-	TcpPort        int    `yaml:"tcp_port"`
-	KcpPort        int    `yaml:"kcp_port"`
-	UdpApiPort     int    `yaml:"udp_p2p_port"`
-	TlsPort        int    `yaml:"tls_port"`
-	GrpcPort       int    `yaml:"grpc_port"`
-	LoginKey       string `yaml:"login_key"`
+	ServerHost string `yaml:"server_host"`
+	TcpPort    int    `yaml:"tcp_port"`
+	KcpPort    int    `yaml:"kcp_port"`
+	UdpApiPort int    `yaml:"udp_p2p_port"`
+	TlsPort    int    `yaml:"tls_port"`
+	GrpcPort   int    `yaml:"grpc_port"`
+	LoginKey   string `yaml:"login_key"`
 }
 
 type ServerConfig struct {

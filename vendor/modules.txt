@@ -1,6 +1,6 @@
 # github.com/OpenIoTHub/grpc-api v0.0.0-20200427072713-117370265662
 github.com/OpenIoTHub/grpc-api/pb-go
-# github.com/OpenIoTHub/utils v0.0.12
+# github.com/OpenIoTHub/utils v0.0.26
 github.com/OpenIoTHub/utils/file
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
@@ -26,9 +26,9 @@ github.com/golang/snappy
 github.com/iotdevice/zeroconf
 # github.com/jacobsa/go-serial v0.0.0-20180131005756-15cf729a72d4
 github.com/jacobsa/go-serial/serial
-# github.com/klauspost/cpuid v1.2.4
+# github.com/klauspost/cpuid v1.2.2
 github.com/klauspost/cpuid
-# github.com/klauspost/reedsolomon v1.9.5
+# github.com/klauspost/reedsolomon v1.9.4
 github.com/klauspost/reedsolomon
 # github.com/libp2p/go-buffer-pool v0.0.2
 github.com/libp2p/go-buffer-pool
