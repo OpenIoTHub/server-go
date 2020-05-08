@@ -1,3 +1,7 @@
+cache:
+  directories:
+    - $GOPATH/pkg/mod
+    - $HOME/.cache/go-build
 language: go
 go: 1.14.x
 env:

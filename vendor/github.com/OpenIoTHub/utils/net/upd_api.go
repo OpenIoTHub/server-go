@@ -68,7 +68,6 @@ func GetExternalIpPort(listener *net.UDPConn, token *models.TokenClaims) (*net.U
 		return nil, err
 	}
 	defer conn.Close()
-
 	err = conn.SetDeadline(time.Now().Add(time.Duration(3 * time.Second)))
 	if err != nil {
 		fmt.Printf("%s", err.Error())
@@ -92,6 +91,7 @@ func GetExternalIpPort(listener *net.UDPConn, token *models.TokenClaims) (*net.U
 	switch m := addr.(type) {
 	case *net.UDPAddr:
 		{
+			log.Printf("GetExternalIpPort:IP:%s,Port:%d", m.IP, m.Port)
 			return m, err
 		}
 
