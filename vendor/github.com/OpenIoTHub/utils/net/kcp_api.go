@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func RunApiServer(port int) {
+func RunKCPApiServer(port int) {
 	//listener, err := net.ListenUDP("udp", &net.UDPAddr{IP: net.ParseIP("0.0.0.0"), Port: port})
 	listener, err := kcp.ListenWithOptions(fmt.Sprintf("0.0.0.0:%d", port), nil, 10, 3)
 	if err != nil {
@@ -29,11 +29,11 @@ func kcpListenerHdl(listener *kcp.Listener) {
 			log.Println(err)
 			continue
 		}
-		go connHdl(conn)
+		go kcpConnHdl(conn)
 	}
 }
 
-func connHdl(conn *kcp.UDPSession) {
+func kcpConnHdl(conn *kcp.UDPSession) {
 	//defer conn.Close()
 	remoteAddr := conn.RemoteAddr().(*net.UDPAddr)
 	rawMsg, err := msg.ReadMsg(conn)
@@ -60,9 +60,9 @@ func connHdl(conn *kcp.UDPSession) {
 }
 
 //获取一个listener的外部地址和端口
-func GetExternalIpPort(listener *net.UDPConn, token *models.TokenClaims) (*net.UDPAddr, error) {
+func GetExternalIpPortByKCP(listener *net.UDPConn, token *models.TokenClaims) (*net.UDPAddr, error) {
 	//TODO：使用给定的Listener
-	conn, err := kcp.NewConn(fmt.Sprintf("%s:%d", token.Host, token.P2PApiPort), nil, 10, 3, listener)
+	conn, err := kcp.NewConn(fmt.Sprintf("%s:%d", token.Host, token.KCPApiPort), nil, 10, 3, listener)
 	if err != nil {
 		fmt.Printf("%s", err.Error())
 		return nil, err

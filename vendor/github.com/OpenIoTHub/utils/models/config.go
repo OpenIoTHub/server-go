@@ -12,6 +12,7 @@ type Srever struct {
 	TcpPort    int    `yaml:"tcp_port"`
 	KcpPort    int    `yaml:"kcp_port"`
 	UdpApiPort int    `yaml:"udp_p2p_port"`
+	KcpApiPort int    `yaml:"kcp_p2p_port"`
 	TlsPort    int    `yaml:"tls_port"`
 	GrpcPort   int    `yaml:"grpc_port"`
 	LoginKey   string `yaml:"login_key"`
@@ -23,6 +24,7 @@ type ServerConfig struct {
 		TcpPort    int    `yaml:"tcp_port"`
 		KcpPort    int    `yaml:"kcp_port"`
 		UdpApiPort int    `yaml:"udp_p2p_port"`
+		KcpApiPort int    `yaml:"kcp_p2p_port"`
 		TlsPort    int    `yaml:"tls_port"`
 		GrpcPort   int    `yaml:"grpc_port"`
 		HttpPort   int    `yaml:"http_port"`
