@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/OpenIoTHub/grpc-api v0.0.0-20200427072713-117370265662
-	github.com/OpenIoTHub/utils v0.0.26
+	github.com/OpenIoTHub/utils v0.0.31
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/iotdevice/zeroconf v0.1.2 // indirect
 	github.com/klauspost/reedsolomon v1.9.4 // indirect
@@ -24,3 +24,5 @@ require (
 	google.golang.org/grpc v1.29.1
 	gopkg.in/yaml.v2 v2.2.8
 )
+
+replace github.com/OpenIoTHub/utils => C:\Users\Farry\go\src\github.com\OpenIoTHub\utils

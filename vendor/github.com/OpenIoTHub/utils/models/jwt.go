@@ -14,7 +14,8 @@ type TokenClaims struct {
 	KcpPort    int
 	TlsPort    int
 	GrpcPort   int
-	P2PApiPort int
+	UDPApiPort int
+	KCPApiPort int
 	Permission int
 	jwt.StandardClaims
 }
@@ -29,6 +30,7 @@ func GetToken(gatewayConfig GatewayConfig, permission int, expiresecd int64) (to
 		gatewayConfig.Server.TlsPort,
 		gatewayConfig.Server.GrpcPort,
 		gatewayConfig.Server.UdpApiPort,
+		gatewayConfig.Server.KcpApiPort,
 	)
 	tokenModel := jwt.NewWithClaims(jwt.SigningMethodHS256, TokenClaims{
 		gatewayConfig.LastId,
@@ -38,6 +40,7 @@ func GetToken(gatewayConfig GatewayConfig, permission int, expiresecd int64) (to
 		gatewayConfig.Server.TlsPort,
 		gatewayConfig.Server.GrpcPort,
 		gatewayConfig.Server.UdpApiPort,
+		gatewayConfig.Server.KcpApiPort,
 		permission,
 		jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 8*60*60,
