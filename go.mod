@@ -25,4 +25,4 @@ require (
 	gopkg.in/yaml.v2 v2.2.8
 )
 
-replace github.com/OpenIoTHub/utils => C:\Users\Farry\go\src\github.com\OpenIoTHub\utils
+//replace github.com/OpenIoTHub/utils => C:\Users\Farry\go\src\github.com\OpenIoTHub\utils
