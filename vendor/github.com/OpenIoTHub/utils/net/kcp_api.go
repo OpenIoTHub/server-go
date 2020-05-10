@@ -44,6 +44,7 @@ func kcpConnHdl(conn *kcp.UDPSession) {
 	case *models.GetMyUDPPublicAddr:
 		{
 			_ = m
+			log.Println("KCP API GetMyUDPPublicAddr form:", remoteAddr.String())
 			_ = msg.WriteMsg(conn, remoteAddr)
 		}
 
@@ -64,19 +65,19 @@ func GetExternalIpPortByKCP(listener *net.UDPConn, token *models.TokenClaims) (*
 	//TODO：使用给定的Listener
 	conn, err := kcp.NewConn(fmt.Sprintf("%s:%d", token.Host, token.KCPApiPort), nil, 10, 3, listener)
 	if err != nil {
-		fmt.Printf("%s", err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	defer conn.Close()
 	err = conn.SetDeadline(time.Now().Add(time.Duration(3 * time.Second)))
 	if err != nil {
-		fmt.Printf("%s", err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 
 	err = msg.WriteMsg(conn, &models.GetMyUDPPublicAddr{})
 	if err != nil {
-		fmt.Printf("%s", err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 
@@ -84,7 +85,7 @@ func GetExternalIpPortByKCP(listener *net.UDPConn, token *models.TokenClaims) (*
 	addr, err := msg.ReadMsgWithTimeOut(conn, time.Second)
 	log.Println("获取api的UDP包成功，开始解析自己listener出口地址和端口")
 	if err != nil {
-		fmt.Printf("获取listener的出口出错: %s", err.Error())
+		log.Printf("获取listener的出口出错: %s", err.Error())
 		return nil, err
 	}
 
