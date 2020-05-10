@@ -63,6 +63,5 @@ func run() (err error) {
 	go nettool.RunUDPApiServer(config.ConfigMode.Common.UdpApiPort)
 	go nettool.RunKCPApiServer(config.ConfigMode.Common.KcpApiPort)
 	log.Println("服务器正在运行，内网端配置请根据本服务器配置填写！")
-	log.Println("config.ConfigMode.Common.KcpApiPort:", config.ConfigMode.Common.KcpApiPort)
 	return
 }

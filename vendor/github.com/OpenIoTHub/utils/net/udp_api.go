@@ -22,16 +22,18 @@ func RunUDPApiServer(port int) {
 func udpListener(listener *net.UDPConn) {
 	data := make([]byte, 256)
 	for {
-		_, remoteAddr, err := listener.ReadFromUDP(data)
+		n, remoteAddr, err := listener.ReadFromUDP(data)
 		if err != nil {
-			fmt.Printf("error during read: %s", err)
+			log.Printf("error during read: %s", err)
+			return
 		}
-		//fmt.Printf("<%s> %s\n", remoteAddr, data[:n])
+		log.Printf("UDP API接收到<%s>消息: %s\n", remoteAddr, data[:n])
 		//:TODO 防阻塞
 		go func() {
 			_, err = listener.WriteToUDP([]byte(remoteAddr.String()), remoteAddr)
 			if err != nil {
-				fmt.Printf(err.Error())
+				log.Printf(err.Error())
+				return
 			}
 		}()
 	}
@@ -41,7 +43,7 @@ func udpListener(listener *net.UDPConn) {
 func GetExternalIpPortByUDP(listener *net.UDPConn, token *models.TokenClaims) (*net.UDPAddr, error) {
 	var ip string
 	var port int
-	udpaddr, err := net.ResolveUDPAddr("udp", token.Host+":"+strconv.Itoa(token.UDPApiPort))
+	raddr, err := net.ResolveUDPAddr("udp", token.Host+":"+strconv.Itoa(token.UDPApiPort))
 	//udpaddr, err := net.ResolveUDPAddr("udp", "tencent-shanghai-v1.host.nat-cloud.com:34321")
 	if err != nil {
 		fmt.Printf("%s", err.Error())
@@ -54,12 +56,11 @@ func GetExternalIpPortByUDP(listener *net.UDPConn, token *models.TokenClaims) (*
 		return nil, err
 	}
 
-	listener.WriteToUDP([]byte("getIpPort"), udpaddr)
+	listener.WriteToUDP([]byte("getIpPort"), raddr)
 
 	log.Println("发送到服务器确定成功！等待确定外网ip和port")
 	data := make([]byte, 256)
 	n, _, err := listener.ReadFromUDP(data)
-	log.Println("获取api的UDP包成功，开始解析自己listener出口地址和端口")
 	if err != nil {
 		fmt.Printf("获取listener的出口出错: %s", err.Error())
 		return nil, err
