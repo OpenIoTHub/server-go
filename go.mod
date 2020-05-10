@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/OpenIoTHub/grpc-api v0.0.0-20200427072713-117370265662
-	github.com/OpenIoTHub/utils v0.0.32
+	github.com/OpenIoTHub/utils v0.0.33
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/iotdevice/zeroconf v0.1.2 // indirect
 	github.com/klauspost/reedsolomon v1.9.4 // indirect
