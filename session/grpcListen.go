@@ -2,8 +2,8 @@ package session
 
 import (
 	"fmt"
-	"github.com/OpenIoTHub/grpc-api/pb-go"
 	"github.com/OpenIoTHub/server-go/config"
+	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"google.golang.org/grpc"
 	"log"
 	"net"

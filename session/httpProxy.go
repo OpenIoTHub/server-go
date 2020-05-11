@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/OpenIoTHub/grpc-api/pb-go"
+	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/net/httpUtil"
 	"github.com/libp2p/go-yamux"

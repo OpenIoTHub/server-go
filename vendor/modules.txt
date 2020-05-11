@@ -1,5 +1,5 @@
-# github.com/OpenIoTHub/grpc-api v0.0.0-20200427072713-117370265662
-github.com/OpenIoTHub/grpc-api/pb-go
+# github.com/OpenIoTHub/server-grpc-api v0.0.0-20200511044130-638841a924dc
+github.com/OpenIoTHub/server-grpc-api/pb-go
 # github.com/OpenIoTHub/utils v0.0.33
 github.com/OpenIoTHub/utils/file
 github.com/OpenIoTHub/utils/io
