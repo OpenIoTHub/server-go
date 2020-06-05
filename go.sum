@@ -1,8 +1,8 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/OpenIoTHub/server-grpc-api v0.0.0-20200511044130-638841a924dc h1:dsSyicn95xKT0TRjyWK/P0ULkqLFPF5gWnGBGEUMezI=
-github.com/OpenIoTHub/server-grpc-api v0.0.0-20200511044130-638841a924dc/go.mod h1:4Tvt1MoMNqIBcVSweRZOXuqOj5JWw1HPNxd9vZv4oAI=
+github.com/OpenIoTHub/server-grpc-api v1.0.4 h1:dVqKqdhV6VaQIZipOHqxJEpt7NfU8QvPTaDXVJd1Vog=
+github.com/OpenIoTHub/server-grpc-api v1.0.4/go.mod h1:4Tvt1MoMNqIBcVSweRZOXuqOj5JWw1HPNxd9vZv4oAI=
 github.com/OpenIoTHub/utils v0.0.33 h1:+bOfZhWWwdbZLha860hI383MWtnj4n6AEaVt3elfJ7w=
 github.com/OpenIoTHub/utils v0.0.33/go.mod h1:slmbWv86SCu1f9AopK7L0Jr0hv1kMByWBxm6Q4eziSc=
 github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da/go.mod h1:eHEWzANqSiWQsof+nXEI9bUVUyV6F53Fp89EuCh2EAA=

@@ -82,20 +82,22 @@ func (sm *SessionsManager) GetOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*
 	}, err
 }
 
-func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Empty) (*pb.HTTPList, error) {
+func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Device) (*pb.HTTPList, error) {
 	var cfgs []*pb.HTTPConfig
 	for _, config := range sm.GetAllHttpProxy() {
-		cfgs = append(cfgs, &pb.HTTPConfig{
-			Domain:           config.Domain,
-			RunId:            config.RunId,
-			RemoteIP:         config.RemoteIP,
-			RemotePort:       int32(config.RemotePort),
-			UserName:         config.UserName,
-			Password:         config.Password,
-			IfHttps:          config.IfHttps,
-			Description:      config.Description,
-			RemotePortStatus: config.RemotePortStatus,
-		})
+		if config.RunId == in.RunId && config.RemoteIP == in.Addr {
+			cfgs = append(cfgs, &pb.HTTPConfig{
+				Domain:           config.Domain,
+				RunId:            config.RunId,
+				RemoteIP:         config.RemoteIP,
+				RemotePort:       int32(config.RemotePort),
+				UserName:         config.UserName,
+				Password:         config.Password,
+				IfHttps:          config.IfHttps,
+				Description:      config.Description,
+				RemotePortStatus: config.RemotePortStatus,
+			})
+		}
 	}
 	return &pb.HTTPList{HTTPConfigs: cfgs}, nil
 }
