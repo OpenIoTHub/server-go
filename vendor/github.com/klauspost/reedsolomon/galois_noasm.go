@@ -7,23 +7,33 @@
 package reedsolomon
 
 func galMulSlice(c byte, in, out []byte, o *options) {
-	mt := mulTable[c][:256]
 	out = out[:len(in)]
+	if c == 1 {
+		copy(out, in)
+		return
+	}
+	mt := mulTable[c][:256]
 	for n, input := range in {
 		out[n] = mt[input]
 	}
 }
 
 func galMulSliceXor(c byte, in, out []byte, o *options) {
-	mt := mulTable[c][:256]
 	out = out[:len(in)]
+	if c == 1 {
+		for n, input := range in {
+			out[n] ^= input
+		}
+		return
+	}
+	mt := mulTable[c][:256]
 	for n, input := range in {
 		out[n] ^= mt[input]
 	}
 }
 
 // slice galois add
-func sliceXor(in, out []byte, sse2 bool) {
+func sliceXor(in, out []byte, o *options) {
 	for n, input := range in {
 		out[n] ^= input
 	}
@@ -31,8 +41,4 @@ func sliceXor(in, out []byte, sse2 bool) {
 
 func init() {
 	defaultOptions.useAVX512 = false
-}
-
-func (r reedSolomon) codeSomeShardsAvx512(matrixRows, inputs, outputs [][]byte, outputCount, byteCount int) {
-	panic("unreachable")
 }

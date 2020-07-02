@@ -5,8 +5,6 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/libp2p/go-buffer-pool"
 )
 
 type streamState int
@@ -25,7 +23,6 @@ const (
 // Stream is used to represent a logical stream
 // within a session.
 type Stream struct {
-	recvWindow uint32
 	sendWindow uint32
 
 	id      uint32
@@ -35,7 +32,7 @@ type Stream struct {
 	stateLock sync.Mutex
 
 	recvLock sync.Mutex
-	recvBuf  pool.Buffer
+	recvBuf  segmentedBuffer
 
 	sendLock sync.Mutex
 
@@ -52,10 +49,10 @@ func newStream(session *Session, id uint32, state streamState) *Stream {
 		id:            id,
 		session:       session,
 		state:         state,
-		recvWindow:    initialStreamWindow,
 		sendWindow:    initialStreamWindow,
 		readDeadline:  makePipeDeadline(),
 		writeDeadline: makePipeDeadline(),
+		recvBuf:       NewSegmentedBuffer(initialStreamWindow),
 		recvNotifyCh:  make(chan struct{}, 1),
 		sendNotifyCh:  make(chan struct{}, 1),
 	}
@@ -84,9 +81,7 @@ START:
 	case streamRemoteClose:
 		fallthrough
 	case streamClosed:
-		s.recvLock.Lock()
 		empty := s.recvBuf.Len() == 0
-		s.recvLock.Unlock()
 		if empty {
 			return 0, io.EOF
 		}
@@ -213,18 +208,12 @@ func (s *Stream) sendWindowUpdate() error {
 
 	// Determine the delta update
 	max := s.session.config.MaxStreamWindowSize
-	s.recvLock.Lock()
-	delta := (max - uint32(s.recvBuf.Len())) - s.recvWindow
-
-	// Check if we can omit the update
-	if delta < (max/2) && flags == 0 {
-		s.recvLock.Unlock()
-		return nil
-	}
 
 	// Update our window
-	s.recvWindow += delta
-	s.recvLock.Unlock()
+	needed, delta := s.recvBuf.GrowTo(max, flags != 0)
+	if !needed {
+		return nil
+	}
 
 	// Send the header
 	hdr := encode(typeWindowUpdate, flags, s.id, delta)
@@ -406,29 +395,17 @@ func (s *Stream) readData(hdr header, flags uint16, conn io.Reader) error {
 		return nil
 	}
 
-	// Wrap in a limited reader
-	conn = &io.LimitedReader{R: conn, N: int64(length)}
-
-	// Copy into buffer
-	s.recvLock.Lock()
-
-	if length > s.recvWindow {
-		s.recvLock.Unlock()
-		s.session.logger.Printf("[ERR] yamux: receive window exceeded (stream: %d, remain: %d, recv: %d)", s.id, s.recvWindow, length)
+	// Validate it's okay to copy
+	if !s.recvBuf.TryReserve(length) {
+		s.session.logger.Printf("[ERR] yamux: receive window exceeded (stream: %d, remain: %d, recv: %d)", s.id, s.recvBuf.Cap(), length)
 		return ErrRecvWindowExceeded
 	}
 
-	s.recvBuf.Grow(int(length))
-	if _, err := io.Copy(&s.recvBuf, conn); err != nil {
-		s.recvLock.Unlock()
+	// Copy into buffer
+	if err := s.recvBuf.Append(conn, int(length)); err != nil {
 		s.session.logger.Printf("[ERR] yamux: Failed to read stream data: %v", err)
 		return err
 	}
-
-	// Decrement the receive window
-	s.recvWindow -= length
-	s.recvLock.Unlock()
-
 	// Unblock any readers
 	asyncNotify(s.recvNotifyCh)
 	return nil

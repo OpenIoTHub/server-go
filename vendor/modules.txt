@@ -1,12 +1,13 @@
 # github.com/OpenIoTHub/server-grpc-api v1.0.4
 github.com/OpenIoTHub/server-grpc-api/pb-go
-# github.com/OpenIoTHub/utils v0.0.33
+# github.com/OpenIoTHub/utils v0.0.42
 github.com/OpenIoTHub/utils/file
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
 github.com/OpenIoTHub/utils/msg
 github.com/OpenIoTHub/utils/net
 github.com/OpenIoTHub/utils/net/httpUtil
+github.com/OpenIoTHub/utils/net/ip
 github.com/OpenIoTHub/utils/pool
 # github.com/cenkalti/backoff v2.2.1+incompatible
 github.com/cenkalti/backoff
@@ -14,7 +15,7 @@ github.com/cenkalti/backoff
 github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 github.com/dgrijalva/jwt-go
-# github.com/golang/protobuf v1.4.0
+# github.com/golang/protobuf v1.4.2
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
@@ -26,18 +27,32 @@ github.com/golang/snappy
 github.com/iotdevice/zeroconf
 # github.com/jacobsa/go-serial v0.0.0-20180131005756-15cf729a72d4
 github.com/jacobsa/go-serial/serial
-# github.com/klauspost/cpuid v1.2.2
+# github.com/klauspost/cpuid v1.3.0
 github.com/klauspost/cpuid
-# github.com/klauspost/reedsolomon v1.9.4
+# github.com/klauspost/reedsolomon v1.9.9
 github.com/klauspost/reedsolomon
 # github.com/libp2p/go-buffer-pool v0.0.2
 github.com/libp2p/go-buffer-pool
 # github.com/libp2p/go-msgio v0.0.4
 github.com/libp2p/go-msgio
-# github.com/libp2p/go-yamux v1.3.6
+# github.com/libp2p/go-yamux v1.3.8
 github.com/libp2p/go-yamux
 # github.com/miekg/dns v1.1.29
 github.com/miekg/dns
+# github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061
+github.com/mmcloughlin/avo/attr
+github.com/mmcloughlin/avo/build
+github.com/mmcloughlin/avo/buildtags
+github.com/mmcloughlin/avo/gotypes
+github.com/mmcloughlin/avo/internal/prnt
+github.com/mmcloughlin/avo/internal/stack
+github.com/mmcloughlin/avo/ir
+github.com/mmcloughlin/avo/operand
+github.com/mmcloughlin/avo/pass
+github.com/mmcloughlin/avo/printer
+github.com/mmcloughlin/avo/reg
+github.com/mmcloughlin/avo/src
+github.com/mmcloughlin/avo/x86
 # github.com/pkg/errors v0.9.1
 github.com/pkg/errors
 # github.com/russross/blackfriday/v2 v2.0.1
@@ -46,7 +61,7 @@ github.com/russross/blackfriday/v2
 github.com/satori/go.uuid
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
-# github.com/templexxx/cpu v0.0.1
+# github.com/templexxx/cpu v0.0.7
 github.com/templexxx/cpu
 # github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161
 github.com/templexxx/cpufeat
@@ -54,15 +69,15 @@ github.com/templexxx/cpufeat
 github.com/templexxx/xor
 # github.com/templexxx/xorsimd v0.4.1
 github.com/templexxx/xorsimd
-# github.com/tjfoc/gmsm v1.3.0
+# github.com/tjfoc/gmsm v1.3.2
 github.com/tjfoc/gmsm/sm4
 # github.com/urfave/cli/v2 v2.2.0
 github.com/urfave/cli/v2
 # github.com/xtaci/kcp-go v5.4.20+incompatible
 github.com/xtaci/kcp-go
-# github.com/xtaci/kcp-go/v5 v5.5.12
+# github.com/xtaci/kcp-go/v5 v5.5.14
 github.com/xtaci/kcp-go/v5
-# golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79
+# golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 golang.org/x/crypto/acme
 golang.org/x/crypto/acme/autocert
 golang.org/x/crypto/blowfish
@@ -76,7 +91,9 @@ golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/tea
 golang.org/x/crypto/twofish
 golang.org/x/crypto/xtea
-# golang.org/x/net v0.0.0-20200501053045-e0ff5e5a1de5
+# golang.org/x/mod v0.3.0
+golang.org/x/mod/semver
+# golang.org/x/net v0.0.0-20200625001655-4c5254603344
 golang.org/x/net/bpf
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
@@ -89,23 +106,39 @@ golang.org/x/net/ipv4
 golang.org/x/net/ipv6
 golang.org/x/net/trace
 golang.org/x/net/websocket
-# golang.org/x/sys v0.0.0-20200501145240-bc7a7d42d5c3
+# golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.2
+# golang.org/x/text v0.3.3
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# google.golang.org/genproto v0.0.0-20200430143042-b979b6f78d84
+# golang.org/x/tools v0.0.0-20200702044944-0cc1aa72b347
+golang.org/x/tools/go/gcexportdata
+golang.org/x/tools/go/internal/gcimporter
+golang.org/x/tools/go/internal/packagesdriver
+golang.org/x/tools/go/packages
+golang.org/x/tools/internal/event
+golang.org/x/tools/internal/event/core
+golang.org/x/tools/internal/event/keys
+golang.org/x/tools/internal/event/label
+golang.org/x/tools/internal/gocommand
+golang.org/x/tools/internal/packagesinternal
+golang.org/x/tools/internal/typesinternal
+# golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
+golang.org/x/xerrors
+golang.org/x/xerrors/internal
+# google.golang.org/genproto v0.0.0-20200702021140-07506425bd67
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.29.1
+# google.golang.org/grpc v1.30.0
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
 google.golang.org/grpc/balancer
 google.golang.org/grpc/balancer/base
+google.golang.org/grpc/balancer/grpclb/state
 google.golang.org/grpc/balancer/roundrobin
 google.golang.org/grpc/binarylog/grpc_binarylog_v1
 google.golang.org/grpc/codes
@@ -128,19 +161,19 @@ google.golang.org/grpc/internal/grpcsync
 google.golang.org/grpc/internal/grpcutil
 google.golang.org/grpc/internal/resolver/dns
 google.golang.org/grpc/internal/resolver/passthrough
+google.golang.org/grpc/internal/serviceconfig
 google.golang.org/grpc/internal/status
 google.golang.org/grpc/internal/syscall
 google.golang.org/grpc/internal/transport
 google.golang.org/grpc/keepalive
 google.golang.org/grpc/metadata
-google.golang.org/grpc/naming
 google.golang.org/grpc/peer
 google.golang.org/grpc/resolver
 google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.21.0
+# google.golang.org/protobuf v1.25.0
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
 google.golang.org/protobuf/internal/descfmt
@@ -151,12 +184,11 @@ google.golang.org/protobuf/internal/encoding/messageset
 google.golang.org/protobuf/internal/encoding/tag
 google.golang.org/protobuf/internal/encoding/text
 google.golang.org/protobuf/internal/errors
-google.golang.org/protobuf/internal/fieldnum
 google.golang.org/protobuf/internal/fieldsort
 google.golang.org/protobuf/internal/filedesc
 google.golang.org/protobuf/internal/filetype
 google.golang.org/protobuf/internal/flags
-google.golang.org/protobuf/internal/genname
+google.golang.org/protobuf/internal/genid
 google.golang.org/protobuf/internal/impl
 google.golang.org/protobuf/internal/mapsort
 google.golang.org/protobuf/internal/pragma
@@ -171,5 +203,5 @@ google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# gopkg.in/yaml.v2 v2.2.8
+# gopkg.in/yaml.v2 v2.3.0
 gopkg.in/yaml.v2
