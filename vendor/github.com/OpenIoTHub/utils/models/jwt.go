@@ -2,7 +2,9 @@ package models
 
 import (
 	"fmt"
+	"github.com/OpenIoTHub/utils/net/ip"
 	"github.com/dgrijalva/jwt-go"
+	uuid "github.com/satori/go.uuid"
 	"log"
 	"time"
 )
@@ -20,7 +22,7 @@ type TokenClaims struct {
 	jwt.StandardClaims
 }
 
-func GetToken(gatewayConfig GatewayConfig, permission int, expiresecd int64) (token string, err error) {
+func GetToken(gatewayConfig *GatewayConfig, permission int, expiresecd int64) (token string, err error) {
 	fmt.Println("Get Token:")
 	fmt.Println(
 		gatewayConfig.LastId,
@@ -53,6 +55,38 @@ func GetToken(gatewayConfig GatewayConfig, permission int, expiresecd int64) (to
 		return "", err
 	}
 	return tokenStr, nil
+}
+
+func GetTokenByServerConfig(serverConfig *ServerConfig, permission int, expiresecd int64) (gatewayToken, openIoTHubToken string, err error) {
+	uuidStr := uuid.Must(uuid.NewV4()).String()
+	myPublicIp, err := ip.GetMyPublicIpInfo()
+	if err != nil {
+		return "", "", err
+	}
+	gatewayConfig := &GatewayConfig{
+		ConnectionType: "tcp",
+		LastId:         uuidStr,
+		GrpcPort:       1082,
+		Server: &Srever{
+			ServerHost: myPublicIp,
+			TcpPort:    serverConfig.Common.TcpPort,
+			KcpPort:    serverConfig.Common.KcpPort,
+			UdpApiPort: serverConfig.Common.UdpApiPort,
+			KcpApiPort: serverConfig.Common.KcpApiPort,
+			TlsPort:    serverConfig.Common.TlsPort,
+			GrpcPort:   serverConfig.Common.GrpcPort,
+			LoginKey:   serverConfig.Security.LoginKey,
+		},
+	}
+	gatewayToken, err = GetToken(gatewayConfig, 1, expiresecd)
+	if err != nil {
+		return "", "", err
+	}
+	openIoTHubToken, err = GetToken(gatewayConfig, 2, expiresecd)
+	if err != nil {
+		return "", "", err
+	}
+	return gatewayToken, openIoTHubToken, err
 }
 
 func DecodeToken(salt, tokenStr string) (*TokenClaims, error) {

@@ -1,10 +1,10 @@
 package models
 
 type GatewayConfig struct {
-	ConnectionType        string `yaml:"connection_type"`
-	LastId                string `yaml:"last_id"`
-	ExplorerTokenHttpPort int    `yaml:"http_api_port"`
-	Server                Srever
+	ConnectionType string `yaml:"connection_type"`
+	LastId         string `yaml:"last_id"`
+	GrpcPort       int    `yaml:"grpc_api_port"`
+	Server         *Srever
 }
 
 type Srever struct {

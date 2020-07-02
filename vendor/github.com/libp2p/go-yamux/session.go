@@ -706,6 +706,7 @@ func (s *Session) closeStream(id uint32) {
 		default:
 			s.logger.Printf("[ERR] yamux: SYN tracking out of sync")
 		}
+		delete(s.inflight, id)
 	}
 	delete(s.streams, id)
 	s.streamLock.Unlock()

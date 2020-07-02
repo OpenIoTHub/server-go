@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/server-go/session"
+	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/net"
 	"github.com/urfave/cli/v2"
 	"log"
@@ -32,6 +33,31 @@ func main() {
 			Usage:       "config file path",
 			EnvVars:     []string{"ServerConfigFilePath"},
 			Destination: &config.DefaultConfigFilePath,
+		},
+	}
+	myApp.Commands = []*cli.Command{
+		{
+			Name:    "generate",
+			Aliases: []string{"g"},
+			Usage:   "generate one token for gateway and one token for OpenIoTHub",
+			Action: func(c *cli.Context) error {
+				err := config.LoadConfig()
+				if err != nil {
+					log.Println(err)
+					return err
+				}
+				GateWayToken, OpenIoTHubToken, err := models.GetTokenByServerConfig(&config.ConfigMode, 1, 200000000000)
+				if err != nil {
+					return err
+				}
+				fmt.Println("Generated one pair of token:")
+				fmt.Println("========================================")
+				fmt.Printf("GatewayToken:%s\n\n", GateWayToken)
+				fmt.Println("========================================")
+				fmt.Printf("OpenIoTHubToken:%s\n\n", OpenIoTHubToken)
+				fmt.Println("========================================")
+				return nil
+			},
 		},
 	}
 	myApp.Action = func(c *cli.Context) error {
