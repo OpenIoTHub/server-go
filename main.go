@@ -52,10 +52,10 @@ func main() {
 				}
 				fmt.Println("Generated one pair of token:")
 				fmt.Println("注意不要复制了换行符:")
-				fmt.Println("====================GatewayToken:->====================")
-				fmt.Printf("%s\n\n", GateWayToken)
-				fmt.Println("====================OpenIoTHubToken:->=================")
-				fmt.Printf("%s\n\n", OpenIoTHubToken)
+				fmt.Println("====================Gateway Token:->====================")
+				fmt.Println(GateWayToken)
+				fmt.Println("====================OpenIoTHub Token:->=================")
+				fmt.Println(OpenIoTHubToken)
 				fmt.Println("========================================")
 				return nil
 			},
