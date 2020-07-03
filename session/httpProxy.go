@@ -17,10 +17,6 @@ import (
 	"time"
 )
 
-func init() {
-	fmt.Printf("初始化Http代理管理器\n")
-}
-
 //服务结构
 type HttpProxy struct {
 	Domain           string
