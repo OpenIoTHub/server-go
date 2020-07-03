@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	//"github.com/OpenIoTHub/utils/net"
+	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
 	"log"
 	"net"
@@ -64,19 +65,19 @@ type IP struct {
 
 //获取自己的公网ip
 func GetMyPublicIpInfo() (string, error) {
-	url := "http://www.taobao.com/help/getip.php"
+	url := "https://www.ip.cn/"
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
 
-	out, err := ioutil.ReadAll(resp.Body)
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		return "", err
 	}
-	ip := strings.Replace(strings.Replace(string(out), "ipCallback({ip:\"", "", -1), "\"})", "", -1)
-	return ip, nil
+	doc2 := doc.Find("code")
+	return doc2.Html()
 }
 
 func GetIpInfo(ip string) (*IPInfo, error) {
