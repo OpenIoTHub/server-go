@@ -23,7 +23,7 @@ func main() {
 	myApp := cli.NewApp()
 	myApp.Name = "server-go"
 	myApp.Usage = "-c [config File Path]"
-	myApp.Version = fmt.Sprintf("%s(commit:%s,build on:%s,buildBy:%s)", version, commit, date, builtBy)
+	myApp.Version = buildVersion(version, commit, date, builtBy)
 	myApp.Flags = []cli.Flag{
 		//TODO 应该设置工作目录，各组件共享
 		&cli.StringFlag{
@@ -91,4 +91,18 @@ func run() (err error) {
 	go nettool.RunKCPApiServer(config.ConfigMode.Common.KcpApiPort)
 	log.Println("服务器正在运行，内网端配置请根据本服务器配置填写！")
 	return
+}
+
+func buildVersion(version, commit, date, builtBy string) string {
+	var result = version
+	if commit != "" {
+		result = fmt.Sprintf("%s\ncommit: %s", result, commit)
+	}
+	if date != "" {
+		result = fmt.Sprintf("%s\nbuilt at: %s", result, date)
+	}
+	if builtBy != "" {
+		result = fmt.Sprintf("%s\nbuilt by: %s", result, builtBy)
+	}
+	return result
 }
