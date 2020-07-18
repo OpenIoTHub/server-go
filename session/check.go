@@ -1,10 +1,15 @@
 package session
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 	"log"
 )
 
@@ -49,4 +54,40 @@ func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string,
 		break
 	}
 	return false, nil
+}
+
+func checkOpenIoTHubToken(key, tokenStr, id string) (token *models.TokenClaims, err error) {
+	token, err = models.DecodeToken(key, tokenStr)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	if token.Permission&1 != 1 {
+		log.Println("token type err ,not n")
+		return nil, errors.New("not gateway token")
+	}
+	if token.Id != id {
+		log.Println("token type err ,not n")
+		return nil, errors.New("id check error")
+	}
+	return
+}
+
+func authOpenIoTHubGrpc(ctx context.Context, id string) (err error) {
+	var jwt string
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return status.Errorf(codes.Unauthenticated, "metadata.FromIncomingContext err")
+	}
+	if jwts, ok := md["jwt"]; ok {
+		jwt = jwts[0]
+	} else {
+		return status.Errorf(codes.Unauthenticated, "jwt is empty")
+	}
+
+	_, err = checkOpenIoTHubToken(config.ConfigMode.Security.LoginKey, jwt, id)
+	if err != nil {
+		return status.Errorf(codes.Unauthenticated, err.Error())
+	}
+	return nil
 }

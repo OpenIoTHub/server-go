@@ -9,6 +9,8 @@ import (
 	"github.com/OpenIoTHub/utils/net/httpUtil"
 	"github.com/libp2p/go-yamux"
 	"golang.org/x/net/websocket"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -42,6 +44,11 @@ func (hp *HttpProxy) UpdateRemotePortStatus() {
 
 //grpc
 func (sm *SessionsManager) CreateOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.HTTPConfig, error) {
+	err := authOpenIoTHubGrpc(ctx, in.RunId)
+	if err != nil {
+		return in, status.Errorf(codes.Unauthenticated, err.Error())
+	}
+
 	return in, sm.AddHttpProxy(&HttpProxy{
 		Domain:      in.Domain,
 		RunId:       in.RunId,
@@ -55,12 +62,20 @@ func (sm *SessionsManager) CreateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 }
 
 func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.Empty, error) {
+	err := authOpenIoTHubGrpc(ctx, in.RunId)
+	if err != nil {
+		return &pb.Empty{}, status.Errorf(codes.Unauthenticated, err.Error())
+	}
 	sm.DelHttpProxy(in.Domain)
 	return &pb.Empty{}, nil
 
 }
 
 func (sm *SessionsManager) GetOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.HTTPConfig, error) {
+	err := authOpenIoTHubGrpc(ctx, in.RunId)
+	if err != nil {
+		return in, status.Errorf(codes.Unauthenticated, err.Error())
+	}
 	config, err := sm.GetOneHttpProxy(in.Domain)
 	if err != nil {
 		return &pb.HTTPConfig{}, err
@@ -80,6 +95,10 @@ func (sm *SessionsManager) GetOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*
 
 func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Device) (*pb.HTTPList, error) {
 	var cfgs []*pb.HTTPConfig
+	err := authOpenIoTHubGrpc(ctx, in.RunId)
+	if err != nil {
+		return &pb.HTTPList{HTTPConfigs: cfgs}, status.Errorf(codes.Unauthenticated, err.Error())
+	}
 	for _, config := range sm.GetAllHttpProxy() {
 		if config.RunId == in.RunId && config.RemoteIP == in.Addr {
 			cfgs = append(cfgs, &pb.HTTPConfig{
