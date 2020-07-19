@@ -62,12 +62,12 @@ func checkOpenIoTHubToken(key, tokenStr, id string) (token *models.TokenClaims, 
 		log.Println(err.Error())
 		return
 	}
-	if token.Permission&1 != 1 {
-		log.Println("token type err ,not n")
+	if token.Permission != 2 {
+		log.Printf("token type err ,%d not 2(OpenIoTHub)", token.Permission)
 		return nil, errors.New("not gateway token")
 	}
-	if token.Id != id {
-		log.Println("token type err ,not n")
+	if token.RunId != id {
+		log.Printf("RunId: %s not %s", token.RunId, id)
 		return nil, errors.New("id check error")
 	}
 	return
