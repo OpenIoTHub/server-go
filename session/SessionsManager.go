@@ -132,7 +132,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				return
 			}
 			if token.Permission != 2 {
-				log.Println("token type err ,not n")
+				log.Println("token type err ,not 2")
 				conn.Close()
 				return
 			}
