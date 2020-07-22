@@ -101,19 +101,29 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			log.Printf("新Gateway登录： runId：%s 系统：%s 芯片架构：%s", token.RunId, m.Os, m.Arch)
+			//TODO 添加上线、下线日志储存以供用户查询
+			log.Printf("新Gateway登录： runId：%s 系统(OS)：%s 芯片架构(CPU Arch)：%s Version：%s", token.RunId, m.Os, m.Arch, m.Version)
 			//sess[token.RunId]=session
-			session := &Session{Id: token.RunId, Conn: &conn, GatewaySession: session, WorkConn: make(chan net.Conn, 5)}
+			session := &Session{
+				Id:             token.RunId,
+				OS:             m.Os,
+				ARCH:           m.Arch,
+				Version:        m.Version,
+				Conn:           &conn,
+				GatewaySession: session,
+				WorkConn:       make(chan net.Conn, 5)}
 			//:TODO 新的登录存储之前先清除旧的同id登录
 			sess.SetSession(token.RunId, session)
 		}
 
 	case *models.GatewayWorkConn:
 		{
-			//:TODO	内网主动新创建的用来接收数据传输业务的连接
+			//内网主动新创建的用来接收数据传输业务的连接
+			//TODO 添加上线、下线日志储存以供用户查询
 			log.Println("获取到一个Gateway主动发起的工作连接")
 			log.Println(m.RunId)
 			log.Println(m.Secret)
+			//TODO 验证Secret
 			session, err := sess.GetSession(m.RunId)
 			if err != nil {
 				log.Println(err)
@@ -136,7 +146,8 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			log.Printf("新OpenIoTHub登录： runId：%s 系统：%s 芯片架构：%s", token.RunId, m.Os, m.Arch)
+			//TODO 添加上线、下线日志储存以供用户查询
+			log.Printf("新OpenIoTHub登录： runId：%s 系统(OS)：%s 芯片架构(Arch)：%s Version：%s", token.RunId, m.Os, m.Arch, m.Version)
 			//sess[token.RunId]=session
 			//sess := &Session{Id: token.RunId, Conn: &conn, GatewaySession: session}
 			//SetSession(token.RunId, sess)
