@@ -61,16 +61,18 @@ type Message interface{}
 
 // login
 type GatewayLogin struct {
-	Token string
-	Os    string
-	Arch  string
+	Token   string
+	Os      string
+	Arch    string
+	Version string
 }
 
 // Connect TO
 type OpenIoTHubLogin struct {
-	Token string
-	Os    string
-	Arch  string
+	Token   string
+	Os      string
+	Arch    string
+	Version string
 }
 
 type NewSubSession struct{}

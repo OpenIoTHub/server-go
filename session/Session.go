@@ -9,6 +9,9 @@ import (
 //
 type Session struct {
 	Id             string
+	OS             string
+	ARCH           string
+	Version        string
 	Conn           *net.Conn
 	GatewaySession *yamux.Session
 	WorkConn       chan net.Conn
