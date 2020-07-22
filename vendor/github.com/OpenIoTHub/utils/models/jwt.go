@@ -66,7 +66,6 @@ func GetTokenByServerConfig(serverConfig *ServerConfig, permission int, expirese
 	gatewayConfig := &GatewayConfig{
 		ConnectionType: "tcp",
 		LastId:         uuidStr,
-		GrpcPort:       1082,
 		Server: &Srever{
 			ServerHost: myPublicIp,
 			TcpPort:    serverConfig.Common.TcpPort,

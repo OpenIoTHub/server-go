@@ -164,8 +164,9 @@ type RequestNewWorkConn struct {
 }
 
 type GatewayWorkConn struct {
-	RunId  string
-	Secret string
+	RunId   string
+	Secret  string
+	Version string
 }
 
 type JsonResponse struct {

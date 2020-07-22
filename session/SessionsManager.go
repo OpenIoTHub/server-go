@@ -121,8 +121,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			//内网主动新创建的用来接收数据传输业务的连接
 			//TODO 添加上线、下线日志储存以供用户查询
 			log.Println("获取到一个Gateway主动发起的工作连接")
-			log.Println(m.RunId)
-			log.Println(m.Secret)
+			log.Println("GatewayWorkConn:", m.RunId, "@", m.Version)
 			//TODO 验证Secret
 			session, err := sess.GetSession(m.RunId)
 			if err != nil {
