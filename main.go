@@ -40,6 +40,16 @@ func main() {
 			Name:    "generate",
 			Aliases: []string{"g"},
 			Usage:   "generate one token for gateway and one token for OpenIoTHub",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:        "config",
+					Aliases:     []string{"c"},
+					Value:       config.DefaultConfigFilePath,
+					Usage:       "config file path",
+					EnvVars:     []string{"GatewayConfigFilePath"},
+					Destination: &config.DefaultConfigFilePath,
+				},
+			},
 			Action: func(c *cli.Context) error {
 				err := config.LoadConfig()
 				if err != nil {
@@ -57,6 +67,25 @@ func main() {
 				fmt.Println("====================OpenIoTHub Token:->=================")
 				fmt.Println(OpenIoTHubToken)
 				fmt.Println("========================================")
+				return nil
+			},
+		},
+		{
+			Name:    "init",
+			Aliases: []string{"i"},
+			Usage:   "init config file",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:        "config",
+					Aliases:     []string{"c"},
+					Value:       config.DefaultConfigFilePath,
+					Usage:       "config file path",
+					EnvVars:     []string{"GatewayConfigFilePath"},
+					Destination: &config.DefaultConfigFilePath,
+				},
+			},
+			Action: func(c *cli.Context) error {
+				config.InitConfigFile()
 				return nil
 			},
 		},
