@@ -19,26 +19,7 @@ func LoadConfig() (err error) {
 	}
 	_, err = os.Stat(DefaultConfigFilePath)
 	if err != nil {
-		log.Println("没有找到配置文件：", DefaultConfigFilePath)
-		log.Println("开始生成默认的空白配置文件")
-		ConfigMode.Common.BindAddr = DefaultBindAddr
-		ConfigMode.Common.KcpPort = DefaultKcpPort
-		ConfigMode.Common.TcpPort = DefaultTcpPort
-		ConfigMode.Common.TlsPort = DefaultTlsPort
-		ConfigMode.Common.GrpcPort = DefaultGrpcPort
-		ConfigMode.Common.HttpPort = DefaultHttpPort
-		ConfigMode.Common.HttpsPort = DefaultHttpsPort
-		ConfigMode.Common.UdpApiPort = DefaultUdpApiPort
-		ConfigMode.Common.KcpApiPort = DefaultKcpApiPort
-		ConfigMode.Security.LoginKey = DefaultLoginKey
-		//	生成配置文件模板
-		err = writeConfigFile(ConfigMode, DefaultConfigFilePath)
-		if err != nil {
-			log.Printf("写入默认的配置文件失败：%s\n", err.Error())
-			return
-		}
-		log.Println("配置文件写入成功,路径为：", DefaultConfigFilePath)
-		log.Println("你也可以修改上述配置文件后在运行")
+		InitConfigFile()
 	}
 	log.Println("使用配置文件：", DefaultConfigFilePath)
 	ConfigMode, err = GetConfig(DefaultConfigFilePath)
@@ -46,6 +27,30 @@ func LoadConfig() (err error) {
 		return
 	}
 	return
+}
+
+func InitConfigFile() {
+	var err error
+	log.Println("没有找到配置文件：", DefaultConfigFilePath)
+	log.Println("开始生成默认的空白配置文件")
+	ConfigMode.Common.BindAddr = DefaultBindAddr
+	ConfigMode.Common.KcpPort = DefaultKcpPort
+	ConfigMode.Common.TcpPort = DefaultTcpPort
+	ConfigMode.Common.TlsPort = DefaultTlsPort
+	ConfigMode.Common.GrpcPort = DefaultGrpcPort
+	ConfigMode.Common.HttpPort = DefaultHttpPort
+	ConfigMode.Common.HttpsPort = DefaultHttpsPort
+	ConfigMode.Common.UdpApiPort = DefaultUdpApiPort
+	ConfigMode.Common.KcpApiPort = DefaultKcpApiPort
+	ConfigMode.Security.LoginKey = DefaultLoginKey
+	//	生成配置文件模板
+	err = writeConfigFile(ConfigMode, DefaultConfigFilePath)
+	if err != nil {
+		log.Printf("写入默认的配置文件失败：%s\n", err.Error())
+		return
+	}
+	log.Println("配置文件写入成功,路径为：", DefaultConfigFilePath)
+	log.Println("你也可以修改上述配置文件后在运行")
 }
 
 //从配置文件路径解析配置文件的内容
