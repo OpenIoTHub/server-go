@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/server-go/session"
+	web_ui "github.com/OpenIoTHub/server-go/web-ui"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/net"
 	"github.com/urfave/cli/v2"
@@ -89,6 +90,7 @@ func run() (err error) {
 	go session.SessionsCtl.StartHttpListenAndServ()
 	go nettool.RunUDPApiServer(config.ConfigMode.Common.UdpApiPort)
 	go nettool.RunKCPApiServer(config.ConfigMode.Common.KcpApiPort)
+	go web_ui.RunWebStatic()
 	log.Println("服务器正在运行，内网端配置请根据本服务器配置填写！")
 	return
 }
