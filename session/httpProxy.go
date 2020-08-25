@@ -11,6 +11,7 @@ import (
 	"golang.org/x/net/websocket"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"log"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -119,12 +120,12 @@ func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Device) (*pb.H
 
 //grpc end
 
-func (sm *SessionsManager) GetOneHttpProxy(id string) (*HttpProxy, error) {
-	if _, ok := sm.HttpProxyMap[id]; ok {
-		go sm.HttpProxyMap[id].UpdateRemotePortStatus()
-		return sm.HttpProxyMap[id], nil //存在
+func (sm *SessionsManager) GetOneHttpProxy(domain string) (*HttpProxy, error) {
+	if _, ok := sm.HttpProxyMap[domain]; ok {
+		go sm.HttpProxyMap[domain].UpdateRemotePortStatus()
+		return sm.HttpProxyMap[domain], nil //存在
 	}
-	fmt.Printf("httpProxy id未注册")
+	log.Printf("httpProxy id未注册")
 	return nil, errors.New("httpProxy id未注册")
 }
 
@@ -144,8 +145,8 @@ func (sm *SessionsManager) AddHttpProxy(httpProxy *HttpProxy) error {
 	return nil
 }
 
-func (sm *SessionsManager) DelHttpProxy(id string) {
-	delete(sm.HttpProxyMap, id)
+func (sm *SessionsManager) DelHttpProxy(domain string) {
+	delete(sm.HttpProxyMap, domain)
 }
 
 //监听服务
@@ -154,7 +155,7 @@ func (sm *SessionsManager) DelHttpProxy(id string) {
 func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//:TODO 当前不支持websocket的代理（websocket支持basic Auth），或者从beego分发？
 	//：TODO 非80端口r.Host的支持情况
-	//fmt.Printf("host:" + r.Host) //"http://127.0.0.1:8080/"
+	//log.Printf("host:" + r.Host) //"http://127.0.0.1:8080/"
 	hostInfo, err := sm.GetOneHttpProxy(strings.Split(r.Host, ":")[0])
 	if err != nil {
 		_, _ = w.Write([]byte(err.Error()))
@@ -169,7 +170,7 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	remote, err := url.Parse(fmt.Sprintf("http://%s/", r.Host))
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		w.Write([]byte(err.Error()))
 		return
 	}
@@ -186,7 +187,7 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				conn, err := sm.ConnectToWs(hostInfo.RunId, fmt.Sprintf("%s://%s:%d%s", pro, hostInfo.RemoteIP, hostInfo.RemotePort, r.URL.String()),
 					"", fmt.Sprintf("%s://%s:%d%s", orgpro, hostInfo.RemoteIP, hostInfo.RemotePort, r.URL.String()))
 				if err != nil {
-					fmt.Printf(err.Error())
+					log.Printf(err.Error())
 					ws.Write([]byte(err.Error()))
 					return
 				}
@@ -211,7 +212,7 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sm *SessionsManager) dial(network, address string) (net.Conn, error) {
-	//fmt.Printf("请求的地址addr：%s", address)
+	//log.Printf("请求的地址addr：%s", address)
 	end := strings.Index(address, ":")
 	host := address[0:end]
 	hostInfo, err := sm.GetOneHttpProxy(host) //id

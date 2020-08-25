@@ -66,7 +66,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 	}
 	dir := file.CacheDir()
 	if err := os.MkdirAll(dir, 0700); err != nil {
-		fmt.Printf("没有使用缓存目录来存放https证书: %v", err)
+		log.Printf("没有使用缓存目录来存放https证书: %v", err)
 	} else {
 		m.Cache = autocert.DirCache(dir)
 	}
@@ -76,7 +76,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 			Addr:    fmt.Sprintf(":%d", config.DefaultHttpPort),
 			Handler: &sess,
 		}
-		fmt.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.ConfigMode.Common.HttpPort)
+		log.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.ConfigMode.Common.HttpPort)
 		err = serverHttp.ListenAndServe()
 		if err != nil {
 			log.Println(err.Error())
@@ -84,7 +84,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 				Addr:    fmt.Sprintf(":%s", "1083"),
 				Handler: &sess,
 			}
-			fmt.Printf("%d端口被占用，请访问http://127.0.0.1:1083/\n", config.DefaultHttpPort)
+			log.Printf("%d端口被占用，请访问http://127.0.0.1:1083/\n", config.DefaultHttpPort)
 			err = serverHttp.ListenAndServe()
 			if err != nil {
 				log.Println(err.Error())

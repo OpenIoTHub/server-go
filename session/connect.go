@@ -5,6 +5,7 @@ import (
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
 	"github.com/libp2p/go-yamux"
+	"log"
 )
 
 //Connect to tcp
@@ -19,7 +20,7 @@ func (sm *SessionsManager) ConnectToTcp(runId, remoteIp string, remotePort int) 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -36,7 +37,7 @@ func (sm *SessionsManager) ConnectToTls(runId, remoteIp string, remotePort int) 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -54,7 +55,7 @@ func (sm *SessionsManager) ConnectToUdp(runId, remoteIp string, remotePort int) 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -75,7 +76,7 @@ func (sm *SessionsManager) ConnectToSerialPort(runId string, msgsd *models.Conne
 	//}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -91,7 +92,7 @@ func (sm *SessionsManager) ConnectToTapTun(runId string) (*yamux.Stream, error) 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -110,7 +111,7 @@ func (sm *SessionsManager) ConnectToSSH(runId, remoteIP string, remotePort int, 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -128,7 +129,7 @@ func (sm *SessionsManager) ConnectToWs(runId, targetUrl, protocol, origin string
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -146,7 +147,7 @@ func (sm *SessionsManager) ListenMulticastUDP(runId, ip string, port uint) (*yam
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return nil, err
 	}
 	return stream, nil

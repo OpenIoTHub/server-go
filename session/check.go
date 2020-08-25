@@ -25,7 +25,7 @@ func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string,
 		}
 	}()
 	if err != nil {
-		fmt.Printf("get stream err: " + err.Error())
+		log.Printf("get stream err: " + err.Error())
 		return false, err
 	}
 	msgsd := &models.CheckStatusRequest{
@@ -34,7 +34,7 @@ func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string,
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return false, err
 	}
 	//:TODO 可能不会及时返还

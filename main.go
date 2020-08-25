@@ -61,13 +61,13 @@ func main() {
 				if err != nil {
 					return err
 				}
-				fmt.Println("Generated one pair of token:")
-				fmt.Println("注意不要复制了换行符:")
-				fmt.Println("====================Gateway Token:->====================")
-				fmt.Println(GateWayToken)
-				fmt.Println("====================OpenIoTHub Token:->=================")
-				fmt.Println(OpenIoTHubToken)
-				fmt.Println("========================================")
+				log.Println("Generated one pair of token:")
+				log.Println("注意不要复制了换行符:")
+				log.Println("====================Gateway Token:->====================")
+				log.Println(GateWayToken)
+				log.Println("====================OpenIoTHub Token:->=================")
+				log.Println(OpenIoTHubToken)
+				log.Println("========================================")
 				return nil
 			},
 		},
