@@ -73,7 +73,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 
 	go func() {
 		serverHttp := http.Server{
-			Addr:    fmt.Sprintf(":%d", config.DefaultHttpPort),
+			Addr:    fmt.Sprintf(":%d", config.ConfigMode.Common.HttpPort),
 			Handler: &sess,
 		}
 		log.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.ConfigMode.Common.HttpPort)
@@ -106,7 +106,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 				Handler:   &sess,
 				TLSConfig: m.TLSConfig(),
 			}
-			log.Println("1443端口被占用，请访问http://127.0.0.1:1443/")
+			log.Println("1443端口被占用，请访问https://127.0.0.1:1443/")
 			err = serverHttps.ListenAndServeTLS("", "")
 			if err != nil {
 				log.Println(err.Error())
