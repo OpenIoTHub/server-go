@@ -1,7 +1,9 @@
 package config
 
+import "fmt"
+
 var DefaultConfigFileName = "server.yaml"
-var DefaultConfigFilePath = "./server.yaml"
+var DefaultConfigFilePath = fmt.Sprintf("./%s", DefaultConfigFileName)
 
 var DefaultBindAddr = "0.0.0.0"
 

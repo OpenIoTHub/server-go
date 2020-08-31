@@ -154,7 +154,6 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 		}
 	default:
 		{
-			//:TODO 为什么重连会跑到
 			log.Println("从端口获取两种登录类别之一错误")
 			conn.Close()
 		}

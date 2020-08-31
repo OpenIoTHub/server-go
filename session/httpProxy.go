@@ -225,8 +225,5 @@ func (sm *SessionsManager) dial(network, address string) (net.Conn, error) {
 	} else {
 		stream, err = sm.ConnectToTcp(hostInfo.RunId, hostInfo.RemoteIP, hostInfo.RemotePort)
 	}
-	if err != nil {
-		return nil, err
-	}
-	return stream, nil
+	return stream, err
 }
