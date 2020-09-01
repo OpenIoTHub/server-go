@@ -2,19 +2,23 @@ package config
 
 import "fmt"
 
-var DefaultConfigFileName = "server.yaml"
+const DefaultConfigFileName = "server.yaml"
+
 var DefaultConfigFilePath = fmt.Sprintf("./%s", DefaultConfigFileName)
 
-var DefaultBindAddr = "0.0.0.0"
+const DefaultBindAddr = "0.0.0.0"
 
-var DefaultKcpPort = 34320
-var DefaultTcpPort = 34320
-var DefaultTlsPort = 34321
-var DefaultUdpApiPort = 34321
-var DefaultKcpApiPort = 34322
-var DefaultGrpcPort = 34322
+const DefaultKcpPort = 34320
+const DefaultTcpPort = 34320
+const DefaultTlsPort = 34321
+const DefaultUdpApiPort = 34321
+const DefaultKcpApiPort = 34322
+const DefaultGrpcPort = 34322
 
-var DefaultLoginKey = "HLLdsa544&*S"
+const DefaultLoginKey = "HLLdsa544&*S"
 
-var DefaultHttpPort = 80
-var DefaultHttpsPort = 443
+const DefaultHttpPort = 80
+const DefaultHttpsPort = 443
+
+const DefaultRedisNetwork = "tcp"
+const DefaultRedisAddress = "127.0.0.1:6379"

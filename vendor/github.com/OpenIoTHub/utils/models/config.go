@@ -36,4 +36,11 @@ type ServerConfig struct {
 		HttpsCertFilePath string `yaml:"https_cert_file_path"`
 		HttpsKeyFilePath  string `yaml:"https_key_file_path"`
 	}
+	RedisConfig struct {
+		Network  string `yaml:"network"`
+		Address  string `yaml:"address"`
+		Database int    `yaml:"database"`
+		NeedAuth bool   `yaml:"needAuth"`
+		Password string `yaml:"password"`
+	}
 }

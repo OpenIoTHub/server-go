@@ -111,6 +111,7 @@ func run() (err error) {
 		log.Println(err)
 		return
 	}
+	session.InitSessionsCtl()
 	go session.SessionsCtl.RunTLS()
 	go session.SessionsCtl.RunTCP()
 	go session.SessionsCtl.RunKCP()

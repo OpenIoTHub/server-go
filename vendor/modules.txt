@@ -1,6 +1,6 @@
 # github.com/OpenIoTHub/server-grpc-api v1.0.4
 github.com/OpenIoTHub/server-grpc-api/pb-go
-# github.com/OpenIoTHub/utils v0.0.47
+# github.com/OpenIoTHub/utils v0.0.50
 github.com/OpenIoTHub/utils/file
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
@@ -27,6 +27,9 @@ github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/golang/snappy v0.0.1
 github.com/golang/snappy
+# github.com/gomodule/redigo v2.0.0+incompatible
+github.com/gomodule/redigo/internal
+github.com/gomodule/redigo/redis
 # github.com/iotdevice/zeroconf v0.1.2
 github.com/iotdevice/zeroconf
 # github.com/jacobsa/go-serial v0.0.0-20180131005756-15cf729a72d4
@@ -59,8 +62,6 @@ github.com/mmcloughlin/avo/src
 github.com/mmcloughlin/avo/x86
 # github.com/pkg/errors v0.9.1
 github.com/pkg/errors
-# github.com/rakyll/statik v0.1.7
-github.com/rakyll/statik/fs
 # github.com/russross/blackfriday/v2 v2.0.1
 github.com/russross/blackfriday/v2
 # github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b

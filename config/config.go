@@ -43,6 +43,8 @@ func InitConfigFile() {
 	ConfigMode.Common.UdpApiPort = DefaultUdpApiPort
 	ConfigMode.Common.KcpApiPort = DefaultKcpApiPort
 	ConfigMode.Security.LoginKey = DefaultLoginKey
+	ConfigMode.RedisConfig.Network = DefaultRedisNetwork
+	ConfigMode.RedisConfig.Address = DefaultRedisAddress
 	//	生成配置文件模板
 	err = writeConfigFile(ConfigMode, DefaultConfigFilePath)
 	if err != nil {

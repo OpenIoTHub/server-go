@@ -14,3 +14,9 @@ security:
   tls_key_file_path: ""
   https_cert_file_path: ""
   https_key_file_path: ""
+redisconfig:
+  network: tcp
+  address: 127.0.0.1:6379
+  database: 0
+  needAuth: false
+  password: ""

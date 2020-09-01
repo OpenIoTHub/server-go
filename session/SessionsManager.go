@@ -6,6 +6,7 @@ import (
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
+	"github.com/gomodule/redigo/redis"
 	"github.com/libp2p/go-yamux"
 	"log"
 	"net"
@@ -15,11 +16,42 @@ import (
 type SessionsManager struct {
 	Session      map[string]*Session
 	HttpProxyMap map[string]*HttpProxy
+	redisPool    *redis.Pool
 }
 
-var SessionsCtl = SessionsManager{
-	Session:      make(map[string]*Session),
-	HttpProxyMap: make(map[string]*HttpProxy),
+var SessionsCtl SessionsManager
+
+func InitSessionsCtl() {
+	SessionsCtl = SessionsManager{
+		Session:      make(map[string]*Session),
+		HttpProxyMap: make(map[string]*HttpProxy),
+		redisPool: &redis.Pool{
+			MaxIdle:     256,
+			MaxActive:   0,
+			IdleTimeout: time.Duration(120),
+			Dial: func() (redis.Conn, error) {
+				if config.ConfigMode.RedisConfig.NeedAuth {
+					return redis.Dial(
+						config.ConfigMode.RedisConfig.Network,
+						config.ConfigMode.RedisConfig.Address,
+						redis.DialReadTimeout(time.Duration(1000)*time.Millisecond),
+						redis.DialWriteTimeout(time.Duration(1000)*time.Millisecond),
+						redis.DialConnectTimeout(time.Duration(1000)*time.Millisecond),
+						redis.DialDatabase(config.ConfigMode.RedisConfig.Database),
+					)
+				}
+				return redis.Dial(
+					config.ConfigMode.RedisConfig.Network,
+					config.ConfigMode.RedisConfig.Address,
+					redis.DialReadTimeout(time.Duration(1000)*time.Millisecond),
+					redis.DialWriteTimeout(time.Duration(1000)*time.Millisecond),
+					redis.DialConnectTimeout(time.Duration(1000)*time.Millisecond),
+					redis.DialDatabase(config.ConfigMode.RedisConfig.Database),
+					redis.DialPassword(config.ConfigMode.RedisConfig.Password),
+				)
+			},
+		},
+	}
 }
 
 func (sess *SessionsManager) GetSessionByID(id string) (*Session, error) {
