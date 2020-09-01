@@ -1,6 +1,8 @@
 package session
 
 import (
+	"github.com/OpenIoTHub/utils/models"
+	"github.com/OpenIoTHub/utils/msg"
 	"github.com/libp2p/go-yamux"
 	"log"
 	"net"
@@ -15,6 +17,21 @@ type Session struct {
 	Conn           *net.Conn
 	GatewaySession *yamux.Session
 	WorkConn       chan net.Conn
+}
+
+func (sess *Session) GetStream() (*yamux.Stream, error) {
+	return sess.GatewaySession.OpenStream()
+}
+
+func (sess *Session) RequestNewWorkConn() error {
+	stream, err := sess.GetStream()
+	if err != nil {
+		return err
+	}
+	return msg.WriteMsg(stream, &models.RequestNewWorkConn{
+		Type:   "tcp",
+		Config: "",
+	})
 }
 
 //:TODO 存活检测

@@ -40,11 +40,9 @@ func (sess *SessionsManager) GetStream(id string) (*yamux.Stream, error) {
 		log.Println(err.Error())
 		return nil, err
 	}
-	log.Println("get session ok")
-	stream, err := mysession.GatewaySession.OpenStream()
-	log.Println("open stream")
+	stream, err := mysession.GetStream()
 	if err != nil {
-		log.Println(err.Error())
+		log.Println(err)
 		return nil, err
 	}
 	return stream, err
@@ -178,22 +176,14 @@ func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 
 	}
 	var workConn net.Conn
-	stream, err := sess.GetStream(id)
-	if err != nil {
-		log.Println(err.Error())
-		resp(err)
-		return
-	}
-	err = msg.WriteMsg(stream, &models.RequestNewWorkConn{
-		Type:   "kcp",
-		Config: "",
-	})
-	if err != nil {
-		log.Println(err.Error())
-		resp(err)
-		return
-	}
 	session, err := sess.GetSession(id)
+	if err != nil {
+		log.Println(err.Error())
+		resp(err)
+		return
+	}
+	//TODO 考虑提前缓存连接以提高性能，但是得做好保活
+	err = session.RequestNewWorkConn()
 	if err != nil {
 		log.Println(err.Error())
 		resp(err)
