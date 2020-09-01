@@ -119,7 +119,7 @@ func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Device) (*pb.H
 }
 
 //grpc end
-
+//TODO 根据配置文件确定从内存获取映射表还是redis
 func (sm *SessionsManager) GetOneHttpProxy(domain string) (*HttpProxy, error) {
 	if _, ok := sm.HttpProxyMap[domain]; ok {
 		go sm.HttpProxyMap[domain].UpdateRemotePortStatus()

@@ -16,7 +16,7 @@ import (
 type SessionsManager struct {
 	Session      map[string]*Session
 	HttpProxyMap map[string]*HttpProxy
-	redisPool    *redis.Pool
+	RedisPool    *redis.Pool
 }
 
 var SessionsCtl SessionsManager
@@ -25,7 +25,7 @@ func InitSessionsCtl() {
 	SessionsCtl = SessionsManager{
 		Session:      make(map[string]*Session),
 		HttpProxyMap: make(map[string]*HttpProxy),
-		redisPool: &redis.Pool{
+		RedisPool: &redis.Pool{
 			MaxIdle:     256,
 			MaxActive:   0,
 			IdleTimeout: time.Duration(120),
@@ -52,6 +52,14 @@ func InitSessionsCtl() {
 			},
 		},
 	}
+}
+
+func (sess *SessionsManager) GetRedisConn() (redis.Conn, error) {
+	conn := sess.RedisPool.Get()
+	if err := conn.Err(); err != nil {
+		return conn, err
+	}
+	return conn, nil
 }
 
 func (sess *SessionsManager) GetSessionByID(id string) (*Session, error) {
