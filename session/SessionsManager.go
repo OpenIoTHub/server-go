@@ -190,6 +190,7 @@ func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 		resp(err)
 		return
 	}
+	resp(nil)
 	go io.Join(workConn, conn)
 	return
 }

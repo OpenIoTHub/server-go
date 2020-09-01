@@ -47,6 +47,7 @@ func (sess *Session) GetNewWorkConn() (net.Conn, error) {
 	//超时返回错误
 	select {
 	case workConn = <-sess.WorkConn:
+		log.Println("获取工作连接成功！")
 		return workConn, err
 	case <-time.After(time.Second * 3):
 		return workConn, errors.New("获取WorkConn超时")
