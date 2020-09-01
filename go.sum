@@ -3,8 +3,10 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/OpenIoTHub/server-grpc-api v1.0.4 h1:dVqKqdhV6VaQIZipOHqxJEpt7NfU8QvPTaDXVJd1Vog=
 github.com/OpenIoTHub/server-grpc-api v1.0.4/go.mod h1:4Tvt1MoMNqIBcVSweRZOXuqOj5JWw1HPNxd9vZv4oAI=
-github.com/OpenIoTHub/utils v0.0.50 h1:LKKe0matk19QH2jOBKyLRjGsAjY0l8DlNUSaUfvkfrk=
-github.com/OpenIoTHub/utils v0.0.50/go.mod h1:HiyH55mqDgQg1J9P80RR+hRIx5P9/TttLED1O91MGQM=
+github.com/OpenIoTHub/utils v0.0.51 h1:uwEq+1IJ4LTlCPcXLtmtUB/B7Dk+Yr8rfBkt03LOo6Q=
+github.com/OpenIoTHub/utils v0.0.51/go.mod h1:HiyH55mqDgQg1J9P80RR+hRIx5P9/TttLED1O91MGQM=
+github.com/OpenIoTHub/utils v0.0.52 h1:8IcArZNFJZ0h4Wgr3B7dpNU0+lkwRChJplv0QTjuNnE=
+github.com/OpenIoTHub/utils v0.0.52/go.mod h1:HiyH55mqDgQg1J9P80RR+hRIx5P9/TttLED1O91MGQM=
 github.com/PuerkitoBio/goquery v1.5.1 h1:PSPBGne8NIUWw+/7vFBV+kG2J/5MOjbzc7154OaKCSE=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da/go.mod h1:eHEWzANqSiWQsof+nXEI9bUVUyV6F53Fp89EuCh2EAA=
