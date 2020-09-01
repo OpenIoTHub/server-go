@@ -15,7 +15,7 @@ import (
 
 //检查远端内网端口的可用性，可用true
 func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string, remotePort int) (bool, error) {
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	defer func() {
 		if stream != nil {
 			err := stream.Close()

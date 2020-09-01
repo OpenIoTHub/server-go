@@ -22,7 +22,7 @@ var SessionsCtl = SessionsManager{
 	HttpProxyMap: make(map[string]*HttpProxy),
 }
 
-func (sess *SessionsManager) GetSession(id string) (*Session, error) {
+func (sess *SessionsManager) GetSessionByID(id string) (*Session, error) {
 	if _, ok := sess.Session[id]; ok {
 		if sess.Session[id].GatewaySession == nil || sess.Session[id].GatewaySession.IsClosed() {
 			sess.DelSession(id)
@@ -34,8 +34,8 @@ func (sess *SessionsManager) GetSession(id string) (*Session, error) {
 	}
 }
 
-func (sess *SessionsManager) GetStream(id string) (*yamux.Stream, error) {
-	mysession, err := sess.GetSession(id)
+func (sess *SessionsManager) GetStreamByID(id string) (*yamux.Stream, error) {
+	mysession, err := sess.GetSessionByID(id)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
@@ -46,6 +46,15 @@ func (sess *SessionsManager) GetStream(id string) (*yamux.Stream, error) {
 		return nil, err
 	}
 	return stream, err
+}
+
+func (sess *SessionsManager) GetNewWorkConnByID(id string) (net.Conn, error) {
+	session, err := sess.GetSessionByID(id)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+	return session.GetNewWorkConn()
 }
 
 func (sess *SessionsManager) SetSession(id string, session *Session) {
@@ -121,7 +130,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			log.Println("获取到一个Gateway主动发起的工作连接")
 			log.Println("GatewayWorkConn:", m.RunId, "@", m.Version)
 			//TODO 验证Secret
-			session, err := sess.GetSession(m.RunId)
+			session, err := sess.GetSessionByID(m.RunId)
 			if err != nil {
 				log.Println(err)
 				conn.Close()
@@ -175,28 +184,12 @@ func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 		time.Sleep(time.Millisecond * 100)
 
 	}
-	var workConn net.Conn
-	session, err := sess.GetSession(id)
+	workConn, err := sess.GetNewWorkConnByID(id)
 	if err != nil {
 		log.Println(err.Error())
 		resp(err)
 		return
 	}
-	//TODO 考虑提前缓存连接以提高性能，但是得做好保活
-	err = session.RequestNewWorkConn()
-	if err != nil {
-		log.Println(err.Error())
-		resp(err)
-		return
-	}
-	//超时返回错误
-	select {
-	case workConn = <-session.WorkConn:
-		resp(nil)
-		go io.Join(workConn, conn)
-		return
-	case <-time.After(time.Second * 3):
-		resp(errors.New("获取内网连接超时"))
-		return
-	}
+	go io.Join(workConn, conn)
+	return
 }

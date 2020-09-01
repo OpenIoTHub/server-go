@@ -10,7 +10,7 @@ import (
 
 //Connect to tcp
 func (sm *SessionsManager) ConnectToTcp(runId, remoteIp string, remotePort int) (*yamux.Stream, error) {
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (sm *SessionsManager) ConnectToTcp(runId, remoteIp string, remotePort int) 
 }
 
 func (sm *SessionsManager) ConnectToTls(runId, remoteIp string, remotePort int) (*yamux.Stream, error) {
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (sm *SessionsManager) ConnectToTls(runId, remoteIp string, remotePort int) 
 
 //Connect to udp
 func (sm *SessionsManager) ConnectToUdp(runId, remoteIp string, remotePort int) (*yamux.Stream, error) {
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (sm *SessionsManager) ConnectToUdp(runId, remoteIp string, remotePort int) 
 
 //Connect to Serial Port
 func (sm *SessionsManager) ConnectToSerialPort(runId string, msgsd *models.ConnectSerialPort) (*yamux.Stream, error) {
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func (sm *SessionsManager) ConnectToSerialPort(runId string, msgsd *models.Conne
 }
 
 func (sm *SessionsManager) ConnectToTapTun(runId string) (*yamux.Stream, error) {
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func (sm *SessionsManager) ConnectToTapTun(runId string) (*yamux.Stream, error) 
 }
 
 func (sm *SessionsManager) ConnectToSSH(runId, remoteIP string, remotePort int, userName, passWord string) (stream *yamux.Stream, err error) {
-	stream, err = sm.GetStream(runId)
+	stream, err = sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (sm *SessionsManager) ConnectToSSH(runId, remoteIP string, remotePort int, 
 }
 
 func (sm *SessionsManager) ConnectToWs(runId, targetUrl, protocol, origin string) (*yamux.Stream, error) {
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +137,7 @@ func (sm *SessionsManager) ConnectToWs(runId, targetUrl, protocol, origin string
 
 func (sm *SessionsManager) ListenMulticastUDP(runId, ip string, port uint) (*yamux.Stream, error) {
 	//"224.0.0.50:9898"
-	stream, err := sm.GetStream(runId)
+	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
 		return nil, err
 	}

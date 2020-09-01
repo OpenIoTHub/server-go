@@ -1,11 +1,13 @@
 package session
 
 import (
+	"errors"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
 	"github.com/libp2p/go-yamux"
 	"log"
 	"net"
+	"time"
 )
 
 //
@@ -32,6 +34,23 @@ func (sess *Session) RequestNewWorkConn() error {
 		Type:   "tcp",
 		Config: "",
 	})
+}
+
+func (sess *Session) GetNewWorkConn() (net.Conn, error) {
+	//TODO 考虑提前缓存连接以提高性能，但是得做好保活
+	var workConn net.Conn
+	err := sess.RequestNewWorkConn()
+	if err != nil {
+		log.Println(err.Error())
+		return workConn, err
+	}
+	//超时返回错误
+	select {
+	case workConn = <-sess.WorkConn:
+		return workConn, err
+	case <-time.After(time.Second * 3):
+		return workConn, errors.New("获取WorkConn超时")
+	}
 }
 
 //:TODO 存活检测
