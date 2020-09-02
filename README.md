@@ -5,8 +5,14 @@
 ### 如果你有自建转发服务端的需求则可以自建此服务端，服务器需要同时开启指定的TCP，UDP端口
 #### 建好此服务器之后，[网关](https://github.com/OpenIoTHub/gateway-go/releases )就可以连接自建的服务器了！
 
-```sh
+```
 如果使用redis持久化保存Http代理配置请将配置文件中的redis的使能打开enabled: true
+```
+```
+如果使用redis后OpenIoTHub App无法添加http代理成功请尝试在redis-cli中执行config set stop-writes-on-bgsave-error no
+参考：https://www.baidu.com/s?ie=UTF-8&wd=MISCONF Redis is configured to save RDB snapshots
+127.0.0.1:6379> config set stop-writes-on-bgsave-error no
+如果配置redis后正常使用请忽略本条问题
 ```
 
 ```yaml
