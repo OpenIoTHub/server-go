@@ -54,14 +54,6 @@ func InitSessionsCtl() {
 	}
 }
 
-func (sess *SessionsManager) GetRedisConn() (redis.Conn, error) {
-	conn := sess.RedisPool.Get()
-	if err := conn.Err(); err != nil {
-		return conn, err
-	}
-	return conn, nil
-}
-
 func (sess *SessionsManager) GetSessionByID(id string) (*Session, error) {
 	if _, ok := sess.Session[id]; ok {
 		if sess.Session[id].GatewaySession == nil || sess.Session[id].GatewaySession.IsClosed() {
@@ -207,7 +199,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 	}
 }
 
-//访问器的登录处理 conn : 访问器 stream ： 内网端
+//访问器的登录处理 conn : 访问器 stream ： 网关
 func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 	resp := func(err error) {
 		code := 0

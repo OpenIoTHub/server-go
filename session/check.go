@@ -13,7 +13,7 @@ import (
 	"log"
 )
 
-//检查远端内网端口的可用性，可用true
+//检查远端网关口的可用性，可用true
 func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string, remotePort int) (bool, error) {
 	stream, err := sm.GetStreamByID(runId)
 	defer func() {
@@ -54,6 +54,21 @@ func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string,
 		break
 	}
 	return false, nil
+}
+
+func (sm *SessionsManager) UpdateAllHttpRemotePortStatus() {
+	//TODO 只一个系统定时任务刷新所有http端口的状态
+	if config.ConfigMode.RedisConfig.Enabled {
+		var HttpProxyMap = make(map[string]*HttpProxy)
+		HttpProxyMap = sm.GetAllHttpProxy()
+		for _, hp := range HttpProxyMap {
+			hp.UpdateRemotePortStatus()
+		}
+		sm.UpdateHttpProxyByMap(HttpProxyMap)
+	}
+	for _, hp := range sm.HttpProxyMap {
+		go hp.UpdateRemotePortStatus()
+	}
 }
 
 func checkOpenIoTHubToken(key, tokenStr, id string) (token *models.TokenClaims, err error) {
