@@ -3,7 +3,37 @@
 ## OpenIoTHub 物联网服务器
 
 ### 如果你有自建转发服务端的需求则可以自建此服务端，服务器需要同时开启指定的TCP，UDP端口
-#### 建好此服务器之后，[网关](https://github.com/OpenIoTHub/server-go/releases )就可以连接自建的服务器了！
+#### 建好此服务器之后，[网关](https://github.com/OpenIoTHub/gateway-go/releases )就可以连接自建的服务器了！
+
+```sh
+如果使用redis持久化保存Http代理配置请将配置文件中的redis的使能打开enabled: true
+```
+
+```yaml
+common:
+  bind_addr: 0.0.0.0 #服务器监听的IP地址，默认监听所有
+  tcp_port: 34320 #服务器使用的tcp端口
+  kcp_port: 34320 #服务器使用的kcp(实际上是udp)端口
+  udp_p2p_port: 34321 #服务器使用的UDP端口，用于辅助p2p
+  kcp_p2p_port: 34322 #服务器使用的kcp（UDP）端口，用于辅助p2p
+  tls_port: 34321 #服务器使用的tls(实际上是tcp)端口，用于安全通信
+  grpc_port: 34322 #服务器使用的grpc(实际上是tcp)端口，用于grpc通信
+  http_port: 80 #服务器监听的http（tcp）端口，用于提供http代理功能
+  https_port: 443 #服务器监听的https（tcp）端口，用于提供https代理功能
+security:
+  login_key: HLLdsa544&*S #用户自定义的服务器秘钥，此为默认，用户个人使用服务器请修改
+  tls_Cert_file_path: ""
+  tls_key_file_path: ""
+  https_cert_file_path: ""
+  https_key_file_path: ""
+redisconfig:
+  enabled: false #是否使用redis保存用户http代理配置 <----这里打开redis
+  network: tcp  #redis使用tcp连接，默认即可
+  address: 127.0.0.1:6379 #redis的地址，默认本机，redis默认端口6379，请根据自己的redis配置
+  database: 0 #redis的默认服务器0，如果你不懂请保持0
+  needAuth: false #redis是否需要密码验证，默认不需要false，如果你的redis需要密码请将false改为true并配置下面password为redis密码
+  password: "" #redis的密码，needAuth:true时有效
+```
 
 You can install the pre-compiled binary (in several different ways),
 use Docker.
@@ -29,6 +59,7 @@ $ brew install server-go（not support yet）
 ```sh
 $ sudo snap install server-go
 ```
+*** 默认配置文件的路径：/root/snap/server-go/current/server-yaml
 
 **scoop**:
 
