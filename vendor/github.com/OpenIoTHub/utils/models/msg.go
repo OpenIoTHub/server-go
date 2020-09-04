@@ -126,7 +126,7 @@ type ReqNewP2PCtrlAsServer struct {
 	ExternalPort int
 }
 
-//让网关以dial的身份连接我
+//让内网端以dial的身份连接我
 type ReqNewP2PCtrlAsClient struct {
 	IntranetIp   string
 	IntranetPort int

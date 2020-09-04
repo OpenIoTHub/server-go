@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	//"github.com/OpenIoTHub/utils/net"
-	"github.com/PuerkitoBio/goquery"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -65,19 +65,19 @@ type IP struct {
 
 //获取自己的公网ip
 func GetMyPublicIpInfo() (string, error) {
-	url := "https://www.ip.cn/"
+	url := "http://ifconfig.me/ip"
+	//url := "http://ipinfo.io/ip"
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-	if err != nil {
-		return "", err
+	body, _ := ioutil.ReadAll(resp.Body)
+	ip := net.ParseIP(string(body))
+	if ip != nil {
+		return ip.String(), nil
 	}
-	doc2 := doc.Find("code")
-	return doc2.Html()
+	return "", errors.New(fmt.Sprintf("get public addr failed form %s", url))
 }
 
 func GetIpInfo(ip string) (*IPInfo, error) {

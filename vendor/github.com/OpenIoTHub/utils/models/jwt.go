@@ -57,12 +57,18 @@ func GetToken(gatewayConfig *GatewayConfig, permission int, expiresecd int64) (t
 	return tokenStr, nil
 }
 
-func GetTokenByServerConfig(serverConfig *ServerConfig, permission int, expiresecd int64) (gatewayToken, openIoTHubToken string, err error) {
+func GetTokenByServerConfig(serverConfig *ServerConfig, expiresecd int64) (gatewayToken, openIoTHubToken string, err error) {
+	var myPublicIp string
 	uuidStr := uuid.Must(uuid.NewV4()).String()
-	myPublicIp, err := ip.GetMyPublicIpInfo()
-	if err != nil {
-		return "", "", err
+	if serverConfig.PublicIp != "" {
+		myPublicIp = serverConfig.PublicIp
+	} else {
+		myPublicIp, err = ip.GetMyPublicIpInfo()
+		if err != nil {
+			return "", "", err
+		}
 	}
+
 	gatewayConfig := &GatewayConfig{
 		ConnectionType: "tcp",
 		LastId:         uuidStr,

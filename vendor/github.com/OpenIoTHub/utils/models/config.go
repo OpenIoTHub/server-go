@@ -18,7 +18,8 @@ type Srever struct {
 }
 
 type ServerConfig struct {
-	Common struct {
+	PublicIp string `yaml:"my_public_ip_or_domian"`
+	Common   struct {
 		BindAddr   string `yaml:"bind_addr"`
 		TcpPort    int    `yaml:"tcp_port"`
 		KcpPort    int    `yaml:"kcp_port"`

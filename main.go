@@ -56,7 +56,7 @@ func main() {
 					log.Println(err)
 					return err
 				}
-				GateWayToken, OpenIoTHubToken, err := models.GetTokenByServerConfig(&config.ConfigMode, 1, 200000000000)
+				GateWayToken, OpenIoTHubToken, err := models.GetTokenByServerConfig(&config.ConfigMode, 200000000000)
 				if err != nil {
 					return err
 				}
