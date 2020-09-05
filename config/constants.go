@@ -2,7 +2,7 @@ package config
 
 import "fmt"
 
-const DefaultConfigFileName = "server.yaml"
+const DefaultConfigFileName = "server-go.yaml"
 
 var DefaultConfigFilePath = fmt.Sprintf("./%s", DefaultConfigFileName)
 

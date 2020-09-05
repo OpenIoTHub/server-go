@@ -7,7 +7,7 @@ Type=simple
 User=nobody
 Restart=on-failure
 RestartSec=5s
-ExecStart=/usr/bin/server-go -c /etc/server-go/server-go.yaml
+ExecStart=/usr/local/bin/server-go -c /etc/server-go/server-go.yaml
 
 [Install]
 WantedBy=multi-user.target
