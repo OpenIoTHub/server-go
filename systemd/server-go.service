@@ -1,0 +1,13 @@
+[Unit]
+Description=OpenIoTHub Server
+After=network.target
+
+[Service]
+Type=simple
+User=nobody
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/bin/server-go -c /etc/server-go/server-go.yaml
+
+[Install]
+WantedBy=multi-user.target
