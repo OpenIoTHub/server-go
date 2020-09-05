@@ -74,7 +74,7 @@ nfpms:
       - deb
       - rpm
     files:
-      "systemd/**": "/usr/lib/systemd/user"
+      "systemd/**": "/etc/systemd/system"
     config_files:
       "server-go.yaml": "/etc/server-go/server-go.yaml"
 snapcrafts:
