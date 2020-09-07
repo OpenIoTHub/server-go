@@ -89,6 +89,15 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:    "test",
+			Aliases: []string{"t"},
+			Usage:   "test this command",
+			Action: func(c *cli.Context) error {
+				fmt.Println("ok")
+				return nil
+			},
+		},
 	}
 	myApp.Action = func(c *cli.Context) error {
 		err := run()

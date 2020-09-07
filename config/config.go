@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/OpenIoTHub/utils/models"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -31,8 +32,6 @@ func LoadConfig() (err error) {
 
 func InitConfigFile() {
 	var err error
-	log.Println("没有找到配置文件：", DefaultConfigFilePath)
-	log.Println("开始生成默认的空白配置文件")
 	ConfigMode.Common.BindAddr = DefaultBindAddr
 	ConfigMode.Common.KcpPort = DefaultKcpPort
 	ConfigMode.Common.TcpPort = DefaultTcpPort
@@ -47,12 +46,13 @@ func InitConfigFile() {
 	ConfigMode.RedisConfig.Address = DefaultRedisAddress
 	//	生成配置文件模板
 	err = writeConfigFile(ConfigMode, DefaultConfigFilePath)
-	if err != nil {
-		log.Printf("写入默认的配置文件失败：%s\n", err.Error())
+	if err == nil {
+		fmt.Println("config created")
 		return
+	} else {
+		log.Println("配置文件路径为：", DefaultConfigFilePath)
+		log.Println("写入配置文件失败：", err.Error())
 	}
-	log.Println("配置文件写入成功,路径为：", DefaultConfigFilePath)
-	log.Println("你也可以修改上述配置文件后在运行")
 }
 
 //从配置文件路径解析配置文件的内容
