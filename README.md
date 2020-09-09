@@ -1,5 +1,7 @@
 # Server for OpenIoTHub
 [![Build Status](https://travis-ci.com/OpenIoTHub/server-go.svg?branch=master)](https://travis-ci.com/OpenIoTHub/server-go)
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/server-go)
 ## OpenIoTHub 物联网服务器
 
 ### 如果你有自建转发服务端的需求则可以自建此服务端，服务器需要同时开启指定的TCP，UDP端口
