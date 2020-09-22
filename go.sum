@@ -5,8 +5,8 @@ github.com/OpenIoTHub/getip v0.1.0 h1:W8iB+PcDz15jJHJTxMZmyXVAc8TRjwJTZ1+JsxCYVc
 github.com/OpenIoTHub/getip v0.1.0/go.mod h1:MO10UjKzR2d8p2ajplZu//NsvQ0GMiL7pllh1LEnKIM=
 github.com/OpenIoTHub/server-grpc-api v1.0.4 h1:dVqKqdhV6VaQIZipOHqxJEpt7NfU8QvPTaDXVJd1Vog=
 github.com/OpenIoTHub/server-grpc-api v1.0.4/go.mod h1:4Tvt1MoMNqIBcVSweRZOXuqOj5JWw1HPNxd9vZv4oAI=
-github.com/OpenIoTHub/utils v0.0.57 h1:2/LygP+zO+z/DXKG61JdJ5FmwK3DU92RVgSOBNMkEtI=
-github.com/OpenIoTHub/utils v0.0.57/go.mod h1:y1u/SS0CAgsOI95RnrI6nxMFcXNVAF6NF6sbNDqNDkQ=
+github.com/OpenIoTHub/utils v0.0.59 h1:Nf//jfC+FYeDkLT5W1Dt85R5g4Vf18DSOQMSEULqYA8=
+github.com/OpenIoTHub/utils v0.0.59/go.mod h1:y1u/SS0CAgsOI95RnrI6nxMFcXNVAF6NF6sbNDqNDkQ=
 github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da/go.mod h1:eHEWzANqSiWQsof+nXEI9bUVUyV6F53Fp89EuCh2EAA=
 github.com/cenkalti/backoff v2.2.1+incompatible h1:tNowT99t7UNflLxfYYSlKYsBpXdEet03Pg2g16Swow4=
 github.com/cenkalti/backoff v2.2.1+incompatible/go.mod h1:90ReRw6GdpyfrHakVjL/QHaoyV4aDUVVkXQJJJ3NXXM=

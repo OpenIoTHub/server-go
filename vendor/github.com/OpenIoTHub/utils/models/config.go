@@ -2,8 +2,9 @@ package models
 
 //网关的配置文件
 type GatewayConfig struct {
+	GatewayUUID         string
 	LoginWithTokenList  []string
-	loginWithServerConf []*LoginWithServer
+	LoginWithServerConf []*LoginWithServer
 }
 
 type LoginWithServer struct {
