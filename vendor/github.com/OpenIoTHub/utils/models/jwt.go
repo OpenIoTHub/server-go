@@ -22,34 +22,23 @@ type TokenClaims struct {
 	jwt.StandardClaims
 }
 
-func GetToken(gatewayConfig *GatewayConfig, permission int, expiresecd int64) (token string, err error) {
-	fmt.Println("Get Token:")
-	fmt.Println(
-		gatewayConfig.LastId,
-		gatewayConfig.Server.ServerHost,
-		gatewayConfig.Server.TcpPort,
-		gatewayConfig.Server.KcpPort,
-		gatewayConfig.Server.TlsPort,
-		gatewayConfig.Server.GrpcPort,
-		gatewayConfig.Server.UdpApiPort,
-		gatewayConfig.Server.KcpApiPort,
-	)
+func GetToken(loginWithServer *LoginWithServer, permission int, expiresecd int64) (token string, err error) {
 	tokenModel := jwt.NewWithClaims(jwt.SigningMethodHS256, TokenClaims{
-		gatewayConfig.LastId,
-		gatewayConfig.Server.ServerHost,
-		gatewayConfig.Server.TcpPort,
-		gatewayConfig.Server.KcpPort,
-		gatewayConfig.Server.TlsPort,
-		gatewayConfig.Server.GrpcPort,
-		gatewayConfig.Server.UdpApiPort,
-		gatewayConfig.Server.KcpApiPort,
+		loginWithServer.LastId,
+		loginWithServer.Server.ServerHost,
+		loginWithServer.Server.TcpPort,
+		loginWithServer.Server.KcpPort,
+		loginWithServer.Server.TlsPort,
+		loginWithServer.Server.GrpcPort,
+		loginWithServer.Server.UdpApiPort,
+		loginWithServer.Server.KcpApiPort,
 		permission,
 		jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 8*60*60,
 			ExpiresAt: time.Now().Unix() + expiresecd,
 		},
 	})
-	tokenStr, err := tokenModel.SignedString([]byte(gatewayConfig.Server.LoginKey))
+	tokenStr, err := tokenModel.SignedString([]byte(loginWithServer.Server.LoginKey))
 	if err != nil {
 		fmt.Printf(err.Error())
 		return "", err
@@ -63,13 +52,13 @@ func GetTokenByServerConfig(serverConfig *ServerConfig, expiresecd int64) (gatew
 	if serverConfig.PublicIp != "" {
 		myPublicIp = serverConfig.PublicIp
 	} else {
-		myPublicIp, err = ip.GetMyPublicIpInfo()
+		myPublicIp, err = ip.GetMyPublicIpv4()
 		if err != nil {
 			return "", "", err
 		}
 	}
 
-	gatewayConfig := &GatewayConfig{
+	loginWithServer := &LoginWithServer{
 		ConnectionType: "tcp",
 		LastId:         uuidStr,
 		Server: &Srever{
@@ -83,11 +72,11 @@ func GetTokenByServerConfig(serverConfig *ServerConfig, expiresecd int64) (gatew
 			LoginKey:   serverConfig.Security.LoginKey,
 		},
 	}
-	gatewayToken, err = GetToken(gatewayConfig, 1, expiresecd)
+	gatewayToken, err = GetToken(loginWithServer, 1, expiresecd)
 	if err != nil {
 		return "", "", err
 	}
-	openIoTHubToken, err = GetToken(gatewayConfig, 2, expiresecd)
+	openIoTHubToken, err = GetToken(loginWithServer, 2, expiresecd)
 	if err != nil {
 		return "", "", err
 	}

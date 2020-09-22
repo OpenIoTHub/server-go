@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/OpenIoTHub/server-grpc-api v1.0.4
-	github.com/OpenIoTHub/utils v0.0.54
+	github.com/OpenIoTHub/utils v0.0.57
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible
