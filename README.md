@@ -63,13 +63,20 @@ $ brew install OpenIoTHub/tap/server-go
 $ brew install server-go
 ```
 homebrew pr [server-go](https://github.com/Homebrew/homebrew-core/blob/master/Formula/server-go.rb)
+```text
+*** config file : 
+/usr/local/etc/server-go/server-go.yaml
+```
 
 **snapcraft**:
 
 ```sh
 $ sudo snap install server-go
 ```
-*** 默认配置文件的路径：/root/snap/server-go/current/server-yaml
+```text
+*** config file : 
+/root/snap/server-go/current/server-go.yaml
+```
 
 **scoop**:
 
@@ -82,6 +89,11 @@ $ scoop install server-go
 
 Download the `.deb` or `.rpm` from the [releases page][releases] and
 install with `dpkg -i` and `rpm -i` respectively.
+```text
+*** config file : 
+/etc/server-go/server-go.yaml
+```
+
 
 **Shell script**:
 
