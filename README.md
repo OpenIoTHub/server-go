@@ -60,8 +60,9 @@ $ brew install OpenIoTHub/tap/server-go
 **homebrew** (may not be the latest version):
 
 ```sh
-$ brew install server-go（not support yet）
+$ brew install server-go
 ```
+homebrew pr [server-go](https://github.com/Homebrew/homebrew-core/blob/master/Formula/server-go.rb)
 
 **snapcraft**:
 
