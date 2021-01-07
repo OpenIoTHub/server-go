@@ -18,11 +18,30 @@ type TokenClaims struct {
 	GrpcPort   int
 	UDPApiPort int
 	KCPApiPort int
-	Permission int
+	Permission []string
+	Txts       map[string]string
 	jwt.StandardClaims
 }
 
-func GetToken(loginWithServer *LoginWithServer, permission int, expiresecd int64) (token string, err error) {
+func (t *TokenClaims) IfContainPermission(permission string) bool {
+	for _, p := range t.Permission {
+		if p == permission {
+			return true
+		}
+	}
+	return false
+}
+
+func (t *TokenClaims) IfContainPermissions(permissions []string) bool {
+	for _, p := range permissions {
+		if t.IfContainPermission(p) {
+			return true
+		}
+	}
+	return false
+}
+
+func GetToken(loginWithServer *LoginWithServer, permission []string, expiresecd int64) (token string, err error) {
 	tokenModel := jwt.NewWithClaims(jwt.SigningMethodHS256, TokenClaims{
 		loginWithServer.LastId,
 		loginWithServer.Server.ServerHost,
@@ -33,6 +52,7 @@ func GetToken(loginWithServer *LoginWithServer, permission int, expiresecd int64
 		loginWithServer.Server.UdpApiPort,
 		loginWithServer.Server.KcpApiPort,
 		permission,
+		map[string]string{},
 		jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 8*60*60,
 			ExpiresAt: time.Now().Unix() + expiresecd,
@@ -72,11 +92,11 @@ func GetTokenByServerConfig(serverConfig *ServerConfig, expiresecd int64) (gatew
 			LoginKey:   serverConfig.Security.LoginKey,
 		},
 	}
-	gatewayToken, err = GetToken(loginWithServer, 1, expiresecd)
+	gatewayToken, err = GetToken(loginWithServer, []string{PermissionGatewayLogin}, expiresecd)
 	if err != nil {
 		return "", "", err
 	}
-	openIoTHubToken, err = GetToken(loginWithServer, 2, expiresecd)
+	openIoTHubToken, err = GetToken(loginWithServer, []string{PermissionOpenIoTHubLogin}, expiresecd)
 	if err != nil {
 		return "", "", err
 	}

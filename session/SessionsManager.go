@@ -127,7 +127,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			if token.Permission&1 != 1 {
+			if !token.IfContainPermission(models.PermissionGatewayLogin) {
 				log.Println("token type err ,not n")
 				conn.Close()
 				return
@@ -161,7 +161,19 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			//TODO 添加上线、下线日志储存以供用户查询
 			log.Println("获取到一个Gateway主动发起的工作连接")
 			log.Println("GatewayWorkConn:", m.RunId, "@", m.Version)
-			//TODO 验证Secret
+			//验证Secret
+			token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Secret)
+			if err != nil {
+				log.Println(err.Error())
+				conn.Close()
+				return
+			}
+			if !token.IfContainPermission(models.PermissionGatewayLogin) {
+				log.Println("token type err ,not n")
+				conn.Close()
+				return
+			}
+			//验证Secret Over
 			session, err := sess.GetSessionByID(m.RunId)
 			if err != nil {
 				log.Println(err)
@@ -179,7 +191,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			if token.Permission != 2 {
+			if !token.IfContainPermission(models.PermissionOpenIoTHubLogin) {
 				log.Println("token type err ,not 2")
 				conn.Close()
 				return
