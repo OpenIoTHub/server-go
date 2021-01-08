@@ -78,7 +78,7 @@ func checkOpenIoTHubToken(key, tokenStr, id string) (token *models.TokenClaims, 
 		return
 	}
 	if !token.IfContainPermission(models.PermissionOpenIoTHubLogin) {
-		log.Printf("token type err ,%d not 2(OpenIoTHub)", token.Permission)
+		log.Printf("token type err ,%+v not 2(OpenIoTHub)", token.Permission)
 		return nil, errors.New("not gateway token")
 	}
 	if token.RunId != id {
