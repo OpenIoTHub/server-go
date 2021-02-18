@@ -14,7 +14,6 @@ import (
 	"net"
 	"net/http"
 	"net/http/httputil"
-	"net/url"
 	"strings"
 	"time"
 )
@@ -137,13 +136,6 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	remote, err := url.Parse(fmt.Sprintf("http://%s/", r.Host))
-	if err != nil {
-		log.Printf(err.Error())
-		w.Write([]byte(err.Error()))
-		return
-	}
 	//是websocket
 	if v, ok := r.Header["Upgrade"]; ok {
 		if v[0] == "websocket" {
@@ -169,10 +161,12 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	//是普通http的情况
-	proxy := httputil.NewSingleHostReverseProxy(remote)
+	proxy := httputil.ReverseProxy{Director: func(request *http.Request) {
+		//	修改代理的request
+	}}
 	var pTransport http.RoundTripper = &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
-		Dial:                  sm.dial,
+		DialContext:           sm.dial,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 	}
@@ -181,7 +175,7 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	proxy.ServeHTTP(w, r)
 }
 
-func (sm *SessionsManager) dial(network, address string) (net.Conn, error) {
+func (sm *SessionsManager) dial(c context.Context, network, address string) (net.Conn, error) {
 	//log.Printf("请求的地址addr：%s", address)
 	end := strings.Index(address, ":")
 	host := address[0:end]
