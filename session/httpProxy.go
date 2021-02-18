@@ -163,6 +163,11 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//是普通http的情况
 	proxy := httputil.ReverseProxy{Director: func(request *http.Request) {
 		//	修改代理的request
+		if ip, _, err := net.SplitHostPort(strings.TrimSpace(request.RemoteAddr)); err == nil {
+			request.Header.Add("REMOTE_ADDR", ip)
+			//request.Header.Add("X-Forwarded-For", ip)
+			request.Header.Add("X-Real-Ip", ip)
+		}
 	}}
 	var pTransport http.RoundTripper = &http.Transport{
 		Proxy:                 http.ProxyFromEnvironment,
