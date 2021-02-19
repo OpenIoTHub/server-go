@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/OpenIoTHub/utils/models"
 	"gopkg.in/yaml.v2"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -24,6 +25,21 @@ func LoadConfig() (err error) {
 	}
 	log.Println("使用配置文件：", DefaultConfigFilePath)
 	ConfigMode, err = GetConfig(DefaultConfigFilePath)
+	//解析日志配置
+	writers := []io.Writer{}
+	if ConfigMode.LogConfig != nil && ConfigMode.LogConfig.EnableStdout {
+		writers = append(writers, os.Stdout)
+	}
+	if ConfigMode.LogConfig != nil && ConfigMode.LogConfig.LogFilePath != "" {
+		f, err := os.OpenFile(ConfigMode.LogConfig.LogFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+		writers = append(writers, f)
+	}
+	fileAndStdoutWriter := io.MultiWriter(writers...)
+	log.SetOutput(fileAndStdoutWriter)
+	//
 	if err != nil {
 		return
 	}
@@ -32,6 +48,10 @@ func LoadConfig() (err error) {
 
 func InitConfigFile() {
 	var err error
+	ConfigMode.LogConfig = &models.LogConfig{
+		EnableStdout: true,
+		LogFilePath:  "",
+	}
 	ConfigMode.Common.BindAddr = DefaultBindAddr
 	ConfigMode.Common.KcpPort = DefaultKcpPort
 	ConfigMode.Common.TcpPort = DefaultTcpPort

@@ -3,6 +3,7 @@ package models
 //网关的配置文件
 type GatewayConfig struct {
 	GatewayUUID         string
+	LogConfig           *LogConfig
 	LoginWithTokenList  []string
 	LoginWithServerConf []*LoginWithServer
 }
@@ -26,8 +27,9 @@ type Srever struct {
 
 //服务器的配置文件模型
 type ServerConfig struct {
-	PublicIp string `yaml:"my_public_ip_or_domian"`
-	Common   struct {
+	PublicIp  string `yaml:"my_public_ip_or_domian"`
+	LogConfig *LogConfig
+	Common    struct {
 		BindAddr   string `yaml:"bind_addr"`
 		TcpPort    int    `yaml:"tcp_port"`
 		KcpPort    int    `yaml:"kcp_port"`
@@ -53,4 +55,9 @@ type ServerConfig struct {
 		NeedAuth bool   `yaml:"needAuth"`
 		Password string `yaml:"password"`
 	}
+}
+
+type LogConfig struct {
+	EnableStdout bool
+	LogFilePath  string
 }

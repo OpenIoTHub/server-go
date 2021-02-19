@@ -1,7 +1,6 @@
 package iputils
 
 import (
-	"errors"
 	"io/ioutil"
 	"log"
 	"net"
@@ -57,12 +56,9 @@ var Ipv6APIUrls = []string{
 	"http://v6.ipv6-test.com/api/myip.php",
 }
 
-func GetMyPublicIpv4() (string, error) {
+func GetMyPublicIpv4() string {
 	for _, url := range Ipv4APIUrls {
 		resp, err := http.Get(url)
-		if resp != nil && resp.Body != nil {
-			defer resp.Body.Close()
-		}
 		if err != nil {
 			log.Printf("get public ipv4 err：%s", err)
 			continue
@@ -70,41 +66,42 @@ func GetMyPublicIpv4() (string, error) {
 		bytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			log.Printf("get public ipv4 err：%s", err)
+			_ = resp.Body.Close()
 			continue
 		}
 		ipv4 := strings.Replace(string(bytes), "\n", "", -1)
 		ip := net.ParseIP(ipv4)
 		if ip != nil {
-			log.Println("got ipv4 addr:", ip.String())
-			return ip.String(), nil
+			_ = resp.Body.Close()
+			return ip.String()
 		}
 	}
-	return "", errors.New("ipv4 not found")
+	return ""
 }
 
-func GetMyPublicIpv6() (string, error) {
+func GetMyPublicIpv6() string {
 	for _, url := range Ipv6APIUrls {
 		resp, err := http.Get(url)
-		if resp != nil && resp.Body != nil {
-			defer resp.Body.Close()
-		}
 		if err != nil {
 			log.Printf("get public ipv6 err：%s", err)
 			continue
 		}
+		// 读取 IPv6
 		bytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			log.Printf("get public ipv6 err：%s", err)
+			_ = resp.Body.Close()
 			continue
 		}
+		// 删除 document.write(xxx) (如有)
 		tmp := strings.Replace(string(bytes), "document.write('", "", -1)
-		tmp2 := strings.Replace(tmp, "');", "", -1)
-		ipv6 := strings.Replace(tmp2, "\n", "", -1)
+		tmp = strings.Replace(tmp, "');", "", -1)
+		ipv6 := strings.Replace(tmp, "\n", "", -1)
 		ip := net.ParseIP(ipv6)
 		if ip != nil {
-			log.Println("got ipv6 addr:", ip.String())
-			return ip.String(), nil
+			_ = resp.Body.Close()
+			return ip.String()
 		}
 	}
-	return "", errors.New("pv6 not found")
+	return ""
 }

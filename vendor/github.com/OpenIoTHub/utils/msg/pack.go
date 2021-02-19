@@ -11,7 +11,7 @@ func unpack(typeStr string, buffer []byte, msgIn models.Message) (msg models.Mes
 	if msgIn == nil {
 		t, ok := models.TypeMap[typeStr]
 		if !ok {
-			err = fmt.Errorf("Unsupported message type %b", typeStr)
+			err = fmt.Errorf("unsupported message type %s", typeStr)
 			return
 		}
 

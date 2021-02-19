@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/OpenIoTHub/getip/iputils"
 	"io/ioutil"
 	"log"
@@ -64,15 +65,23 @@ type IP struct {
 
 //获取自己的公网ip
 func GetMyPublicIpInfo() (string, error) {
-	return iputils.GetMyPublicIpv4()
+	return GetMyPublicIpv4()
 }
 
 func GetMyPublicIpv4() (string, error) {
-	return iputils.GetMyPublicIpv4()
+	ip := iputils.GetMyPublicIpv4()
+	if ip != "" {
+		return ip, nil
+	}
+	return "", fmt.Errorf("获取ipv4地址失败")
 }
 
 func GetMyPublicIpv6() (string, error) {
-	return iputils.GetMyPublicIpv6()
+	ip := iputils.GetMyPublicIpv6()
+	if ip != "" {
+		return ip, nil
+	}
+	return "", fmt.Errorf("获取ipv6地址失败")
 }
 
 func GetIpInfo(ip string) (*IPInfo, error) {

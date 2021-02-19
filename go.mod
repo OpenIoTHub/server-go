@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/OpenIoTHub/server-grpc-api v1.0.4
-	github.com/OpenIoTHub/utils v0.0.60
+	github.com/OpenIoTHub/utils v0.0.61
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible
@@ -19,7 +19,7 @@ require (
 	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/templexxx/xor v0.0.0-20191217153810-f85b25db303b // indirect
 	github.com/tjfoc/gmsm v1.3.2 // indirect
-	github.com/urfave/cli/v2 v2.2.0
+	github.com/urfave/cli/v2 v2.3.0
 	github.com/xtaci/kcp-go v5.4.20+incompatible
 	github.com/xtaci/kcp-go/v5 v5.5.14 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
