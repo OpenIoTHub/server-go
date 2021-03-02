@@ -3,7 +3,7 @@ package nettool
 import (
 	"context"
 	"fmt"
-	"github.com/iotdevice/zeroconf"
+	"github.com/grandcat/zeroconf"
 	"github.com/satori/go.uuid"
 	"log"
 	"strings"

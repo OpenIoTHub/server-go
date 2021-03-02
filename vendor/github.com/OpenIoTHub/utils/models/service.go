@@ -1,6 +1,6 @@
 package models
 
-import "github.com/iotdevice/zeroconf"
+import "github.com/grandcat/zeroconf"
 
 type FindmDNS struct {
 	Service string

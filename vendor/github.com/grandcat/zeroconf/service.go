@@ -97,8 +97,8 @@ type ServiceEntry struct {
 	Port     int      `json:"port"`     // Service Port
 	Text     []string `json:"text"`     // Service info served as a TXT record
 	TTL      uint32   `json:"ttl"`      // TTL of the service record
-	AddrIPv4 []net.IP //`json:"-"`        // Host machine IPv4 address
-	AddrIPv6 []net.IP //`json:"-"`        // Host machine IPv6 address
+	AddrIPv4 []net.IP `json:"-"`        // Host machine IPv4 address
+	AddrIPv6 []net.IP `json:"-"`        // Host machine IPv6 address
 }
 
 // NewServiceEntry constructs a ServiceEntry.

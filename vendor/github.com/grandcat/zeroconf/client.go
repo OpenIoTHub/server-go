@@ -3,7 +3,6 @@ package zeroconf
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
 	"strings"
 
@@ -197,27 +196,21 @@ func (c *client) mainloop(ctx context.Context, params *LookupParams) {
 		select {
 		case <-ctx.Done():
 			// Context expired. Notify subscriber that we are done here.
-			// TODO 关闭传入的channel
-			//params.done()
+			params.done()
 			c.shutdown()
 			return
 		case msg := <-msgCh:
-			//log.Println("==msgCh", msg)
 			entries = make(map[string]*ServiceEntry)
 			sections := append(msg.Answer, msg.Ns...)
 			sections = append(sections, msg.Extra...)
-			//log.Println("sections", sections)
+
 			for _, answer := range sections {
-				//log.Println("answer", answer)
 				switch rr := answer.(type) {
 				case *dns.PTR:
-					//log.Println("====dns.PTR", rr.Hdr.Name, rr.Ptr)
 					if params.ServiceName() != rr.Hdr.Name {
-						//log.Println("params.ServiceName() != rr.Hdr.Name")
 						continue
 					}
 					if params.ServiceInstanceName() != "" && params.ServiceInstanceName() != rr.Ptr {
-						//log.Println("params.ServiceInstanceName() != \"\" && params.ServiceInstanceName() != rr.Ptr")
 						continue
 					}
 					if _, ok := entries[rr.Ptr]; !ok {
@@ -228,7 +221,6 @@ func (c *client) mainloop(ctx context.Context, params *LookupParams) {
 					}
 					entries[rr.Ptr].TTL = rr.Hdr.Ttl
 				case *dns.SRV:
-					//log.Println("*dns.SRV", rr)
 					if params.ServiceInstanceName() != "" && params.ServiceInstanceName() != rr.Hdr.Name {
 						continue
 					} else if !strings.HasSuffix(rr.Hdr.Name, params.ServiceName()) {
@@ -244,7 +236,6 @@ func (c *client) mainloop(ctx context.Context, params *LookupParams) {
 					entries[rr.Hdr.Name].Port = int(rr.Port)
 					entries[rr.Hdr.Name].TTL = rr.Hdr.Ttl
 				case *dns.TXT:
-					//log.Println("dns.TXT", rr)
 					if params.ServiceInstanceName() != "" && params.ServiceInstanceName() != rr.Hdr.Name {
 						continue
 					} else if !strings.HasSuffix(rr.Hdr.Name, params.ServiceName()) {
@@ -265,14 +256,12 @@ func (c *client) mainloop(ctx context.Context, params *LookupParams) {
 				switch rr := answer.(type) {
 				case *dns.A:
 					for k, e := range entries {
-						//log.Println("A:",rr.A)
 						if e.HostName == rr.Hdr.Name {
 							entries[k].AddrIPv4 = append(entries[k].AddrIPv4, rr.A)
 						}
 					}
 				case *dns.AAAA:
 					for k, e := range entries {
-						//log.Println("A:",rr.AAAA)
 						if e.HostName == rr.Hdr.Name {
 							entries[k].AddrIPv6 = append(entries[k].AddrIPv6, rr.AAAA)
 						}
@@ -280,48 +269,24 @@ func (c *client) mainloop(ctx context.Context, params *LookupParams) {
 				}
 			}
 		}
-		//log.Println("===entries", entries["home._home-assistant._tcp.local."])
+
 		if len(entries) > 0 {
-			//log.Println("len(entries) > 0")
-			//log.Println(entries)
-			//log.Println("===entries", entries["home._home-assistant._tcp.local."])
 			for k, e := range entries {
 				if e.TTL == 0 {
-					//log.Println("e.TTL == 0")
 					delete(entries, k)
 					delete(sentEntries, k)
 					continue
 				}
 				if _, ok := sentEntries[k]; ok {
-					//log.Println(" _, ok := sentEntries[k]; ok")
-					//log.Println(sentEntries[k])
-					//log.Println(entries[k])
 					continue
 				}
 
 				// If this is an DNS-SD query do not throw PTR away.
 				// It is expected to have only PTR for enumeration
-				//log.Println("=========")
-				//log.Println("ServiceTypeName:", params.ServiceRecord.ServiceTypeName() ,"ServiceName:", params.ServiceRecord.ServiceName())
 				if params.ServiceRecord.ServiceTypeName() != params.ServiceRecord.ServiceName() {
 					// Require at least one resolved IP address for ServiceEntry
 					// TODO: wait some more time as chances are high both will arrive.
 					if len(e.AddrIPv4) == 0 && len(e.AddrIPv6) == 0 {
-						//log.Println("len(e.AddrIPv4) == 0 && len(e.AddrIPv6) == 0")
-						//log.Println("e:", e)
-
-						newParams := defaultParams(e.Service)
-						newParams.Instance = e.Instance
-						newParams.Domain = e.Domain
-						newParams.Entries = params.Entries
-						_, cancel := context.WithCancel(ctx)
-						err := c.query(newParams)
-						if err != nil {
-							log.Println("cancel()")
-							cancel()
-						}
-						delete(entries, k)
-						delete(sentEntries, k)
 						continue
 					}
 				}
@@ -330,7 +295,6 @@ func (c *client) mainloop(ctx context.Context, params *LookupParams) {
 				// service entry.
 				params.Entries <- e
 				sentEntries[k] = e
-				//log.Println("sentEntries[k] = e")
 				params.disableProbing()
 			}
 			// reset entries
@@ -386,14 +350,11 @@ func (c *client) recv(ctx context.Context, l interface{}, msgCh chan *dns.Msg) {
 			fatalErr = err
 			continue
 		}
-		//log.Println(string(buf))
 		msg := new(dns.Msg)
 		if err := msg.Unpack(buf[:n]); err != nil {
-			//log.Println(string(buf))
-			//log.Printf("[WARN] mdns: Failed to unpack packet: %v", err)
+			// log.Printf("[WARN] mdns: Failed to unpack packet: %v", err)
 			continue
 		}
-		//log.Println("===msg:",msg)
 		select {
 		case msgCh <- msg:
 			// Submit decoded DNS message and continue.
@@ -426,8 +387,7 @@ func (c *client) periodicQuery(ctx context.Context, params *LookupParams) error 
 		// Backoff and cancel logic.
 		wait := bo.NextBackOff()
 		if wait == backoff.Stop {
-			log.Println("periodicQuery: abort due to timeout")
-			return nil
+			return fmt.Errorf("periodicQuery: abort due to timeout")
 		}
 		select {
 		case <-time.After(wait):
@@ -447,13 +407,10 @@ func (c *client) periodicQuery(ctx context.Context, params *LookupParams) error 
 // Performs the actual query by service name (browse) or service instance name (lookup),
 // start response listeners goroutines and loops over the entries channel.
 func (c *client) query(params *LookupParams) error {
-	//log.Println("aaaa")
 	var serviceName, serviceInstanceName string
 	serviceName = fmt.Sprintf("%s.%s.", trimDot(params.Service), trimDot(params.Domain))
-	//log.Println("===serviceName:", serviceName)
 	if params.Instance != "" {
 		serviceInstanceName = fmt.Sprintf("%s.%s", params.Instance, serviceName)
-		//log.Println("===serviceInstanceName", serviceInstanceName)
 	}
 
 	// send the query
@@ -462,18 +419,11 @@ func (c *client) query(params *LookupParams) error {
 		m.Question = []dns.Question{
 			dns.Question{serviceInstanceName, dns.TypeSRV, dns.ClassINET},
 			dns.Question{serviceInstanceName, dns.TypeTXT, dns.ClassINET},
-			//dns.Question{serviceInstanceName, dns.TypeA, dns.ClassINET},
 		}
 		m.RecursionDesired = false
 	} else {
 		m.SetQuestion(serviceName, dns.TypePTR)
-		//m.Question = []dns.Question{
-		//	dns.Question{serviceName, dns.TypeSRV, dns.ClassINET},
-		//	dns.Question{serviceName, dns.TypeTXT, dns.ClassINET},
-		//	dns.Question{serviceName, dns.TypeA, dns.ClassINET},
-		//}
 		m.RecursionDesired = false
-		//log.Println("++++++++++++++++++++dns:", m.String())
 	}
 	if err := c.sendQuery(m); err != nil {
 		return err
@@ -488,7 +438,6 @@ func (c *client) sendQuery(msg *dns.Msg) error {
 	if err != nil {
 		return err
 	}
-	//log.Println(string(buf))
 	if c.ipv4conn != nil {
 		var wcm ipv4.ControlMessage
 		for ifi := range c.ifaces {
