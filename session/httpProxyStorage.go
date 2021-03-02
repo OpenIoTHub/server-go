@@ -2,7 +2,6 @@ package session
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
 	"log"
@@ -27,8 +26,8 @@ func (sm *SessionsManager) GetOneHttpProxy(domain string) (*HttpProxy, error) {
 	if _, ok := sm.HttpProxyMap[domain]; ok {
 		return sm.HttpProxyMap[domain], nil //存在
 	}
-	log.Printf("httpProxy id未注册")
-	return nil, errors.New("httpProxy id未注册")
+	log.Printf("httpProxy id未注册%s", domain)
+	return nil, fmt.Errorf("httpProxy id未注册:%s", domain)
 }
 
 func (sm *SessionsManager) GetAllHttpProxy() map[string]*HttpProxy {
