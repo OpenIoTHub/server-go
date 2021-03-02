@@ -14,10 +14,15 @@ const (
 	streamSYNSent
 	streamSYNReceived
 	streamEstablished
-	streamLocalClose
-	streamRemoteClose
-	streamClosed
-	streamReset
+	streamFinished
+)
+
+type halfStreamState int
+
+const (
+	halfOpen halfStreamState = iota
+	halfClosed
+	halfReset
 )
 
 // Stream is used to represent a logical stream
@@ -28,8 +33,9 @@ type Stream struct {
 	id      uint32
 	session *Session
 
-	state     streamState
-	stateLock sync.Mutex
+	state                 streamState
+	writeState, readState halfStreamState
+	stateLock             sync.Mutex
 
 	recvLock sync.Mutex
 	recvBuf  segmentedBuffer
@@ -52,7 +58,7 @@ func newStream(session *Session, id uint32, state streamState) *Stream {
 		sendWindow:    initialStreamWindow,
 		readDeadline:  makePipeDeadline(),
 		writeDeadline: makePipeDeadline(),
-		recvBuf:       NewSegmentedBuffer(initialStreamWindow),
+		recvBuf:       newSegmentedBuffer(initialStreamWindow),
 		recvNotifyCh:  make(chan struct{}, 1),
 		sendNotifyCh:  make(chan struct{}, 1),
 	}
@@ -74,19 +80,22 @@ func (s *Stream) Read(b []byte) (n int, err error) {
 	defer asyncNotify(s.recvNotifyCh)
 START:
 	s.stateLock.Lock()
-	state := s.state
+	state := s.readState
 	s.stateLock.Unlock()
 
 	switch state {
-	case streamRemoteClose:
-		fallthrough
-	case streamClosed:
+	case halfOpen:
+		// Open -> read
+	case halfClosed:
 		empty := s.recvBuf.Len() == 0
 		if empty {
 			return 0, io.EOF
 		}
-	case streamReset:
+		// Closed, but we have data pending -> read.
+	case halfReset:
 		return 0, ErrStreamReset
+	default:
+		panic("unknown state")
 	}
 
 	// If there is no data available, block
@@ -138,16 +147,18 @@ func (s *Stream) write(b []byte) (n int, err error) {
 
 START:
 	s.stateLock.Lock()
-	state := s.state
+	state := s.writeState
 	s.stateLock.Unlock()
 
 	switch state {
-	case streamLocalClose:
-		fallthrough
-	case streamClosed:
+	case halfOpen:
+		// Open for writing -> write
+	case halfClosed:
 		return 0, ErrStreamClosed
-	case streamReset:
+	case halfReset:
 		return 0, ErrStreamReset
+	default:
+		panic("unknown state")
 	}
 
 	// If there is no data available, block
@@ -239,75 +250,117 @@ func (s *Stream) sendReset() error {
 
 // Reset resets the stream (forcibly closes the stream)
 func (s *Stream) Reset() error {
+	sendReset := false
 	s.stateLock.Lock()
 	switch s.state {
+	case streamFinished:
+		s.stateLock.Unlock()
+		return nil
 	case streamInit:
-		// No need to send anything.
-		s.state = streamReset
-		s.stateLock.Unlock()
-		return nil
-	case streamClosed, streamReset:
-		s.stateLock.Unlock()
-		return nil
+		// we haven't sent anything, so we don't need to send a reset.
 	case streamSYNSent, streamSYNReceived, streamEstablished:
-	case streamLocalClose, streamRemoteClose:
+		sendReset = true
 	default:
 		panic("unhandled state")
 	}
-	s.state = streamReset
-	s.stateLock.Unlock()
 
-	err := s.sendReset()
+	// at least one direction is open, we need to reset.
+
+	// If we've already sent/received an EOF, no need to reset that side.
+	if s.writeState == halfOpen {
+		s.writeState = halfReset
+	}
+	if s.readState == halfOpen {
+		s.readState = halfReset
+	}
+	s.state = streamFinished
 	s.notifyWaiting()
+	s.stateLock.Unlock()
+	if sendReset {
+		_ = s.sendReset()
+	}
 	s.cleanup()
-
-	return err
+	return nil
 }
 
-// Close is used to close the stream
-func (s *Stream) Close() error {
-	closeStream := false
+// CloseWrite is used to close the stream for writing.
+func (s *Stream) CloseWrite() error {
 	s.stateLock.Lock()
-	switch s.state {
-	case streamInit, streamSYNSent, streamSYNReceived, streamEstablished:
-		s.state = streamLocalClose
-		goto SEND_CLOSE
-
-	case streamLocalClose:
-	case streamRemoteClose:
-		s.state = streamClosed
-		closeStream = true
-		goto SEND_CLOSE
-
-	case streamClosed:
-	case streamReset:
+	switch s.writeState {
+	case halfOpen:
+		// Open for writing -> close write
+	case halfClosed:
+		s.stateLock.Unlock()
+		return nil
+	case halfReset:
+		s.stateLock.Unlock()
+		return ErrStreamReset
 	default:
-		panic("unhandled state")
+		panic("invalid state")
+	}
+	s.writeState = halfClosed
+	cleanup := s.readState != halfOpen
+	if cleanup {
+		s.state = streamFinished
 	}
 	s.stateLock.Unlock()
-	return nil
-SEND_CLOSE:
-	s.stateLock.Unlock()
-	err := s.sendClose()
 	s.notifyWaiting()
-	if closeStream {
+
+	err := s.sendClose()
+	if cleanup {
+		// we're fully closed, might as well be nice to the user and
+		// free everything early.
 		s.cleanup()
 	}
 	return err
 }
 
-// forceClose is used for when the session is exiting
-func (s *Stream) forceClose() {
+// CloseRead is used to close the stream for writing.
+func (s *Stream) CloseRead() error {
+	cleanup := false
 	s.stateLock.Lock()
-	switch s.state {
-	case streamClosed:
-		// Already successfully closed. It just hasn't been removed from
-		// the list of streams yet.
+	switch s.readState {
+	case halfOpen:
+		// Open for reading -> close read
+	case halfClosed, halfReset:
+		s.stateLock.Unlock()
+		return nil
 	default:
-		s.state = streamReset
+		panic("invalid state")
+	}
+	s.readState = halfReset
+	cleanup = s.writeState != halfOpen
+	if cleanup {
+		s.state = streamFinished
 	}
 	s.stateLock.Unlock()
 	s.notifyWaiting()
+	if cleanup {
+		// we're fully closed, might as well be nice to the user and
+		// free everything early.
+		s.cleanup()
+	}
+	return nil
+}
+
+// Close is used to close the stream.
+func (s *Stream) Close() error {
+	_ = s.CloseRead() // can't fail.
+	return s.CloseWrite()
+}
+
+// forceClose is used for when the session is exiting
+func (s *Stream) forceClose() {
+	s.stateLock.Lock()
+	if s.readState == halfOpen {
+		s.readState = halfReset
+	}
+	if s.writeState == halfOpen {
+		s.writeState = halfReset
+	}
+	s.state = streamFinished
+	s.notifyWaiting()
+	s.stateLock.Unlock()
 
 	s.readDeadline.set(time.Time{})
 	s.writeDeadline.set(time.Time{})
@@ -340,25 +393,24 @@ func (s *Stream) processFlags(flags uint16) error {
 		s.session.establishStream(s.id)
 	}
 	if flags&flagFIN == flagFIN {
-		switch s.state {
-		case streamSYNSent:
-			fallthrough
-		case streamSYNReceived:
-			fallthrough
-		case streamEstablished:
-			s.state = streamRemoteClose
+		if s.readState == halfOpen {
+			s.readState = halfClosed
+			if s.writeState != halfOpen {
+				// We're now fully closed.
+				closeStream = true
+				s.state = streamFinished
+			}
 			s.notifyWaiting()
-		case streamLocalClose:
-			s.state = streamClosed
-			closeStream = true
-			s.notifyWaiting()
-		default:
-			s.session.logger.Printf("[ERR] yamux: unexpected FIN flag in state %d", s.state)
-			return ErrUnexpectedFlag
 		}
 	}
 	if flags&flagRST == flagRST {
-		s.state = streamReset
+		if s.readState == halfOpen {
+			s.readState = halfReset
+		}
+		if s.writeState == halfOpen {
+			s.writeState = halfReset
+		}
+		s.state = streamFinished
 		closeStream = true
 		s.notifyWaiting()
 	}
@@ -426,11 +478,9 @@ func (s *Stream) SetDeadline(t time.Time) error {
 func (s *Stream) SetReadDeadline(t time.Time) error {
 	s.stateLock.Lock()
 	defer s.stateLock.Unlock()
-	switch s.state {
-	case streamClosed, streamRemoteClose, streamReset:
-		return nil
+	if s.readState == halfOpen {
+		s.readDeadline.set(t)
 	}
-	s.readDeadline.set(t)
 	return nil
 }
 
@@ -438,11 +488,9 @@ func (s *Stream) SetReadDeadline(t time.Time) error {
 func (s *Stream) SetWriteDeadline(t time.Time) error {
 	s.stateLock.Lock()
 	defer s.stateLock.Unlock()
-	switch s.state {
-	case streamClosed, streamLocalClose, streamReset:
-		return nil
+	if s.writeState == halfOpen {
+		s.writeDeadline.set(t)
 	}
-	s.writeDeadline.set(t)
 	return nil
 }
 

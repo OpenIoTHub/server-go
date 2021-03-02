@@ -11,7 +11,7 @@ require (
 	github.com/iotdevice/zeroconf v0.1.2 // indirect
 	github.com/klauspost/cpuid v1.3.0 // indirect
 	github.com/klauspost/reedsolomon v1.9.9 // indirect
-	github.com/libp2p/go-yamux v1.3.8
+	github.com/libp2p/go-yamux v1.4.0
 	github.com/miekg/dns v1.1.29 // indirect
 	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
