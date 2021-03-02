@@ -4,11 +4,12 @@ os:
 language: go
 
 go:
-  - 1.13.x
+  - 1.11.x
 
 env:
   global:
-    - GOTFLAGS="-race -cpu=5"
+    - GOTFLAGS="-race"
+    - GO111MODULE=on
   matrix:
     - BUILD_DEPTYPE=gomod
 
@@ -20,11 +21,10 @@ install:
 script:
   - bash <(curl -s https://raw.githubusercontent.com/ipfs/ci-helpers/master/travis-ci/run-standard-tests.sh)
 
-
 cache:
   directories:
     - $GOPATH/pkg/mod
-    - $HOME/.cache/go-build
+    - /home/travis/.cache/go-build
 
 notifications:
   email: false
