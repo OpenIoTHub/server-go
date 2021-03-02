@@ -124,8 +124,11 @@ func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Device) (*pb.H
 func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//:TODO 当前不支持websocket的代理（websocket支持basic Auth），或者从beego分发？
 	//：TODO 非80端口r.Host的支持情况
-	//log.Printf("host:" + r.Host) //"http://127.0.0.1:8080/"
-	hostInfo, err := sm.GetOneHttpProxy(strings.Split(r.Host, ":")[0])
+	log.Printf("Serve host:" + r.Host) //"http://127.0.0.1:8080/"
+	var hostInfo *HttpProxy
+	var err error
+	hostPort := strings.Replace(strings.Replace(r.Host, "http://", "", -1), "https://", "", -1)
+	hostInfo, err = sm.GetOneHttpProxy(strings.Split(hostPort, ":")[0])
 	if err != nil {
 		_, _ = w.Write([]byte(err.Error()))
 		return
@@ -181,10 +184,9 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sm *SessionsManager) dial(c context.Context, network, address string) (net.Conn, error) {
-	//log.Printf("请求的地址addr：%s", address)
-	end := strings.Index(address, ":")
-	host := address[0:end]
-	hostInfo, err := sm.GetOneHttpProxy(host) //id
+	log.Printf("请求的地址addr：%s", address)
+	hostPort := strings.Replace(strings.Replace(address, "http://", "", -1), "https://", "", -1)
+	hostInfo, err := sm.GetOneHttpProxy(strings.Split(hostPort, ":")[0]) //id
 	if err != nil {
 		return nil, err
 	}
