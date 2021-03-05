@@ -127,10 +127,12 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//：TODO 非80端口r.Host的支持情况
 	log.Println("host:", r.Host)
 	log.Println("hostRequestURI:", r.RequestURI)
-	if r.TLS != nil {
-		log.Println("是https请求")
-	} else {
+	log.Println("hostRequestHEADER:", r.Header)
+	log.Println("r.URL.Scheme:", r.URL.Scheme)
+	if r.URL.Scheme == "http" {
 		log.Println("是http请求")
+	} else if r.URL.Scheme == "https" {
+		log.Println("是https请求")
 	}
 	hostInfo, err := sm.GetOneHttpProxy(strings.Split(r.Host, ":")[0])
 	if err != nil {
@@ -138,14 +140,26 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if hostInfo.UserName != "" || hostInfo.Password != "" {
-		ok := httpUtil.Auth(w, r, hostInfo.UserName, hostInfo.Password)
-		if !ok {
+		if u, p, ok := r.BasicAuth(); ok {
+			if u != hostInfo.UserName || p != hostInfo.Password {
+				w.Header().Set("WWW-Authenticate", `Basic realm="Dotcoo User Login"`)
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+		} else {
+			w.Header().Set("WWW-Authenticate", `Basic realm="Dotcoo User Login"`)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 	}
 
 	var remote *url.URL
-	remote, err = url.Parse(fmt.Sprintf("%s://%s/", r.Proto, r.Host))
+	if hostInfo.IfHttps {
+		remote, err = url.Parse(fmt.Sprintf("%s://%s/", "https", r.Host))
+	} else {
+		remote, err = url.Parse(fmt.Sprintf("%s://%s/", "http", r.Host))
+	}
+
 	if err != nil {
 		log.Printf(err.Error())
 		w.Write([]byte(err.Error()))
