@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"github.com/OpenIoTHub/utils/io"
-	"github.com/OpenIoTHub/utils/net/httpUtil"
 	"github.com/libp2p/go-yamux"
 	"golang.org/x/net/websocket"
 	"google.golang.org/grpc/codes"
