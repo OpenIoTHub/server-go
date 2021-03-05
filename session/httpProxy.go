@@ -125,7 +125,13 @@ func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Device) (*pb.H
 func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	//:TODO 当前不支持websocket的代理（websocket支持basic Auth），或者从beego分发？
 	//：TODO 非80端口r.Host的支持情况
-	//log.Printf("host:" + r.Host) //"http://127.0.0.1:8080/"
+	log.Println("host:", r.Host)
+	log.Println("hostRequestURI:", r.RequestURI)
+	if r.TLS != nil {
+		log.Println("是https请求")
+	} else {
+		log.Println("是http请求")
+	}
 	hostInfo, err := sm.GetOneHttpProxy(strings.Split(r.Host, ":")[0])
 	if err != nil {
 		_, _ = w.Write([]byte(err.Error()))
@@ -138,7 +144,8 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	remote, err := url.Parse(fmt.Sprintf("http://%s/", r.Host))
+	var remote *url.URL
+	remote, err = url.Parse(fmt.Sprintf("%s://%s/", r.Proto, r.Host))
 	if err != nil {
 		log.Printf(err.Error())
 		w.Write([]byte(err.Error()))
