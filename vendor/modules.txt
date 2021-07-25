@@ -1,6 +1,6 @@
 # github.com/OpenIoTHub/getip v0.1.2
 github.com/OpenIoTHub/getip/iputils
-# github.com/OpenIoTHub/server-grpc-api v1.0.4
+# github.com/OpenIoTHub/server-grpc-api v1.0.5
 github.com/OpenIoTHub/server-grpc-api/pb-go
 # github.com/OpenIoTHub/utils v0.0.63
 github.com/OpenIoTHub/utils/file
@@ -8,7 +8,6 @@ github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
 github.com/OpenIoTHub/utils/msg
 github.com/OpenIoTHub/utils/net
-github.com/OpenIoTHub/utils/net/httpUtil
 github.com/OpenIoTHub/utils/net/ip
 github.com/OpenIoTHub/utils/pool
 # github.com/cenkalti/backoff v2.2.1+incompatible
@@ -17,7 +16,7 @@ github.com/cenkalti/backoff
 github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 github.com/dgrijalva/jwt-go
-# github.com/golang/protobuf v1.4.2
+# github.com/golang/protobuf v1.4.3
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
@@ -100,7 +99,7 @@ golang.org/x/crypto/twofish
 golang.org/x/crypto/xtea
 # golang.org/x/mod v0.3.0
 golang.org/x/mod/semver
-# golang.org/x/net v0.0.0-20200625001655-4c5254603344
+# golang.org/x/net v0.0.0-20201027133719-8eef5233e2a1
 golang.org/x/net/bpf
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
@@ -113,7 +112,7 @@ golang.org/x/net/ipv4
 golang.org/x/net/ipv6
 golang.org/x/net/trace
 golang.org/x/net/websocket
-# golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae
+# golang.org/x/sys v0.0.0-20201027130517-9d1ec526b7bf
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
@@ -137,9 +136,9 @@ golang.org/x/tools/internal/typesinternal
 # golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
-# google.golang.org/genproto v0.0.0-20200702021140-07506425bd67
+# google.golang.org/genproto v0.0.0-20201026171402-d4b8fe4fd877
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.30.0
+# google.golang.org/grpc v1.33.1
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -151,7 +150,6 @@ google.golang.org/grpc/binarylog/grpc_binarylog_v1
 google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
 google.golang.org/grpc/credentials
-google.golang.org/grpc/credentials/internal
 google.golang.org/grpc/encoding
 google.golang.org/grpc/encoding/proto
 google.golang.org/grpc/grpclog
@@ -161,6 +159,7 @@ google.golang.org/grpc/internal/balancerload
 google.golang.org/grpc/internal/binarylog
 google.golang.org/grpc/internal/buffer
 google.golang.org/grpc/internal/channelz
+google.golang.org/grpc/internal/credentials
 google.golang.org/grpc/internal/envconfig
 google.golang.org/grpc/internal/grpclog
 google.golang.org/grpc/internal/grpcrand

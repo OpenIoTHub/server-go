@@ -3,6 +3,7 @@ package session
 import (
 	"errors"
 	"github.com/OpenIoTHub/server-go/config"
+	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"
@@ -17,6 +18,7 @@ type SessionsManager struct {
 	Session      map[string]*Session
 	HttpProxyMap map[string]*HttpProxy
 	RedisPool    *redis.Pool
+	pb.UnimplementedHttpManagerServer
 }
 
 var SessionsCtl SessionsManager
