@@ -5,6 +5,7 @@ import (
 	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"log"
 )
 
 //grpc
@@ -13,7 +14,7 @@ func (sm *SessionsManager) CreateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 	if err != nil {
 		return in, status.Errorf(codes.Unauthenticated, err.Error())
 	}
-
+	log.Println("CreateOneHTTP:", in.Domain)
 	return in, sm.AddHttpProxy(&HttpProxy{
 		Domain:      in.Domain,
 		RunId:       in.RunId,
@@ -31,6 +32,7 @@ func (sm *SessionsManager) UpdateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 	if err != nil {
 		return in, status.Errorf(codes.Unauthenticated, err.Error())
 	}
+	log.Println("UpdateOneHTTP:", in.Domain)
 	h := &HttpProxy{
 		Domain:      in.Domain,
 		RunId:       in.RunId,
@@ -50,6 +52,7 @@ func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 	if err != nil {
 		return &pb.Empty{}, status.Errorf(codes.Unauthenticated, err.Error())
 	}
+	log.Println("DeleteOneHTTP:", in.Domain)
 	//TODO 验证要删除的域名的所属id是否和token的id一致
 	sm.DelHttpProxy(in.Domain)
 	return &pb.Empty{}, nil
