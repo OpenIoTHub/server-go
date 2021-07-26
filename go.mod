@@ -1,9 +1,9 @@
 module github.com/OpenIoTHub/server-go
 
-go 1.12
+go 1.16
 
 require (
-	github.com/OpenIoTHub/iot-manager-grpc-api v0.0.44
+	github.com/OpenIoTHub/iot-manager-grpc-api v0.0.45
 	github.com/OpenIoTHub/server-grpc-api v1.0.13
 	github.com/OpenIoTHub/utils v0.0.67
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect

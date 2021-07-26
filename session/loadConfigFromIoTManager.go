@@ -13,6 +13,8 @@ import (
 
 const IoTManagerAddr = "iot-manager.iotserv.com:8881"
 
+//const IoTManagerAddr = "127.0.0.1:8881"
+
 func LoadConfigFromIoTManager() (err error) {
 	conn, err := grpc.Dial(IoTManagerAddr, grpc.WithInsecure())
 	if err != nil {
@@ -35,11 +37,12 @@ func LoadConfigFromIoTManager() (err error) {
 		return
 	}
 	for _, info := range rst.HttpInfoList {
+		log.Println("add domain:", info)
 		SessionsCtl.AddHttpProxy(&HttpProxy{
 			Domain:           info.Domain,
-			UserName:         "",
-			Password:         "",
-			RunId:            info.UUID,
+			UserName:         info.Username,
+			Password:         info.Password,
+			RunId:            info.GatewayUuid,
 			RemoteIP:         info.RemoteAddr,
 			RemotePort:       int(info.RemotePort),
 			IfHttps:          info.ApplicationProtocol == "https",
@@ -47,5 +50,6 @@ func LoadConfigFromIoTManager() (err error) {
 			RemotePortStatus: false,
 		})
 	}
+	log.Println("LoadConfigFromIoTManager:OK!")
 	return
 }

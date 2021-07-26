@@ -7,6 +7,8 @@ github.com/OpenIoTHub/iot-manager-grpc-api v0.0.43 h1:N8LNxtm8pZp86cMQqm1pORPOyc
 github.com/OpenIoTHub/iot-manager-grpc-api v0.0.43/go.mod h1:quSdCoNkC+YlLTGhZ+3FKcjCkVWy6gVAG66yVUCLrI8=
 github.com/OpenIoTHub/iot-manager-grpc-api v0.0.44 h1:UEadhNG8CK9XGqmG6SjCM+bTG8azDVJN5Mrtv9+cDZM=
 github.com/OpenIoTHub/iot-manager-grpc-api v0.0.44/go.mod h1:quSdCoNkC+YlLTGhZ+3FKcjCkVWy6gVAG66yVUCLrI8=
+github.com/OpenIoTHub/iot-manager-grpc-api v0.0.45 h1:tU5TtgFusWVBWEUaEXOJn0b9SQ0MHqNr4TVKWaJHfN8=
+github.com/OpenIoTHub/iot-manager-grpc-api v0.0.45/go.mod h1:quSdCoNkC+YlLTGhZ+3FKcjCkVWy6gVAG66yVUCLrI8=
 github.com/OpenIoTHub/server-grpc-api v1.0.4 h1:dVqKqdhV6VaQIZipOHqxJEpt7NfU8QvPTaDXVJd1Vog=
 github.com/OpenIoTHub/server-grpc-api v1.0.4/go.mod h1:4Tvt1MoMNqIBcVSweRZOXuqOj5JWw1HPNxd9vZv4oAI=
 github.com/OpenIoTHub/server-grpc-api v1.0.5 h1:IPoQG0V85iHcXVr03T5vPI6hfr6utv9IoHVdxTcPims=
