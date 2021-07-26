@@ -27,9 +27,10 @@ type Srever struct {
 
 //服务器的配置文件模型
 type ServerConfig struct {
-	PublicIp  string `yaml:"my_public_ip_or_domian"`
-	LogConfig *LogConfig
-	Common    struct {
+	ServerUuid string `yaml:"server_uuid"`
+	PublicIp   string `yaml:"my_public_ip_or_domian"`
+	LogConfig  *LogConfig
+	Common     struct {
 		BindAddr   string `yaml:"bind_addr"`
 		TcpPort    int    `yaml:"tcp_port"`
 		KcpPort    int    `yaml:"kcp_port"`

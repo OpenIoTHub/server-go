@@ -46,6 +46,8 @@ var (
 		Error{},
 
 		JsonResponse{},
+
+		DeleteGatewayJwt{},
 	}
 )
 
@@ -214,4 +216,7 @@ type OK struct{}
 type Error struct {
 	Code    int
 	Message string
+}
+
+type DeleteGatewayJwt struct {
 }

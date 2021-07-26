@@ -121,6 +121,7 @@ func run() (err error) {
 		return
 	}
 	session.InitSessionsCtl()
+	session.LoadConfigFromIoTManager()
 	go session.SessionsCtl.RunTLS()
 	go session.SessionsCtl.RunTCP()
 	go session.SessionsCtl.RunKCP()

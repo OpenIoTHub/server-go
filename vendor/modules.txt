@@ -1,8 +1,10 @@
 # github.com/OpenIoTHub/getip v0.1.2
 github.com/OpenIoTHub/getip/iputils
-# github.com/OpenIoTHub/server-grpc-api v1.0.5
+# github.com/OpenIoTHub/iot-manager-grpc-api v0.0.44
+github.com/OpenIoTHub/iot-manager-grpc-api/pb-go
+# github.com/OpenIoTHub/server-grpc-api v1.0.13
 github.com/OpenIoTHub/server-grpc-api/pb-go
-# github.com/OpenIoTHub/utils v0.0.63
+# github.com/OpenIoTHub/utils v0.0.67
 github.com/OpenIoTHub/utils/file
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models

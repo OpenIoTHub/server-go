@@ -47,15 +47,15 @@ func (sm *SessionsManager) UpdateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 	return in, sm.AddHttpProxy(h)
 }
 
-func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.Empty, error) {
+func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.ServerGoEmpty, error) {
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
-		return &pb.Empty{}, status.Errorf(codes.Unauthenticated, err.Error())
+		return &pb.ServerGoEmpty{}, status.Errorf(codes.Unauthenticated, err.Error())
 	}
 	log.Println("DeleteOneHTTP:", in.Domain)
 	//TODO 验证要删除的域名的所属id是否和token的id一致
 	sm.DelHttpProxy(in.Domain)
-	return &pb.Empty{}, nil
+	return &pb.ServerGoEmpty{}, nil
 
 }
 

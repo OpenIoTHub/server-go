@@ -32,13 +32,16 @@ func (t *TokenClaims) IfContainPermission(permission string) bool {
 	return false
 }
 
+//列表内的权限是否都包括
 func (t *TokenClaims) IfContainPermissions(permissions []string) bool {
 	for _, p := range permissions {
 		if t.IfContainPermission(p) {
-			return true
+			continue
+		} else {
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 func GetToken(loginWithServer *LoginWithServer, permission []string, expiresecd int64) (token string, err error) {

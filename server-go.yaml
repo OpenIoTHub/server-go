@@ -1,3 +1,4 @@
+server_uuid: "" #服务器的唯一UUID
 my_public_ip_or_domian: "" #你运行本软件的服务器的域名或者ip地址，用来使用命令生成token时有用
 logconfig:
   enablestdout: true #是否输出日志到控制台

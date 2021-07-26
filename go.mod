@@ -3,8 +3,9 @@ module github.com/OpenIoTHub/server-go
 go 1.12
 
 require (
-	github.com/OpenIoTHub/server-grpc-api v1.0.5
-	github.com/OpenIoTHub/utils v0.0.63
+	github.com/OpenIoTHub/iot-manager-grpc-api v0.0.44
+	github.com/OpenIoTHub/server-grpc-api v1.0.13
+	github.com/OpenIoTHub/utils v0.0.67
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/iotdevice/zeroconf v0.1.2 // indirect
@@ -14,6 +15,7 @@ require (
 	github.com/miekg/dns v1.1.29 // indirect
 	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
 	github.com/templexxx/cpu v0.0.7 // indirect
 	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/templexxx/xor v0.0.0-20191217153810-f85b25db303b // indirect

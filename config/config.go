@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/OpenIoTHub/server-go/utils"
 	"github.com/OpenIoTHub/utils/models"
 	"gopkg.in/yaml.v2"
 	"io"
@@ -48,6 +49,7 @@ func LoadConfig() (err error) {
 
 func InitConfigFile() {
 	var err error
+	ConfigMode.ServerUuid = utils.GetOneUUID()
 	ConfigMode.LogConfig = &models.LogConfig{
 		EnableStdout: true,
 		LogFilePath:  "",
@@ -86,6 +88,14 @@ func GetConfig(configFilePath string) (configMode models.ServerConfig, err error
 	if err != nil {
 		log.Println(err.Error())
 		return
+	}
+	if configMode.ServerUuid == "" {
+		configMode.ServerUuid = utils.GetOneUUID()
+		err = writeConfigFile(configMode, configFilePath)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
 	}
 	return
 }

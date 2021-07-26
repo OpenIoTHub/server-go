@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 type HttpManagerClient interface {
 	CreateOneHTTP(ctx context.Context, in *HTTPConfig, opts ...grpc.CallOption) (*HTTPConfig, error)
 	UpdateOneHTTP(ctx context.Context, in *HTTPConfig, opts ...grpc.CallOption) (*HTTPConfig, error)
-	DeleteOneHTTP(ctx context.Context, in *HTTPConfig, opts ...grpc.CallOption) (*Empty, error)
+	DeleteOneHTTP(ctx context.Context, in *HTTPConfig, opts ...grpc.CallOption) (*ServerGoEmpty, error)
 	GetOneHTTP(ctx context.Context, in *HTTPConfig, opts ...grpc.CallOption) (*HTTPConfig, error)
 	GetAllHTTP(ctx context.Context, in *Device, opts ...grpc.CallOption) (*HTTPList, error)
 }
@@ -50,8 +50,8 @@ func (c *httpManagerClient) UpdateOneHTTP(ctx context.Context, in *HTTPConfig, o
 	return out, nil
 }
 
-func (c *httpManagerClient) DeleteOneHTTP(ctx context.Context, in *HTTPConfig, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *httpManagerClient) DeleteOneHTTP(ctx context.Context, in *HTTPConfig, opts ...grpc.CallOption) (*ServerGoEmpty, error) {
+	out := new(ServerGoEmpty)
 	err := c.cc.Invoke(ctx, "/pb.HttpManager/DeleteOneHTTP", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (c *httpManagerClient) GetAllHTTP(ctx context.Context, in *Device, opts ...
 type HttpManagerServer interface {
 	CreateOneHTTP(context.Context, *HTTPConfig) (*HTTPConfig, error)
 	UpdateOneHTTP(context.Context, *HTTPConfig) (*HTTPConfig, error)
-	DeleteOneHTTP(context.Context, *HTTPConfig) (*Empty, error)
+	DeleteOneHTTP(context.Context, *HTTPConfig) (*ServerGoEmpty, error)
 	GetOneHTTP(context.Context, *HTTPConfig) (*HTTPConfig, error)
 	GetAllHTTP(context.Context, *Device) (*HTTPList, error)
 	mustEmbedUnimplementedHttpManagerServer()
@@ -99,7 +99,7 @@ func (UnimplementedHttpManagerServer) CreateOneHTTP(context.Context, *HTTPConfig
 func (UnimplementedHttpManagerServer) UpdateOneHTTP(context.Context, *HTTPConfig) (*HTTPConfig, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOneHTTP not implemented")
 }
-func (UnimplementedHttpManagerServer) DeleteOneHTTP(context.Context, *HTTPConfig) (*Empty, error) {
+func (UnimplementedHttpManagerServer) DeleteOneHTTP(context.Context, *HTTPConfig) (*ServerGoEmpty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOneHTTP not implemented")
 }
 func (UnimplementedHttpManagerServer) GetOneHTTP(context.Context, *HTTPConfig) (*HTTPConfig, error) {
