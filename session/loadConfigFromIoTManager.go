@@ -18,7 +18,7 @@ const IoTManagerAddr = "iot-manager.iotserv.com:8881"
 func LoadConfigFromIoTManager() (err error) {
 	conn, err := grpc.Dial(IoTManagerAddr, grpc.WithInsecure())
 	if err != nil {
-		log.Println("grpc.Dial: %v", err)
+		log.Println("grpc.Dial:", err)
 		return
 	}
 	defer conn.Close()
