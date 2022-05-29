@@ -90,12 +90,12 @@ snapcrafts:
     description: |
       OpenIoTHub Server
     grade: stable
-    confinement: classic
+#    confinement: classic
     publish: true
-#    apps:
-#      server-go:
-#        plugs: ["network", "network-bind"]
-#        daemon: simple
+    apps:
+      server-go:
+        plugs: ["network", "network-bind"]
+        daemon: simple
 dockers:
   - image_templates:
       - 'openiothub/server-go:{{ .Tag }}'
