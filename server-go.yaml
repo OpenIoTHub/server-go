@@ -1,28 +1,28 @@
-server_uuid: "" #服务器的唯一UUID
-my_public_ip_or_domian: "" #你运行本软件的服务器的域名或者ip地址，用来使用命令生成token时有用
+server_uuid: 4d4ff46b-2560-4886-8091-8ae31d83c6a5
+my_public_ip_or_domian: ""
 logconfig:
-  enablestdout: true #是否输出日志到控制台
-  logfilepath: "./mylog.log" #配置日志输出文件的位置，空则不输出到文件
+  enablestdout: true
+  logfilepath: ./mylog.log
 common:
-  bind_addr: 0.0.0.0 #服务器监听的IP地址，默认监听所有
-  tcp_port: 34320 #服务器使用的tcp端口
-  kcp_port: 34320 #服务器使用的kcp(实际上是udp)端口
-  udp_p2p_port: 34321 #服务器使用的UDP端口，用于辅助p2p
-  kcp_p2p_port: 34322 #服务器使用的kcp（UDP）端口，用于辅助p2p
-  tls_port: 34321 #服务器使用的tls(实际上是tcp)端口，用于安全通信
-  grpc_port: 34322 #服务器使用的grpc(实际上是tcp)端口，用于grpc通信
-  http_port: 80 #服务器监听的http（tcp）端口，用于提供http代理功能
-  https_port: 443 #服务器监听的https（tcp）端口，用于提供https代理功能
+  bind_addr: 0.0.0.0
+  tcp_port: 34320
+  kcp_port: 34320
+  udp_p2p_port: 34321
+  kcp_p2p_port: 34322
+  tls_port: 34321
+  grpc_port: 34322
+  http_port: 80
+  https_port: 443
 security:
-  login_key: HLLdsa544&*S #用户自定义的服务器秘钥，此为默认，用户个人使用服务器请修改
+  login_key: HLLdsa544&*S
   tls_Cert_file_path: ""
   tls_key_file_path: ""
   https_cert_file_path: ""
   https_key_file_path: ""
 redisconfig:
-  enabled: false #是否使用redis保存用户http代理配置
-  network: tcp  #redis使用tcp连接，默认即可
-  address: 127.0.0.1:6379 #redis的地址，默认本机，redis默认端口6379，请根据自己的redis配置
-  database: 0 #redis的默认服务器0，如果你不懂请保持0
-  needAuth: false #redis是否需要密码验证，默认不需要false，如果你的redis需要密码请将false改为true并配置下面password为redis密码
-  password: "" #redis的密码，needAuth:true时有效
+  enabled: false
+  network: tcp
+  address: 127.0.0.1:6379
+  database: 0
+  needAuth: false
+  password: ""

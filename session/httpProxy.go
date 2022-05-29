@@ -3,7 +3,6 @@ package session
 import (
 	"fmt"
 	"github.com/OpenIoTHub/utils/io"
-	"github.com/libp2p/go-yamux"
 	"golang.org/x/net/websocket"
 	"log"
 	"net"
@@ -128,7 +127,7 @@ func (sm *SessionsManager) dial(network, address string) (net.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	var stream *yamux.Stream
+	var stream net.Conn
 	if hostInfo.IfHttps {
 		stream, err = sm.ConnectToTls(hostInfo.RunId, hostInfo.RemoteIP, hostInfo.RemotePort)
 	} else {

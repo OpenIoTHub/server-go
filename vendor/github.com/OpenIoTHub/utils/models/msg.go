@@ -67,6 +67,8 @@ type GatewayLogin struct {
 	Os      string
 	Arch    string
 	Version string
+	//禁止muxer，用于支持嵌入式等受限设备
+	DisableMuxer bool
 }
 
 // Connect TO

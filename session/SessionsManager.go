@@ -68,18 +68,13 @@ func (sess *SessionsManager) GetSessionByID(id string) (*Session, error) {
 	}
 }
 
-func (sess *SessionsManager) GetStreamByID(id string) (*yamux.Stream, error) {
+func (sess *SessionsManager) GetStreamByID(id string) (net.Conn, error) {
 	mysession, err := sess.GetSessionByID(id)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
 	}
-	stream, err := mysession.GetStream()
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	return stream, err
+	return mysession.GetStream()
 }
 
 func (sess *SessionsManager) GetNewWorkConnByID(id string) (net.Conn, error) {
@@ -134,6 +129,24 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
+			log.Printf("新Gateway登录： runId：%s 系统(OS)：%s 芯片架构(CPU Arch)：%s Version：%s 禁止muxer：%t",
+				token.RunId, m.Os, m.Arch, m.Version, m.DisableMuxer)
+			if m.DisableMuxer {
+				//禁止muxer的网关
+				//sess[token.RunId]=session
+				session := &Session{
+					Id:             token.RunId,
+					OS:             m.Os,
+					ARCH:           m.Arch,
+					Version:        m.Version,
+					DisableMuxer:   m.DisableMuxer,
+					Conn:           &conn,
+					GatewaySession: nil,
+					WorkConn:       make(chan net.Conn, 5)}
+				//:TODO 新的登录存储之前先清除旧的同id登录
+				sess.SetSession(token.RunId, session)
+				return
+			}
 			config := yamux.DefaultConfig()
 			//config.EnableKeepAlive = false
 			session, err = yamux.Client(conn, config)
@@ -143,7 +156,6 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				return
 			}
 			//TODO 添加上线、下线日志储存以供用户查询
-			log.Printf("新Gateway登录： runId：%s 系统(OS)：%s 芯片架构(CPU Arch)：%s Version：%s", token.RunId, m.Os, m.Arch, m.Version)
 			//sess[token.RunId]=session
 			session := &Session{
 				Id:             token.RunId,
@@ -229,6 +241,34 @@ func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 		})
 		time.Sleep(time.Millisecond * 100)
 
+	}
+	//TODO 模拟嵌入式设备不支持mux的情况
+	gatewaySess, _ := sess.GetSessionByID(id)
+	if gatewaySess != nil && gatewaySess.DisableMuxer {
+		resp(nil)
+		//mux conn并分别与workConn桥接
+		//config := yamux.DefaultConfig()
+		//config.EnableKeepAlive = false
+		session, err := yamux.Server(conn, yamux.DefaultConfig())
+		if err != nil {
+			log.Println(err.Error())
+			conn.Close()
+			return
+		}
+		for {
+			mobileConn, err := session.Accept()
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			workConn, err := sess.GetStreamByID(id)
+			if err != nil {
+				log.Println(err.Error())
+				resp(err)
+				return
+			}
+			go io.Join(workConn, mobileConn)
+		}
 	}
 	workConn, err := sess.GetNewWorkConnByID(id)
 	if err != nil {

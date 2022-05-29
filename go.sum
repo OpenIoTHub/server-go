@@ -6,8 +6,8 @@ github.com/OpenIoTHub/iot-manager-grpc-api v0.0.45 h1:tU5TtgFusWVBWEUaEXOJn0b9SQ
 github.com/OpenIoTHub/iot-manager-grpc-api v0.0.45/go.mod h1:quSdCoNkC+YlLTGhZ+3FKcjCkVWy6gVAG66yVUCLrI8=
 github.com/OpenIoTHub/server-grpc-api v1.0.13 h1:O4/8REQvgiGZlY6xBCozxFkU7We/PNdds8asXtBdi4Y=
 github.com/OpenIoTHub/server-grpc-api v1.0.13/go.mod h1:3WPC0jlknNyjtnnttKZCvg7v7/IKjVPgllWQzMtOG4Y=
-github.com/OpenIoTHub/utils v0.0.69 h1:ndMDJnMDVHJUc5z7ekoAZ6Zr9hHyu+6qJMPbnDvRjJg=
-github.com/OpenIoTHub/utils v0.0.69/go.mod h1:zUOZTZnKO6hcFt8YSoF+zvUbIttCcwTpZVvorcMGN3o=
+github.com/OpenIoTHub/utils v0.0.71 h1:mg3ahbG2GI8QqrC3F58GJY0rqGT/JhcKMMLmf+SafXI=
+github.com/OpenIoTHub/utils v0.0.71/go.mod h1:zUOZTZnKO6hcFt8YSoF+zvUbIttCcwTpZVvorcMGN3o=
 github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da/go.mod h1:eHEWzANqSiWQsof+nXEI9bUVUyV6F53Fp89EuCh2EAA=
 github.com/cenkalti/backoff v2.2.1+incompatible h1:tNowT99t7UNflLxfYYSlKYsBpXdEet03Pg2g16Swow4=
 github.com/cenkalti/backoff v2.2.1+incompatible/go.mod h1:90ReRw6GdpyfrHakVjL/QHaoyV4aDUVVkXQJJJ3NXXM=
@@ -57,7 +57,6 @@ github.com/jacobsa/go-serial v0.0.0-20180131005756-15cf729a72d4/go.mod h1:2RvX5Z
 github.com/kisielk/errcheck v1.2.0/go.mod h1:/BMXB+zMLi60iA8Vv6Ksmxu/1UDYcXs4uQLJ+jE2L00=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/cpuid v1.2.4/go.mod h1:Pj4uuM528wm8OyEC2QMXAi2YiTZ96dNQPGgoMS4s3ek=
-github.com/klauspost/cpuid v1.3.1 h1:5JNjFYYQrZeKRJ0734q51WCEEn2huer72Dc7K+R/b6s=
 github.com/klauspost/cpuid v1.3.1/go.mod h1:bYW4mA6ZgKPob1/Dlai2LviZJO7KGI3uoWLd42rAQw4=
 github.com/klauspost/cpuid/v2 v2.0.6 h1:dQ5ueTiftKxp0gyjKSx5+8BtPWkyQbd95m8Gys/RarI=
 github.com/klauspost/cpuid/v2 v2.0.6/go.mod h1:FInQzS24/EEf25PyTYn52gqo7WaD8xa0213Md/qVLRg=
@@ -160,6 +159,8 @@ golang.org/x/sys v0.0.0-20200808120158-1030fc2bf1d9/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20201027130517-9d1ec526b7bf h1:HmHgHRpqpvB74D7bjXkue6kkHJfOrKyYJtW6Sv4jpI4=
 golang.org/x/sys v0.0.0-20201027130517-9d1ec526b7bf/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
+golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.3 h1:cokOdA+Jmi5PJGXLlLllQSgYigAEfHXJAERHVMaCc2k=
 golang.org/x/text v0.3.3/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=

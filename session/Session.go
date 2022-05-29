@@ -16,24 +16,36 @@ type Session struct {
 	OS             string
 	ARCH           string
 	Version        string
+	DisableMuxer   bool
 	Conn           *net.Conn
 	GatewaySession *yamux.Session
 	WorkConn       chan net.Conn
 }
 
-func (sess *Session) GetStream() (*yamux.Stream, error) {
+func (sess *Session) GetStream() (net.Conn, error) {
+	if sess.GatewaySession == nil || sess.DisableMuxer {
+		return sess.GetNewWorkConn()
+	}
 	return sess.GatewaySession.OpenStream()
 }
 
 func (sess *Session) RequestNewWorkConn() error {
-	stream, err := sess.GetStream()
-	if err != nil {
-		return err
+	if sess.GatewaySession != nil && !sess.DisableMuxer {
+		stream, err := sess.GetStream()
+		if err != nil {
+			return err
+		}
+		return msg.WriteMsg(stream, &models.RequestNewWorkConn{
+			Type:   "tcp",
+			Config: "",
+		})
+	} else if sess.DisableMuxer {
+		return msg.WriteMsg(*sess.Conn, &models.RequestNewWorkConn{
+			Type:   "tcp",
+			Config: "",
+		})
 	}
-	return msg.WriteMsg(stream, &models.RequestNewWorkConn{
-		Type:   "tcp",
-		Config: "",
-	})
+	return errors.New("RequestNewWorkConn err")
 }
 
 func (sess *Session) GetNewWorkConn() (net.Conn, error) {
