@@ -16,7 +16,7 @@ builds:
     - darwin
     - windows
   goarch:
-    - 386
+    - "386"
     - amd64
     - arm
     - arm64
@@ -29,7 +29,7 @@ builds:
     - softfloat
   ignore:
     - goos: darwin
-      goarch: 386
+      goarch: "386"
 archives:
 - replacements:
     darwin: Darwin
@@ -90,20 +90,20 @@ snapcrafts:
     description: |
       OpenIoTHub Server
     grade: stable
-#    confinement: classic
+    confinement: classic
     publish: true
-    apps:
-      server-go:
-        plugs: ["network", "network-bind"]
-        daemon: simple
+#    apps:
+#      server-go:
+#        plugs: ["network", "network-bind"]
+#        daemon: simple
 dockers:
   - image_templates:
       - 'openiothub/server-go:{{ .Tag }}'
       - 'openiothub/server-go:v{{ .Major }}.{{ .Minor }}'
       - 'openiothub/server-go:latest'
     dockerfile: Dockerfile
-    binaries:
-      - server-go
+#    binaries:
+#      - server-go
     build_flag_templates:
       - "--pull"
       - "--label=org.opencontainers.image.created={{.Date}}"
