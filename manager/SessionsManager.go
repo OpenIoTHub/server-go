@@ -1,8 +1,9 @@
-package session
+package manager
 
 import (
 	"errors"
 	"github.com/OpenIoTHub/server-go/config"
+	"github.com/OpenIoTHub/server-go/session"
 	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/models"
@@ -15,7 +16,7 @@ import (
 )
 
 type SessionsManager struct {
-	Session      map[string]*Session
+	Session      map[string]*session.Session
 	HttpProxyMap map[string]*HttpProxy
 	RedisPool    *redis.Pool
 	pb.UnimplementedHttpManagerServer
@@ -25,7 +26,7 @@ var SessionsCtl SessionsManager
 
 func InitSessionsCtl() {
 	SessionsCtl = SessionsManager{
-		Session:      make(map[string]*Session),
+		Session:      make(map[string]*session.Session),
 		HttpProxyMap: make(map[string]*HttpProxy),
 		RedisPool: &redis.Pool{
 			MaxIdle:     256,
@@ -56,7 +57,7 @@ func InitSessionsCtl() {
 	}
 }
 
-func (sess *SessionsManager) GetSessionByID(id string) (*Session, error) {
+func (sess *SessionsManager) GetSessionByID(id string) (*session.Session, error) {
 	if _, ok := sess.Session[id]; ok {
 		if sess.Session[id].GatewaySession == nil || sess.Session[id].GatewaySession.IsClosed() {
 			sess.DelSession(id)
@@ -86,7 +87,7 @@ func (sess *SessionsManager) GetNewWorkConnByID(id string) (net.Conn, error) {
 	return session.GetNewWorkConn()
 }
 
-func (sess *SessionsManager) SetSession(id string, session *Session) {
+func (sess *SessionsManager) SetSession(id string, session *session.Session) {
 	sess.DelSession(id)
 	sess.Session[id] = session
 }
@@ -104,9 +105,9 @@ func (sess *SessionsManager) DelSession(id string) {
 	delete(sess.Session, id)
 }
 
-//connHdl
+// connHdl
 func (sess *SessionsManager) connHdl(conn net.Conn) {
-	var session *yamux.Session
+	var yamuxSession *yamux.Session
 	var token *models.TokenClaims
 	var err error
 	rawMsg, err := msg.ReadMsg(conn)
@@ -134,7 +135,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			if m.DisableMuxer {
 				//禁止muxer的网关
 				//sess[token.RunId]=session
-				session := &Session{
+				gatewaySession := &session.Session{
 					Id:             token.RunId,
 					OS:             m.Os,
 					ARCH:           m.Arch,
@@ -144,12 +145,12 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 					GatewaySession: nil,
 					WorkConn:       make(chan net.Conn, 5)}
 				//:TODO 新的登录存储之前先清除旧的同id登录
-				sess.SetSession(token.RunId, session)
+				sess.SetSession(token.RunId, gatewaySession)
 				return
 			}
 			config := yamux.DefaultConfig()
 			//config.EnableKeepAlive = false
-			session, err = yamux.Client(conn, config)
+			yamuxSession, err = yamux.Client(conn, config)
 			if err != nil {
 				log.Println(err.Error())
 				conn.Close()
@@ -157,16 +158,16 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			}
 			//TODO 添加上线、下线日志储存以供用户查询
 			//sess[token.RunId]=session
-			session := &Session{
+			gatewaySession := &session.Session{
 				Id:             token.RunId,
 				OS:             m.Os,
 				ARCH:           m.Arch,
 				Version:        m.Version,
 				Conn:           &conn,
-				GatewaySession: session,
+				GatewaySession: yamuxSession,
 				WorkConn:       make(chan net.Conn, 5)}
 			//:TODO 新的登录存储之前先清除旧的同id登录
-			sess.SetSession(token.RunId, session)
+			sess.SetSession(token.RunId, gatewaySession)
 		}
 
 	case *models.GatewayWorkConn:
@@ -225,7 +226,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 	}
 }
 
-//访问器的登录处理 conn : 访问器 stream ： 网关
+// 访问器的登录处理 conn : 访问器 stream ： 网关
 func (sess *SessionsManager) openIoTHubLoginHdl(id string, conn net.Conn) {
 	resp := func(err error) {
 		code := 0

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
-	"github.com/OpenIoTHub/server-go/session"
+	"github.com/OpenIoTHub/server-go/manager"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/net"
 	"github.com/urfave/cli/v2"
@@ -120,13 +120,13 @@ func run() (err error) {
 		log.Println(err)
 		return
 	}
-	session.InitSessionsCtl()
-	session.LoadConfigFromIoTManager()
-	go session.SessionsCtl.RunTLS()
-	go session.SessionsCtl.RunTCP()
-	go session.SessionsCtl.RunKCP()
-	go session.SessionsCtl.StartgRpcListenAndServ()
-	go session.SessionsCtl.StartHttpListenAndServ()
+	manager.InitSessionsCtl()
+	manager.LoadConfigFromIoTManager()
+	go manager.SessionsCtl.RunTLS()
+	go manager.SessionsCtl.RunTCP()
+	go manager.SessionsCtl.RunKCP()
+	go manager.SessionsCtl.StartgRpcListenAndServ()
+	go manager.SessionsCtl.StartHttpListenAndServ()
 	go nettool.RunUDPApiServer(config.ConfigMode.Common.UdpApiPort)
 	go nettool.RunKCPApiServer(config.ConfigMode.Common.KcpApiPort)
 	log.Println("服务器正在运行，网关配置请根据本服务器配置填写！")

@@ -77,9 +77,9 @@ func InitConfigFile() {
 	}
 }
 
-//从配置文件路径解析配置文件的内容
+// 从配置文件路径解析配置文件的内容
 func GetConfig(configFilePath string) (configMode models.ServerConfig, err error) {
-	content, err := ioutil.ReadFile(configFilePath)
+	content, err := os.ReadFile(configFilePath)
 	if err != nil {
 		log.Println(err.Error())
 		return
@@ -100,7 +100,7 @@ func GetConfig(configFilePath string) (configMode models.ServerConfig, err error
 	return
 }
 
-//将配置内容写入指定的配置文件
+// 将配置内容写入指定的配置文件
 func writeConfigFile(configMode models.ServerConfig, path string) (err error) {
 	configByte, err := yaml.Marshal(configMode)
 	if err != nil {

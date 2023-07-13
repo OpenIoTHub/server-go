@@ -1,4 +1,4 @@
-package session
+package manager
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-//TODO 根据配置文件确定从内存获取映射表还是redis
+// TODO 根据配置文件确定从内存获取映射表还是redis
 func (sm *SessionsManager) GetOneHttpProxy(domain string) (*HttpProxy, error) {
 	log.Println("query:", domain)
 	if config.ConfigMode.RedisConfig.Enabled {

@@ -10,7 +10,6 @@ import (
 	"time"
 )
 
-//
 type Session struct {
 	Id             string
 	OS             string
@@ -66,7 +65,7 @@ func (sess *Session) GetNewWorkConn() (net.Conn, error) {
 	}
 }
 
-//:TODO 存活检测
+// :TODO 存活检测
 func (sess *Session) Task() {
 	//defer DelSession(sess.Id)
 	//Loop:

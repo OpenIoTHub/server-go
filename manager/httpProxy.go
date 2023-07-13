@@ -1,4 +1,4 @@
-package session
+package manager
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-//服务结构
+// 服务结构
 type HttpProxy struct {
 	Domain           string
 	RunId            string

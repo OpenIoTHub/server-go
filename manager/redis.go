@@ -1,11 +1,11 @@
-package session
+package manager
 
 import (
 	"github.com/gomodule/redigo/redis"
 	"log"
 )
 
-//Redis Method
+// Redis Method
 func (sess *SessionsManager) GetRedisConn() (redis.Conn, error) {
 	conn := sess.RedisPool.Get()
 	if err := conn.Err(); err != nil {

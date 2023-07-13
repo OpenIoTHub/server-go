@@ -1,4 +1,4 @@
-package session
+package manager
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-//Connect to tcp
+// Connect to tcp
 func (sm *SessionsManager) ConnectToTcp(runId, remoteIp string, remotePort int) (net.Conn, error) {
 	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
@@ -43,7 +43,7 @@ func (sm *SessionsManager) ConnectToTls(runId, remoteIp string, remotePort int) 
 	return stream, nil
 }
 
-//Connect to udp
+// Connect to udp
 func (sm *SessionsManager) ConnectToUdp(runId, remoteIp string, remotePort int) (net.Conn, error) {
 	stream, err := sm.GetStreamByID(runId)
 	if err != nil {
@@ -61,7 +61,7 @@ func (sm *SessionsManager) ConnectToUdp(runId, remoteIp string, remotePort int) 
 	return stream, nil
 }
 
-//Connect to Serial Port
+// Connect to Serial Port
 func (sm *SessionsManager) ConnectToSerialPort(runId string, msgsd *models.ConnectSerialPort) (net.Conn, error) {
 	stream, err := sm.GetStreamByID(runId)
 	if err != nil {

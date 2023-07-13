@@ -1,4 +1,4 @@
-package session
+package manager
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"log"
 )
 
-//检查远端网关口的可用性，可用true
+// 检查远端网关口的可用性，可用true
 func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string, remotePort int) (bool, error) {
 	stream, err := sm.GetStreamByID(runId)
 	defer func() {

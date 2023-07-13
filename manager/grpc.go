@@ -1,14 +1,33 @@
-package session
+package manager
 
 import (
 	"context"
+	"fmt"
+	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/server-grpc-api/pb-go"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"log"
+	"net"
 )
 
-//grpc
+// grpc
+func (sm *SessionsManager) StartgRpcListenAndServ() {
+	go func() {
+		s := grpc.NewServer()
+		pb.RegisterHttpManagerServer(s, sm)
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.ConfigMode.Common.GrpcPort))
+		if err != nil {
+			log.Fatalf("failed to listen: %v", err)
+			return
+		}
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+}
+
 func (sm *SessionsManager) CreateOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.HTTPConfig, error) {
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
