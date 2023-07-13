@@ -33,24 +33,18 @@ func InitSessionsCtl() {
 			MaxActive:   0,
 			IdleTimeout: time.Duration(120),
 			Dial: func() (redis.Conn, error) {
+				redisConfigs := []redis.DialOption{redis.DialReadTimeout(time.Duration(1000) * time.Millisecond),
+					redis.DialWriteTimeout(time.Duration(1000) * time.Millisecond),
+					redis.DialConnectTimeout(time.Duration(1000) * time.Millisecond),
+					redis.DialDatabase(config.ConfigMode.RedisConfig.Database),
+				}
 				if config.ConfigMode.RedisConfig.NeedAuth {
-					return redis.Dial(
-						config.ConfigMode.RedisConfig.Network,
-						config.ConfigMode.RedisConfig.Address,
-						redis.DialReadTimeout(time.Duration(1000)*time.Millisecond),
-						redis.DialWriteTimeout(time.Duration(1000)*time.Millisecond),
-						redis.DialConnectTimeout(time.Duration(1000)*time.Millisecond),
-						redis.DialDatabase(config.ConfigMode.RedisConfig.Database),
-					)
+					redisConfigs = append(redisConfigs, redis.DialPassword(config.ConfigMode.RedisConfig.Password))
 				}
 				return redis.Dial(
 					config.ConfigMode.RedisConfig.Network,
 					config.ConfigMode.RedisConfig.Address,
-					redis.DialReadTimeout(time.Duration(1000)*time.Millisecond),
-					redis.DialWriteTimeout(time.Duration(1000)*time.Millisecond),
-					redis.DialConnectTimeout(time.Duration(1000)*time.Millisecond),
-					redis.DialDatabase(config.ConfigMode.RedisConfig.Database),
-					redis.DialPassword(config.ConfigMode.RedisConfig.Password),
+					redisConfigs...,
 				)
 			},
 		},
