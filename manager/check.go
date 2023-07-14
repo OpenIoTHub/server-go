@@ -58,16 +58,11 @@ func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string,
 
 func (sm *SessionsManager) UpdateAllHttpRemotePortStatus() {
 	//TODO 只一个系统定时任务刷新所有http端口的状态
-	if config.ConfigMode.RedisConfig.Enabled {
-		var HttpProxyMap = make(map[string]*HttpProxy)
-		HttpProxyMap = sm.GetAllHttpProxy()
-		for _, hp := range HttpProxyMap {
-			hp.UpdateRemotePortStatus()
-		}
-		sm.UpdateHttpProxyByMap(HttpProxyMap)
-	}
-	for _, hp := range sm.HttpProxyMap {
-		go hp.UpdateRemotePortStatus()
+	HttpProxyMap := sm.GetAllHttpProxy()
+	for _, hp := range HttpProxyMap {
+		hp.UpdateRemotePortStatus()
+		//更新配置
+		sm.AddOrUpdateHttpProxy(hp)
 	}
 }
 

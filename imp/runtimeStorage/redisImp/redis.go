@@ -3,9 +3,12 @@ package redisImp
 import (
 	"github.com/gomodule/redigo/redis"
 	"log"
+	"sync"
 )
 
 type RuntimeStorageRedisImp struct {
+	//TODO 读写锁?
+	sync.RWMutex
 	RedisPool *redis.Pool
 }
 

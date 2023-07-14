@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/server-go/iface/runtimeStorage"
+	"github.com/OpenIoTHub/server-go/imp/runtimeStorage/memImp"
 	"github.com/OpenIoTHub/server-go/imp/runtimeStorage/redisImp"
 	"github.com/OpenIoTHub/server-go/session"
 	"github.com/OpenIoTHub/server-grpc-api/pb-go"
@@ -18,8 +19,7 @@ import (
 )
 
 type SessionsManager struct {
-	Session      map[string]*session.Session
-	HttpProxyMap map[string]*HttpProxy
+	Session map[string]*session.Session
 	//TODO 设置和使用，还有用于黑白名单使用的存储
 	HttpProxyRuntimeStorage runtimeStorage.RuntimeStorageIfce
 	pb.UnimplementedHttpManagerServer
@@ -29,30 +29,34 @@ var SessionsCtl SessionsManager
 
 func InitSessionsCtl() {
 	var httpProxyRuntimeStorage runtimeStorage.RuntimeStorageIfce
-	httpProxyRuntimeStorage = redisImp.NewRuntimeStorageRedisImp(
-		&redis.Pool{
-			MaxIdle:     256,
-			MaxActive:   0,
-			IdleTimeout: time.Duration(120),
-			Dial: func() (redis.Conn, error) {
-				redisConfigs := []redis.DialOption{redis.DialReadTimeout(time.Duration(1000) * time.Millisecond),
-					redis.DialWriteTimeout(time.Duration(1000) * time.Millisecond),
-					redis.DialConnectTimeout(time.Duration(1000) * time.Millisecond),
-					redis.DialDatabase(config.ConfigMode.RedisConfig.Database),
-				}
-				if config.ConfigMode.RedisConfig.NeedAuth {
-					redisConfigs = append(redisConfigs, redis.DialPassword(config.ConfigMode.RedisConfig.Password))
-				}
-				return redis.Dial(
-					config.ConfigMode.RedisConfig.Network,
-					config.ConfigMode.RedisConfig.Address,
-					redisConfigs...,
-				)
-			},
-		})
+	if config.ConfigMode.RedisConfig.Enabled {
+		httpProxyRuntimeStorage = redisImp.NewRuntimeStorageRedisImp(
+			&redis.Pool{
+				MaxIdle:     256,
+				MaxActive:   0,
+				IdleTimeout: time.Duration(120),
+				Dial: func() (redis.Conn, error) {
+					redisConfigs := []redis.DialOption{redis.DialReadTimeout(time.Duration(1000) * time.Millisecond),
+						redis.DialWriteTimeout(time.Duration(1000) * time.Millisecond),
+						redis.DialConnectTimeout(time.Duration(1000) * time.Millisecond),
+						redis.DialDatabase(config.ConfigMode.RedisConfig.Database),
+					}
+					if config.ConfigMode.RedisConfig.NeedAuth {
+						redisConfigs = append(redisConfigs, redis.DialPassword(config.ConfigMode.RedisConfig.Password))
+					}
+					return redis.Dial(
+						config.ConfigMode.RedisConfig.Network,
+						config.ConfigMode.RedisConfig.Address,
+						redisConfigs...,
+					)
+				},
+			})
+	} else {
+		httpProxyRuntimeStorage = memImp.NewRuntimeStorageMemImp()
+	}
+
 	SessionsCtl = SessionsManager{
 		Session:                 make(map[string]*session.Session),
-		HttpProxyMap:            make(map[string]*HttpProxy),
 		HttpProxyRuntimeStorage: httpProxyRuntimeStorage,
 	}
 }

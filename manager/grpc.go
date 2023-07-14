@@ -34,7 +34,7 @@ func (sm *SessionsManager) CreateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 		return in, status.Errorf(codes.Unauthenticated, err.Error())
 	}
 	log.Println("CreateOneHTTP:", in.Domain)
-	return in, sm.AddHttpProxy(&HttpProxy{
+	return in, sm.AddOrUpdateHttpProxy(&HttpProxy{
 		Domain:      in.Domain,
 		RunId:       in.RunId,
 		RemoteIP:    in.RemoteIP,
@@ -63,7 +63,7 @@ func (sm *SessionsManager) UpdateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 		Description: in.Description,
 	}
 	sm.DelHttpProxy(h.Domain)
-	return in, sm.AddHttpProxy(h)
+	return in, sm.AddOrUpdateHttpProxy(h)
 }
 
 func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.ServerGoEmpty, error) {

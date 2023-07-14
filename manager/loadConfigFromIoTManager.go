@@ -38,7 +38,7 @@ func LoadConfigFromIoTManager() (err error) {
 	}
 	for _, info := range rst.HttpInfoList {
 		log.Println("add domain:", info)
-		SessionsCtl.AddHttpProxy(&HttpProxy{
+		SessionsCtl.AddOrUpdateHttpProxy(&HttpProxy{
 			Domain:           info.Domain,
 			UserName:         info.Username,
 			Password:         info.Password,
