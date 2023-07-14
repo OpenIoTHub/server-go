@@ -11,7 +11,7 @@ import (
 func (sm *SessionsManager) GetOneHttpProxy(domain string) (*HttpProxy, error) {
 	log.Println("query:", domain)
 	if config.ConfigMode.RedisConfig.Enabled {
-		hpBytes, err := sm.GetRedisValueByKeyToBytes(domain)
+		hpBytes, err := sm.HttpProxyRuntimeStorage.GetValueByKeyToBytes(domain)
 		if err != nil {
 			return nil, err
 		}
@@ -33,12 +33,12 @@ func (sm *SessionsManager) GetOneHttpProxy(domain string) (*HttpProxy, error) {
 func (sm *SessionsManager) GetAllHttpProxy() map[string]*HttpProxy {
 	if config.ConfigMode.RedisConfig.Enabled {
 		var HttpProxyMap = make(map[string]*HttpProxy)
-		keys, err := sm.GetAllRedisKey()
+		keys, err := sm.HttpProxyRuntimeStorage.GetAllKeys()
 		if err != nil {
 			return HttpProxyMap
 		}
 		for _, key := range keys {
-			hpBytes, err := sm.GetRedisValueByKeyToBytes(key)
+			hpBytes, err := sm.HttpProxyRuntimeStorage.GetValueByKeyToBytes(key)
 			if err != nil {
 				continue
 			}
@@ -60,7 +60,7 @@ func (sm *SessionsManager) AddHttpProxy(httpProxy *HttpProxy) error {
 		if err != nil {
 			return err
 		}
-		return sm.SetRedisKeyValue(httpProxy.Domain, httpProxyBytes)
+		return sm.HttpProxyRuntimeStorage.SetValueByKey(httpProxy.Domain, httpProxyBytes)
 	}
 	if _, ok := sm.HttpProxyMap[httpProxy.Domain]; ok {
 		return fmt.Errorf("域名%s已经被占用！", httpProxy.Domain) //存在
@@ -71,7 +71,7 @@ func (sm *SessionsManager) AddHttpProxy(httpProxy *HttpProxy) error {
 
 func (sm *SessionsManager) DelHttpProxy(domain string) {
 	if config.ConfigMode.RedisConfig.Enabled {
-		sm.DelRedisByKey(domain)
+		sm.HttpProxyRuntimeStorage.DelValueByKey(domain)
 	}
 	delete(sm.HttpProxyMap, domain)
 }
