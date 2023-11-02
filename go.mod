@@ -13,7 +13,7 @@ require (
 	github.com/xtaci/kcp-go v5.4.20+incompatible
 	golang.org/x/crypto v0.14.0
 	golang.org/x/net v0.17.0
-	google.golang.org/grpc v1.33.1
+	google.golang.org/grpc v1.56.3
 	gopkg.in/yaml.v2 v2.3.0
 )
 
@@ -22,7 +22,7 @@ require (
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
-	github.com/golang/protobuf v1.4.3 // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/grandcat/zeroconf v1.0.0 // indirect
 	github.com/jacobsa/go-serial v0.0.0-20180131005756-15cf729a72d4 // indirect
@@ -43,8 +43,8 @@ require (
 	github.com/xtaci/kcp-go/v5 v5.6.1 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
-	google.golang.org/genproto v0.0.0-20201026171402-d4b8fe4fd877 // indirect
-	google.golang.org/protobuf v1.25.0 // indirect
+	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
+	google.golang.org/protobuf v1.30.0 // indirect
 )
 
 //replace github.com/OpenIoTHub/utils => C:\Users\Farry\go\src\github.com\OpenIoTHub\utils
