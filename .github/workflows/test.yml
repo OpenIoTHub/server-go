@@ -7,17 +7,17 @@ on:
     branches: [ master ]
 
 jobs:
-  gateway-go:
+  server-go:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
-          go-version: ^1.16
+          go-version: ^1.20
       - name: Test golang code
         run: go test ./...
       - name: Build golang code
