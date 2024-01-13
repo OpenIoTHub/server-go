@@ -3,8 +3,8 @@ package manager
 import (
 	"context"
 	"fmt"
+	pb "github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/server"
 	"github.com/OpenIoTHub/server-go/config"
-	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

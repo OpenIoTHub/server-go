@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"log"
 	"time"
 )
@@ -24,7 +24,7 @@ func (t *UuidTokenClaims) IfContainPermission(permission string) bool {
 	return false
 }
 
-//列表内的权限是否都包括
+// 列表内的权限是否都包括
 func (t *UuidTokenClaims) IfContainPermissions(permissions []string) bool {
 	for _, p := range permissions {
 		if t.IfContainPermission(p) {

@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/OpenIoTHub/utils/net/ip"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	uuid "github.com/satori/go.uuid"
 	"log"
 	"time"
@@ -32,7 +32,7 @@ func (t *TokenClaims) IfContainPermission(permission string) bool {
 	return false
 }
 
-//列表内的权限是否都包括
+// 列表内的权限是否都包括
 func (t *TokenClaims) IfContainPermissions(permissions []string) bool {
 	for _, p := range permissions {
 		if t.IfContainPermission(p) {

@@ -3,6 +3,7 @@ package kcp
 import (
 	"encoding/binary"
 	"sync/atomic"
+	"time"
 
 	"github.com/klauspost/reedsolomon"
 )
@@ -41,14 +42,12 @@ type fecDecoder struct {
 	decodeCache [][]byte
 	flagCache   []bool
 
-	// zeros
-	zeros []byte
-
 	// RS decoder
 	codec reedsolomon.Encoder
 
 	// auto tune fec parameter
-	autoTune autoTune
+	autoTune   autoTune
+	shouldTune bool
 }
 
 func newFECDecoder(dataShards, parityShards int) *fecDecoder {
@@ -68,7 +67,6 @@ func newFECDecoder(dataShards, parityShards int) *fecDecoder {
 	dec.codec = codec
 	dec.decodeCache = make([][]byte, dec.shardSize)
 	dec.flagCache = make([]bool, dec.shardSize)
-	dec.zeros = make([]byte, mtuLimit)
 	return dec
 }
 
@@ -82,18 +80,17 @@ func (dec *fecDecoder) decode(in fecPacket) (recovered [][]byte) {
 	}
 
 	// check if FEC parameters is out of sync
-	var shouldTune bool
 	if int(in.seqid())%dec.shardSize < dec.dataShards {
 		if in.flag() != typeData { // expect typeData
-			shouldTune = true
+			dec.shouldTune = true
 		}
 	} else {
 		if in.flag() != typeParity {
-			shouldTune = true
+			dec.shouldTune = true
 		}
 	}
 
-	if shouldTune {
+	if dec.shouldTune {
 		autoDS := dec.autoTune.FindPeriod(true)
 		autoPS := dec.autoTune.FindPeriod(false)
 
@@ -112,9 +109,15 @@ func (dec *fecDecoder) decode(in fecPacket) (recovered [][]byte) {
 				dec.codec = codec
 				dec.decodeCache = make([][]byte, dec.shardSize)
 				dec.flagCache = make([]bool, dec.shardSize)
+				dec.shouldTune = false
 				//log.Println("autotune to :", dec.dataShards, dec.parityShards)
 			}
 		}
+	}
+
+	// parameters in tuning
+	if dec.shouldTune {
+		return nil
 	}
 
 	// insertion
@@ -199,7 +202,7 @@ func (dec *fecDecoder) decode(in fecPacket) (recovered [][]byte) {
 				if shards[k] != nil {
 					dlen := len(shards[k])
 					shards[k] = shards[k][:maxlen]
-					copy(shards[k][dlen:], dec.zeros)
+					clear(shards[k][dlen:])
 				} else if k < dec.dataShards {
 					shards[k] = xmitBuf.Get().([]byte)[:0]
 				}
@@ -276,11 +279,9 @@ type (
 		payloadOffset int // FEC payload offset
 
 		// caches
-		shardCache  [][]byte
-		encodeCache [][]byte
-
-		// zeros
-		zeros []byte
+		shardCache     [][]byte
+		encodeCache    [][]byte
+		tsLatestPacket int64
 
 		// RS encoder
 		codec reedsolomon.Encoder
@@ -311,13 +312,12 @@ func newFECEncoder(dataShards, parityShards, offset int) *fecEncoder {
 	for k := range enc.shardCache {
 		enc.shardCache[k] = make([]byte, mtuLimit)
 	}
-	enc.zeros = make([]byte, mtuLimit)
 	return enc
 }
 
 // encodes the packet, outputs parity shards if we have collected quorum datashards
 // notice: the contents of 'ps' will be re-written in successive calling
-func (enc *fecEncoder) encode(b []byte) (ps [][]byte) {
+func (enc *fecEncoder) encode(b []byte, rto uint32) (ps [][]byte) {
 	// The header format:
 	// | FEC SEQID(4B) | FEC TYPE(2B) | SIZE (2B) | PAYLOAD(SIZE-2) |
 	// |<-headerOffset                |<-payloadOffset
@@ -336,26 +336,30 @@ func (enc *fecEncoder) encode(b []byte) (ps [][]byte) {
 	}
 
 	//  Generation of Reed-Solomon Erasure Code
+	now := time.Now().UnixMilli()
 	if enc.shardCount == enc.dataShards {
-		// fill '0' into the tail of each datashard
-		for i := 0; i < enc.dataShards; i++ {
-			shard := enc.shardCache[i]
-			slen := len(shard)
-			copy(shard[slen:enc.maxSize], enc.zeros)
-		}
+		// generate the rs-code only if the data is continuous.
+		if now-enc.tsLatestPacket < int64(rto) {
+			// fill '0' into the tail of each datashard
+			for i := 0; i < enc.dataShards; i++ {
+				shard := enc.shardCache[i]
+				slen := len(shard)
+				clear(shard[slen:enc.maxSize])
+			}
 
-		// construct equal-sized slice with stripped header
-		cache := enc.encodeCache
-		for k := range cache {
-			cache[k] = enc.shardCache[k][enc.payloadOffset:enc.maxSize]
-		}
+			// construct equal-sized slice with stripped header
+			cache := enc.encodeCache
+			for k := range cache {
+				cache[k] = enc.shardCache[k][enc.payloadOffset:enc.maxSize]
+			}
 
-		// encoding
-		if err := enc.codec.Encode(cache); err == nil {
-			ps = enc.shardCache[enc.dataShards:]
-			for k := range ps {
-				enc.markParity(ps[k][enc.headerOffset:])
-				ps[k] = ps[k][:enc.maxSize]
+			// encoding
+			if err := enc.codec.Encode(cache); err == nil {
+				ps = enc.shardCache[enc.dataShards:]
+				for k := range ps {
+					enc.markParity(ps[k][enc.headerOffset:])
+					ps[k] = ps[k][:enc.maxSize]
+				}
 			}
 		}
 
@@ -363,6 +367,8 @@ func (enc *fecEncoder) encode(b []byte) (ps [][]byte) {
 		enc.shardCount = 0
 		enc.maxSize = 0
 	}
+
+	enc.tsLatestPacket = now
 
 	return
 }

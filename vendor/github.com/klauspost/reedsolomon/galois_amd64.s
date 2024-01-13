@@ -1,6 +1,7 @@
 //+build !noasm
 //+build !appengine
 //+build !gccgo
+//+build !nopshufb
 
 // Copyright 2015, Klaus Post, see LICENSE for details.
 
@@ -215,41 +216,17 @@ done_avx2:
 	VZEROUPPER
 	RET
 
-// func sSE2XorSlice(in, out []byte)
-TEXT ·sSE2XorSlice(SB), 7, $0
-	MOVQ in+0(FP), SI     // SI: &in
-	MOVQ in_len+8(FP), R9 // R9: len(in)
-	MOVQ out+24(FP), DX   // DX: &out
-	SHRQ $4, R9           // len(in) / 16
-	CMPQ R9, $0
-	JEQ  done_xor_sse2
-
-loopback_xor_sse2:
-	MOVOU (SI), X0          // in[x]
-	MOVOU (DX), X1          // out[x]
-	PXOR  X0, X1
-	MOVOU X1, (DX)
-	ADDQ  $16, SI           // in+=16
-	ADDQ  $16, DX           // out+=16
-	SUBQ  $1, R9
-	JNZ   loopback_xor_sse2
-
-done_xor_sse2:
-	RET
-
 // func galMulAVX2Xor_64(low, high, in, out []byte)
 TEXT ·galMulAVX2Xor_64(SB), 7, $0
-	MOVQ  low+0(FP), SI     // SI: &low
-	MOVQ  high+24(FP), DX   // DX: &high
-	MOVQ  $15, BX           // BX: low mask
-	MOVQ  BX, X5
-	MOVOU (SI), X6          // X6: low
-	MOVOU (DX), X7          // X7: high
-	MOVQ  in_len+56(FP), R9 // R9: len(in)
+	MOVQ low+0(FP), SI     // SI: &low
+	MOVQ high+24(FP), DX   // DX: &high
+	MOVQ $15, BX           // BX: low mask
+	MOVQ BX, X5
+	MOVQ in_len+56(FP), R9 // R9: len(in)
 
-	VINSERTI128  $1, X6, Y6, Y6 // low
-	VINSERTI128  $1, X7, Y7, Y7 // high
-	VPBROADCASTB X5, Y8         // Y8: lomask (unpacked)
+	VBROADCASTI128 (SI), Y6 // low table
+	VBROADCASTI128 (DX), Y7 // high high table
+	VPBROADCASTB   X5, Y8   // Y8: lomask (unpacked)
 
 	SHRQ  $6, R9           // len(in) / 64
 	MOVQ  out+72(FP), DX   // DX: &out
@@ -290,17 +267,14 @@ done_xor_avx2_64:
 
 // func galMulAVX2_64(low, high, in, out []byte)
 TEXT ·galMulAVX2_64(SB), 7, $0
-	MOVQ  low+0(FP), SI     // SI: &low
-	MOVQ  high+24(FP), DX   // DX: &high
-	MOVQ  $15, BX           // BX: low mask
-	MOVQ  BX, X5
-	MOVOU (SI), X6          // X6: low
-	MOVOU (DX), X7          // X7: high
-	MOVQ  in_len+56(FP), R9 // R9: len(in)
-
-	VINSERTI128  $1, X6, Y6, Y6 // low
-	VINSERTI128  $1, X7, Y7, Y7 // high
-	VPBROADCASTB X5, Y8         // Y8: lomask (unpacked)
+	MOVQ           low+0(FP), SI     // SI: &low
+	MOVQ           high+24(FP), DX   // DX: &high
+	MOVQ           $15, BX           // BX: low mask
+	MOVQ           BX, X5
+	MOVQ           in_len+56(FP), R9 // R9: len(in)
+	VBROADCASTI128 (SI), Y6          // low table
+	VBROADCASTI128 (DX), Y7          // high high table
+	VPBROADCASTB   X5, Y8            // Y8: lomask (unpacked)
 
 	SHRQ  $6, R9         // len(in) / 64
 	MOVQ  out+72(FP), DX // DX: &out
@@ -333,38 +307,4 @@ loopback_avx2_64:
 
 done_avx2_64:
 	VZEROUPPER
-	RET
-
-// func sSE2XorSlice_64(in, out []byte)
-TEXT ·sSE2XorSlice_64(SB), 7, $0
-	MOVQ in+0(FP), SI     // SI: &in
-	MOVQ in_len+8(FP), R9 // R9: len(in)
-	MOVQ out+24(FP), DX   // DX: &out
-	SHRQ $6, R9           // len(in) / 64
-	CMPQ R9, $0
-	JEQ  done_xor_sse2_64
-
-loopback_xor_sse2_64:
-	MOVOU (SI), X0             // in[x]
-	MOVOU 16(SI), X2           // in[x]
-	MOVOU 32(SI), X4           // in[x]
-	MOVOU 48(SI), X6           // in[x]
-	MOVOU (DX), X1             // out[x]
-	MOVOU 16(DX), X3           // out[x]
-	MOVOU 32(DX), X5           // out[x]
-	MOVOU 48(DX), X7           // out[x]
-	PXOR  X0, X1
-	PXOR  X2, X3
-	PXOR  X4, X5
-	PXOR  X6, X7
-	MOVOU X1, (DX)
-	MOVOU X3, 16(DX)
-	MOVOU X5, 32(DX)
-	MOVOU X7, 48(DX)
-	ADDQ  $64, SI              // in+=64
-	ADDQ  $64, DX              // out+=64
-	SUBQ  $1, R9
-	JNZ   loopback_xor_sse2_64
-
-done_xor_sse2_64:
 	RET

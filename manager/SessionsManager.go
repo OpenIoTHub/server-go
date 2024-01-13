@@ -2,12 +2,12 @@ package manager
 
 import (
 	"errors"
+	pb "github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/server"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/server-go/iface/runtimeStorage"
 	"github.com/OpenIoTHub/server-go/imp/runtimeStorage/memImp"
 	"github.com/OpenIoTHub/server-go/imp/runtimeStorage/redisImp"
 	"github.com/OpenIoTHub/server-go/session"
-	"github.com/OpenIoTHub/server-grpc-api/pb-go"
 	"github.com/OpenIoTHub/utils/io"
 	"github.com/OpenIoTHub/utils/models"
 	"github.com/OpenIoTHub/utils/msg"

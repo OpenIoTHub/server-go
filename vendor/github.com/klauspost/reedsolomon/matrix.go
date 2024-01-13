@@ -67,11 +67,11 @@ var errColSizeMismatch = errors.New("column size is not the same for all rows")
 
 func (m matrix) Check() error {
 	rows := len(m)
-	if rows <= 0 {
+	if rows == 0 {
 		return errInvalidRowSize
 	}
 	cols := len(m[0])
-	if cols <= 0 {
+	if cols == 0 {
 		return errInvalidColSize
 	}
 
@@ -175,8 +175,7 @@ func (m matrix) SwapRows(r1, r2 int) error {
 	return nil
 }
 
-// IsSquare will return true if the matrix is square
-// and nil if the matrix is square
+// IsSquare will return true if the matrix is square, otherwise false.
 func (m matrix) IsSquare() bool {
 	return len(m) == len(m[0])
 }
@@ -232,7 +231,7 @@ func (m matrix) gaussianElimination() error {
 		}
 		// Scale to 1.
 		if m[r][r] != 1 {
-			scale := galDivide(1, m[r][r])
+			scale := galOneOver(m[r][r])
 			for c := 0; c < columns; c++ {
 				m[r][c] = galMultiply(m[r][c], scale)
 			}

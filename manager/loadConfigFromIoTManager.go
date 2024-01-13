@@ -2,13 +2,12 @@ package manager
 
 import (
 	"context"
+	pb "github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/manager"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/utils/models"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"log"
-
-	"github.com/OpenIoTHub/iot-manager-grpc-api/pb-go"
 )
 
 const IoTManagerAddr = "iot-manager.iotserv.com:8881"
