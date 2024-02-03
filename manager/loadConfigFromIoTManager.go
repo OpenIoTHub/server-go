@@ -7,6 +7,7 @@ import (
 	"github.com/OpenIoTHub/utils/models"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 )
 
@@ -30,7 +31,7 @@ func LoadConfigFromIoTManager() (err error) {
 	//metadata传递jwt
 	md := metadata.Pairs("jwt", jwt)
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
-	rst, err := c.GetAllHttpInfoListByServerUuid(ctx, &pb.Empty{})
+	rst, err := c.GetAllHttpInfoListByServerUuid(ctx, &emptypb.Empty{})
 	if err != nil {
 		log.Println(err)
 		return

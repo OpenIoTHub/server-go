@@ -1,7 +1,7 @@
 # github.com/OpenIoTHub/getip v0.1.4
 ## explicit; go 1.15
 github.com/OpenIoTHub/getip/iputils
-# github.com/OpenIoTHub/openiothub_grpc_api v1.1.1
+# github.com/OpenIoTHub/openiothub_grpc_api v1.1.4
 ## explicit; go 1.21
 github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/manager
 github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/server
@@ -47,7 +47,7 @@ github.com/jacobsa/go-serial/serial
 # github.com/klauspost/cpuid/v2 v2.2.6
 ## explicit; go 1.15
 github.com/klauspost/cpuid/v2
-# github.com/klauspost/reedsolomon v1.12.0
+# github.com/klauspost/reedsolomon v1.12.1
 ## explicit; go 1.18
 github.com/klauspost/reedsolomon
 # github.com/libp2p/go-buffer-pool v0.1.0
@@ -59,7 +59,7 @@ github.com/libp2p/go-msgio
 # github.com/libp2p/go-yamux v1.4.1
 ## explicit; go 1.12
 github.com/libp2p/go-yamux
-# github.com/miekg/dns v1.1.57
+# github.com/miekg/dns v1.1.58
 ## explicit; go 1.19
 github.com/miekg/dns
 # github.com/multiformats/go-varint v0.0.7
@@ -92,7 +92,7 @@ github.com/tjfoc/gmsm/sm4
 # github.com/urfave/cli/v2 v2.27.1
 ## explicit; go 1.18
 github.com/urfave/cli/v2
-# github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673
+# github.com/xrash/smetrics v0.0.0-20231213231151-1d8dd44e695e
 ## explicit
 github.com/xrash/smetrics
 # github.com/xtaci/kcp-go v5.4.20+incompatible
@@ -160,10 +160,10 @@ golang.org/x/tools/internal/tokeninternal
 golang.org/x/tools/internal/typeparams
 golang.org/x/tools/internal/typesinternal
 golang.org/x/tools/internal/versions
-# google.golang.org/genproto/googleapis/rpc v0.0.0-20240108191215-35c7eff3a6b1
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20240125205218-1f4bbc51befe
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.60.1
+# google.golang.org/grpc v1.61.0
 ## explicit; go 1.19
 google.golang.org/grpc
 google.golang.org/grpc/attributes
@@ -252,7 +252,9 @@ google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/descriptorpb
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
+google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
+google.golang.org/protobuf/types/known/wrapperspb
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2

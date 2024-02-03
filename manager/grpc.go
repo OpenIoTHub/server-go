@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"net"
 )
@@ -68,15 +69,15 @@ func (sm *SessionsManager) UpdateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 	return in, sm.AddOrUpdateHttpProxy(h)
 }
 
-func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.ServerGoEmpty, error) {
+func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*emptypb.Empty, error) {
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
-		return &pb.ServerGoEmpty{}, status.Errorf(codes.Unauthenticated, err.Error())
+		return &emptypb.Empty{}, status.Errorf(codes.Unauthenticated, err.Error())
 	}
 	log.Println("DeleteOneHTTP:", in.Domain)
 	//TODO 验证要删除的域名的所属id是否和token的id一致
 	sm.DelHttpProxy(in.Domain)
-	return &pb.ServerGoEmpty{}, nil
+	return &emptypb.Empty{}, nil
 
 }
 
