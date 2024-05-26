@@ -11,12 +11,12 @@ import (
 	"log"
 )
 
-const IoTManagerAddr = "iot-manager.iotserv.com:8881"
+//const IoTManagerAddr = "api.iot-manager.iothub.cloud:8881"
 
 //const IoTManagerAddr = "127.0.0.1:8881"
 
 func LoadConfigFromIoTManager() (err error) {
-	conn, err := grpc.Dial(IoTManagerAddr, grpc.WithInsecure())
+	conn, err := grpc.Dial(config.IoTManagerAddr, grpc.WithInsecure())
 	if err != nil {
 		log.Println("grpc.Dial:", err)
 		return

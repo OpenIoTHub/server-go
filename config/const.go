@@ -22,3 +22,5 @@ const DefaultHttpsPort = 443
 
 const DefaultRedisNetwork = "tcp"
 const DefaultRedisAddress = "127.0.0.1:6379"
+
+const IoTManagerAddr = "api.iot-manager.iothub.cloud:8881"
