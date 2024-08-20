@@ -75,15 +75,15 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 	go func() {
 		serverHttp := http.Server{
 			Addr:    fmt.Sprintf(":%d", config.ConfigMode.Common.HttpPort),
-			Handler: &sess,
+			Handler: m.HTTPHandler(&sess),
 		}
 		log.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.ConfigMode.Common.HttpPort)
 		err = serverHttp.ListenAndServe()
 		if err != nil {
 			log.Println(err.Error())
-			serverHttp := http.Server{
+			serverHttp = http.Server{
 				Addr:    fmt.Sprintf(":%s", "1083"),
-				Handler: &sess,
+				Handler: m.HTTPHandler(&sess),
 			}
 			log.Printf("%d端口被占用，请访问http://127.0.0.1:1083/\n", config.DefaultHttpPort)
 			err = serverHttp.ListenAndServe()
