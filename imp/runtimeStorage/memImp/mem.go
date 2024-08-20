@@ -32,6 +32,9 @@ func (r *RuntimeStorageMemImp) GetValueByKey(key string) (any, error) {
 
 func (r *RuntimeStorageMemImp) GetValueByKeyToBytes(key string) ([]byte, error) {
 	v, err := r.GetValueByKey(key)
+	if err != nil {
+		return nil, err
+	}
 	return v.([]byte), err
 }
 
