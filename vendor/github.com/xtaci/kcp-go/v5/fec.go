@@ -1,3 +1,42 @@
+// The MIT License (MIT)
+//
+// Copyright (c) 2015 xtaci
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+// THE GENERALIZED REED-SOLOMON FEC SCHEME
+//
+// Encoding:
+// -----------
+// Message:         | M1 | M2 | M3 | M4 |
+// Generate Parity: | P1 | P2 |
+// Encoded Codeword:| M1 | M2 | M3 | M4 | P1 | P2 |
+//
+// Decoding with Erasures:
+// ------------------------
+// Received:        | M1 | ?? | M3 | M4 | P1 | ?? |
+// Erasures:        |    | E1 |    |    |    | E2 |
+// Syndromes:       S1, S2, ...
+// Error Locator:   Λ(x) = ...
+// Correct Erasures:Determine values for E1 (M2) and E2 (P2).
+// Corrected:       | M1 | M2 | M3 | M4 | P1 | P2 |
+
 package kcp
 
 import (
@@ -90,6 +129,7 @@ func (dec *fecDecoder) decode(in fecPacket) (recovered [][]byte) {
 		}
 	}
 
+	// if signal is out-of-sync, try to detect the pattern in the signal
 	if dec.shouldTune {
 		autoDS := dec.autoTune.FindPeriod(true)
 		autoPS := dec.autoTune.FindPeriod(false)

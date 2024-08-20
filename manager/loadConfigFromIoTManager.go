@@ -2,10 +2,12 @@ package manager
 
 import (
 	"context"
+	"crypto/tls"
 	pb "github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/manager"
 	"github.com/OpenIoTHub/server-go/config"
 	"github.com/OpenIoTHub/utils/models"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
@@ -16,9 +18,10 @@ import (
 //const IoTManagerAddr = "127.0.0.1:8881"
 
 func LoadConfigFromIoTManager() (err error) {
-	conn, err := grpc.Dial(config.IoTManagerAddr, grpc.WithInsecure())
+	tlsConfig := grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{}))
+	conn, err := grpc.NewClient(config.IoTManagerAddr, tlsConfig)
 	if err != nil {
-		log.Println("grpc.Dial:", err)
+		log.Println("grpc.NewClient:", err)
 		return
 	}
 	defer conn.Close()
