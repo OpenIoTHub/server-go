@@ -14,6 +14,11 @@ import (
 	"os"
 )
 
+var autocertManager = &autocert.Manager{
+	Prompt:     autocert.AcceptTOS,
+	HostPolicy: func(_ context.Context, host string) error { return nil },
+}
+
 func (sess SessionsManager) RunKCP() {
 	listener, err := kcp.ListenWithOptions(fmt.Sprintf(":%d", config.ConfigMode.Common.KcpPort), nil, 10, 3)
 	if err != nil {
@@ -43,13 +48,14 @@ func (sess SessionsManager) RunTLS() {
 		log.Printf("warning:File Path:%s Not Exist!  So tls server NOT Available!", config.ConfigMode.Security.TlsKeyFilePath)
 		return
 	}
-	cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)
-	//cer, err := tls.LoadX509KeyPair("./cert.pem", "./key.pem")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	tlsConfig := &tls.Config{Certificates: []tls.Certificate{cer}}
+	//cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)
+	////cer, err := tls.LoadX509KeyPair("./cert.pem", "./key.pem")
+	//if err != nil {
+	//	log.Println(err)
+	//	return
+	//}
+	//tlsConfig := &tls.Config{Certificates: []tls.Certificate{cer}}
+	tlsConfig := autocertManager.TLSConfig()
 	listener, err := tls.Listen("tcp", fmt.Sprintf(":%d", config.ConfigMode.Common.TlsPort), tlsConfig)
 	if err != nil {
 		log.Println(err)
@@ -61,21 +67,17 @@ func (sess SessionsManager) RunTLS() {
 // http(s)代理端口监听
 func (sess SessionsManager) StartHttpListenAndServ() {
 	var err error
-	m := &autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: func(_ context.Context, host string) error { return nil },
-	}
 	dir := file.CacheDir()
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		log.Printf("没有使用缓存目录来存放https证书: %v", err)
 	} else {
-		m.Cache = autocert.DirCache(dir)
+		autocertManager.Cache = autocert.DirCache(dir)
 	}
 
 	go func() {
 		serverHttp := http.Server{
 			Addr:    fmt.Sprintf(":%d", config.ConfigMode.Common.HttpPort),
-			Handler: m.HTTPHandler(&sess),
+			Handler: autocertManager.HTTPHandler(&sess),
 		}
 		log.Printf("请访问浏览器访问http://127.0.0.1:%d/查看管理界面\n", config.ConfigMode.Common.HttpPort)
 		err = serverHttp.ListenAndServe()
@@ -83,7 +85,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 			log.Println(err.Error())
 			serverHttp = http.Server{
 				Addr:    fmt.Sprintf(":%s", "1083"),
-				Handler: m.HTTPHandler(&sess),
+				Handler: autocertManager.HTTPHandler(&sess),
 			}
 			log.Printf("%d端口被占用，请访问http://127.0.0.1:1083/\n", config.DefaultHttpPort)
 			err = serverHttp.ListenAndServe()
@@ -97,7 +99,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 		serverHttps := http.Server{
 			Addr:      fmt.Sprintf(":%d", config.ConfigMode.Common.HttpsPort),
 			Handler:   &sess,
-			TLSConfig: m.TLSConfig(),
+			TLSConfig: autocertManager.TLSConfig(),
 		}
 		err = serverHttps.ListenAndServeTLS("", "")
 		if err != nil {
@@ -105,7 +107,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 			serverHttps := http.Server{
 				Addr:      fmt.Sprintf(":%s", "1443"),
 				Handler:   &sess,
-				TLSConfig: m.TLSConfig(),
+				TLSConfig: autocertManager.TLSConfig(),
 			}
 			log.Println("1443端口被占用，请访问https://127.0.0.1:1443/")
 			err = serverHttps.ListenAndServeTLS("", "")

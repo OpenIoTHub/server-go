@@ -7,6 +7,7 @@ import (
 	"github.com/OpenIoTHub/server-go/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -17,7 +18,7 @@ import (
 // grpc
 func (sm *SessionsManager) StartgRpcListenAndServ() {
 	go func() {
-		s := grpc.NewServer()
+		s := grpc.NewServer(grpc.Creds(credentials.NewTLS(autocertManager.TLSConfig())))
 		pb.RegisterHttpManagerServer(s, sm)
 		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.ConfigMode.Common.GrpcPort))
 		if err != nil {
