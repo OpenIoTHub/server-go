@@ -104,7 +104,7 @@ func (sess SessionsManager) StartHttpListenAndServ() {
 		err = serverHttps.ListenAndServeTLS("", "")
 		if err != nil {
 			log.Println(err.Error())
-			serverHttps := http.Server{
+			serverHttps = http.Server{
 				Addr:      fmt.Sprintf(":%s", "1443"),
 				Handler:   &sess,
 				TLSConfig: autocertManager.TLSConfig(),
