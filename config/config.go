@@ -6,7 +6,6 @@ import (
 	"github.com/OpenIoTHub/utils/models"
 	"gopkg.in/yaml.v2"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -32,7 +31,8 @@ func LoadConfig() (err error) {
 		writers = append(writers, os.Stdout)
 	}
 	if ConfigMode.LogConfig != nil && ConfigMode.LogConfig.LogFilePath != "" {
-		f, err := os.OpenFile(ConfigMode.LogConfig.LogFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		var f *os.File
+		f, err = os.OpenFile(ConfigMode.LogConfig.LogFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -111,6 +111,6 @@ func writeConfigFile(configMode models.ServerConfig, path string) (err error) {
 	if err != nil {
 		return
 	}
-	err = ioutil.WriteFile(path, configByte, 0644)
+	err = os.WriteFile(path, configByte, 0644)
 	return
 }

@@ -18,7 +18,13 @@ import (
 // grpc
 func (sm *SessionsManager) StartgRpcListenAndServ() {
 	go func() {
-		s := grpc.NewServer(grpc.Creds(credentials.NewTLS(autocertManager.TLSConfig())))
+		//TODO 如果是IP则使用不安全的连接，如果是域名则使用安全的连接
+		var s *grpc.Server
+		if net.ParseIP(config.ConfigMode.PublicIp) == nil {
+			s = grpc.NewServer(grpc.Creds(credentials.NewTLS(autocertManager.TLSConfig())))
+		} else {
+			s = grpc.NewServer()
+		}
 		pb.RegisterHttpManagerServer(s, sm)
 		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", config.ConfigMode.Common.GrpcPort))
 		if err != nil {
