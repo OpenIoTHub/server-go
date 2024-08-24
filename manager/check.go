@@ -76,10 +76,11 @@ func checkOpenIoTHubToken(key, tokenStr, id string) (token *models.TokenClaims, 
 		log.Printf("token type err ,%+v not 2(OpenIoTHub)", token.Permission)
 		return nil, errors.New("not gateway token")
 	}
-	if token.RunId != id {
-		log.Printf("RunId: %s not %s", token.RunId, id)
-		return nil, errors.New("id check error")
-	}
+	//一个是网关的id一个是http的唯一记录id
+	//if token.RunId != id {
+	//	log.Printf("RunId: %s not %s", token.RunId, id)
+	//	return nil, errors.New("id check error")
+	//}
 	return
 }
 
