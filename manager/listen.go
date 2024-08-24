@@ -1,22 +1,19 @@
 package manager
 
 import (
-	"context"
 	"crypto/tls"
 	"fmt"
 	"github.com/OpenIoTHub/server-go/config"
-	"github.com/OpenIoTHub/utils/file"
 	"github.com/xtaci/kcp-go"
 	"golang.org/x/crypto/acme/autocert"
 	"log"
 	"net"
 	"net/http"
-	"os"
 )
 
 var autocertManager = &autocert.Manager{
-	Prompt:     autocert.AcceptTOS,
-	HostPolicy: func(_ context.Context, host string) error { return nil },
+	Prompt: autocert.AcceptTOS,
+	//HostPolicy: func(_ context.Context, host string) error { return nil },
 }
 
 func (sess SessionsManager) RunKCP() {
@@ -38,16 +35,16 @@ func (sess SessionsManager) RunTCP() {
 }
 
 func (sess SessionsManager) RunTLS() {
-	_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
-	if err != nil {
-		log.Printf("warning:File Path:%s Not Exist! So tls server NOT Available!", config.ConfigMode.Security.TlsCertFilePath)
-		return
-	}
-	_, err = os.Stat(config.ConfigMode.Security.TlsKeyFilePath)
-	if err != nil {
-		log.Printf("warning:File Path:%s Not Exist!  So tls server NOT Available!", config.ConfigMode.Security.TlsKeyFilePath)
-		return
-	}
+	//_, err := os.Stat(config.ConfigMode.Security.TlsCertFilePath)
+	//if err != nil {
+	//	log.Printf("warning:File Path:%s Not Exist! So tls server NOT Available!", config.ConfigMode.Security.TlsCertFilePath)
+	//	return
+	//}
+	//_, err = os.Stat(config.ConfigMode.Security.TlsKeyFilePath)
+	//if err != nil {
+	//	log.Printf("warning:File Path:%s Not Exist!  So tls server NOT Available!", config.ConfigMode.Security.TlsKeyFilePath)
+	//	return
+	//}
 	//cer, err := tls.LoadX509KeyPair(config.ConfigMode.Security.TlsCertFilePath, config.ConfigMode.Security.TlsKeyFilePath)
 	////cer, err := tls.LoadX509KeyPair("./cert.pem", "./key.pem")
 	//if err != nil {
@@ -67,12 +64,12 @@ func (sess SessionsManager) RunTLS() {
 // http(s)代理端口监听
 func (sess SessionsManager) StartHttpListenAndServ() {
 	var err error
-	dir := file.CacheDir()
-	if err := os.MkdirAll(dir, 0700); err != nil {
-		log.Printf("没有使用缓存目录来存放https证书: %v", err)
-	} else {
-		autocertManager.Cache = autocert.DirCache(dir)
-	}
+	//dir := file.CacheDir()
+	//if err := os.MkdirAll(dir, 0700); err != nil {
+	//	log.Printf("没有使用缓存目录来存放https证书: %v", err)
+	//} else {
+	//	autocertManager.Cache = autocert.DirCache(dir)
+	//}
 
 	go func() {
 		serverHttp := http.Server{
