@@ -1,4 +1,4 @@
-name: Release
+name: Test
 
 on:
   push:
@@ -48,7 +48,7 @@ jobs:
           version: latest
           args: release --clean --snapshot
       - name: Upload assets
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: goreleaser-dist
           path: dist/*

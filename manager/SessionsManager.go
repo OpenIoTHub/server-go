@@ -183,8 +183,8 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			//TODO 添加上线、下线日志储存以供用户查询
 			log.Println("获取到一个Gateway主动发起的工作连接")
 			log.Println("GatewayWorkConn:", m.RunId, "@", m.Version)
-			//验证Secret
-			token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Secret)
+			//TODO 验证Secret
+			token, err = models.DecodeUnverifiedToken(config.ConfigMode.Security.LoginKey)
 			if err != nil {
 				log.Println(err.Error())
 				conn.Close()
