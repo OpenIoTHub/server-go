@@ -1,3 +1,4 @@
+version: 2
 # This is an example goreleaser.yaml file with some sane defaults.
 # Make sure to check the documentation at http://goreleaser.com
 before:
@@ -40,43 +41,6 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
-brews:
-  - tap:
-      owner: OpenIoTHub
-      name: homebrew-tap
-    folder: Formula
-    homepage:  http://github.com/OpenIoTHub
-    description: OpenIoTHub Server
-    test: |
-      system "#{bin}/server-go -v"
-scoop:
-  bucket:
-    owner: OpenIoTHub
-    name: scoop-bucket
-  homepage:  http://github.com/OpenIoTHub
-  description: OpenIoTHub Server.
-  license: MIT
-nfpms:
-  - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
-    homepage:  https://github.com/OpenIoTHub
-    description: OpenIoTHub Server
-    maintainer: OpenIoTHub <newfarry@126.com>
-    license: MIT
-    vendor: server-go
-    formats:
-      - deb
-      - rpm
-    scripts:
-      preinstall: "scripts/install_remove/preinstall.sh"
-      postinstall: "scripts/install_remove/postinstall.sh"
-      preremove: "scripts/install_remove/preremove.sh"
-      postremove: "scripts/install_remove/postremove.sh"
-    contents:
-      - src: systemd/**
-        dst: /etc/systemd/system
-      - src: server-go.yaml
-        dst: /etc/server-go/server-go.yaml
-        type: config
 snapcrafts:
   - name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
     summary: OpenIoTHub Server.
@@ -96,6 +60,7 @@ dockers:
       - 'openiothub/server-go:v{{ .Major }}.{{ .Minor }}'
       - 'openiothub/server-go:latest'
     dockerfile: Dockerfile
+    use: buildx
 #    binaries:
 #      - server-go
     build_flag_templates:
