@@ -184,12 +184,12 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			log.Println("获取到一个Gateway主动发起的工作连接")
 			log.Println("GatewayWorkConn:", m.RunId, "@", m.Version)
 			//TODO 验证Secret
-			token, err = models.DecodeUnverifiedToken(config.ConfigMode.Security.LoginKey)
-			if err != nil {
-				log.Println(err.Error())
-				conn.Close()
-				return
-			}
+			token, _ = models.DecodeUnverifiedToken(config.ConfigMode.Security.LoginKey)
+			//if err != nil {
+			//	log.Println(err.Error())
+			//	conn.Close()
+			//	return
+			//}
 			if !token.IfContainPermission(models.PermissionGatewayLogin) {
 				log.Println("token type err ,not n")
 				conn.Close()
