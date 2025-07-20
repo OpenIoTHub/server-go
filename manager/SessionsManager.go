@@ -190,11 +190,11 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			//	conn.Close()
 			//	return
 			//}
-			if !token.IfContainPermission(models.PermissionGatewayLogin) {
-				log.Println("token type err ,not n")
-				conn.Close()
-				return
-			}
+			//if !token.IfContainPermission(models.PermissionGatewayLogin) {
+			//	log.Println("token type err ,not n")
+			//	conn.Close()
+			//	return
+			//}
 			//验证Secret Over
 			session, err := sess.GetSessionByID(m.RunId)
 			if err != nil {
