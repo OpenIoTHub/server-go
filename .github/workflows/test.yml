@@ -38,10 +38,7 @@ jobs:
       - name: setup-snapcraft
         # FIXME: the mkdirs are a hack for https://github.com/goreleaser/goreleaser/issues/1715
         run: |
-          sudo apt-get update
-          sudo apt-get -yq --no-install-suggests --no-install-recommends install snapcraft
-          mkdir -p $HOME/.cache/snapcraft/download
-          mkdir -p $HOME/.cache/snapcraft/stage-packages
+          sudo snap install snapcraft --classic
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
