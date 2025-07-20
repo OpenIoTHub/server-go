@@ -105,6 +105,9 @@ func (sess *SessionsManager) DelSession(id string) {
 			myconn := *sess.Session[id].Conn
 			myconn.Close()
 		}
+		if sess.Session[id].WorkConn != nil {
+			close(sess.Session[id].WorkConn)
+		}
 	}
 	delete(sess.Session, id)
 }
