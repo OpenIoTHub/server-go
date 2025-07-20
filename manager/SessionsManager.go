@@ -126,19 +126,19 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 	case *models.GatewayLogin:
 		{
 			//log.Println(m.Token)
-			token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
-			if err != nil {
-				log.Println(err.Error())
-				conn.Close()
-				return
-			}
-			if !token.IfContainPermission(models.PermissionGatewayLogin) {
-				log.Println("token type err ,not n")
-				conn.Close()
-				return
-			}
-			log.Printf("新Gateway登录： runId：%s 系统(OS)：%s 芯片架构(CPU Arch)：%s Version：%s 禁止muxer：%t",
-				token.RunId, m.Os, m.Arch, m.Version, m.DisableMuxer)
+			//token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
+			//if err != nil {
+			//	log.Println(err.Error())
+			//	conn.Close()
+			//	return
+			//}
+			//if !token.IfContainPermission(models.PermissionGatewayLogin) {
+			//	log.Println("token type err ,not n")
+			//	conn.Close()
+			//	return
+			//}
+			//log.Printf("新Gateway登录： runId：%s 系统(OS)：%s 芯片架构(CPU Arch)：%s Version：%s 禁止muxer：%t",
+			//	token.RunId, m.Os, m.Arch, m.Version, m.DisableMuxer)
 			if m.DisableMuxer {
 				//禁止muxer的网关
 				//sess[token.RunId]=session
