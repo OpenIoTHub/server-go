@@ -126,6 +126,10 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 	case *models.GatewayLogin:
 		{
 			//log.Println(m.Token)
+			token, _ = models.DecodeUnverifiedToken(m.Token)
+			if token == nil {
+				return
+			}
 			//token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Token)
 			//if err != nil {
 			//	log.Println(err.Error())
