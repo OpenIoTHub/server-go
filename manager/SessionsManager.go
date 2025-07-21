@@ -114,6 +114,11 @@ func (sess *SessionsManager) DelSession(id string) {
 
 // connHdl
 func (sess *SessionsManager) connHdl(conn net.Conn) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("connHdl Recovered from panic: %v\n", r) // 记录日志
+		}
+	}()
 	var yamuxSession *yamux.Session
 	var token *models.TokenClaims
 	var err error
@@ -206,6 +211,12 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
+			//panic: send on closed channel
+			//goroutine 194458 [running]:
+			//github.com/OpenIoTHub/server-go/manager.(*SessionsManager).connHdl(0xc0003961c0, {0xe0e930, 0xc0001071b8})
+			//	/Users/iotserv/git/server-go/manager/SessionsManager.go:209 +0x4cc
+			//created by github.com/OpenIoTHub/server-go/manager.SessionsManager.listenerHdl in goroutine 12
+			//	/Users/iotserv/git/server-go/manager/listen.go:131 +0x1e5
 			session.WorkConn <- conn
 		}
 

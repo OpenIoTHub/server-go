@@ -20,6 +20,11 @@ var (
 )
 
 func main() {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("main Recovered from panic: %v\n", r) // 记录日志
+		}
+	}()
 	myApp := cli.NewApp()
 	myApp.Name = "server-go"
 	myApp.Usage = "-c [config File Path]"
