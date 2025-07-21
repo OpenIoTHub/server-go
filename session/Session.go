@@ -7,6 +7,7 @@ import (
 	"github.com/libp2p/go-yamux"
 	"log"
 	"net"
+	"sync"
 	"time"
 )
 
@@ -18,6 +19,9 @@ type Session struct {
 	DisableMuxer   bool
 	Conn           *net.Conn
 	GatewaySession *yamux.Session
+	//写入之前先获取锁判断WorkConn有没有关闭
+	WorkConnMutex  sync.Mutex
+	WorkConnIsOpen bool
 	WorkConn       chan net.Conn
 }
 

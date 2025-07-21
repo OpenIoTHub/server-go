@@ -105,9 +105,12 @@ func (sess *SessionsManager) DelSession(id string) {
 			myconn := *sess.Session[id].Conn
 			myconn.Close()
 		}
-		if sess.Session[id].WorkConn != nil {
+		sess.Session[id].WorkConnMutex.Lock()
+		if sess.Session[id].WorkConnIsOpen && sess.Session[id].WorkConn != nil {
+			sess.Session[id].WorkConnIsOpen = false
 			close(sess.Session[id].WorkConn)
 		}
+		sess.Session[id].WorkConnMutex.Unlock()
 	}
 	delete(sess.Session, id)
 }
@@ -159,6 +162,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 					DisableMuxer:   m.DisableMuxer,
 					Conn:           &conn,
 					GatewaySession: nil,
+					WorkConnIsOpen: true,
 					WorkConn:       make(chan net.Conn, 5)}
 				//:TODO 新的登录存储之前先清除旧的同id登录
 				sess.SetSession(token.RunId, gatewaySession)
@@ -181,6 +185,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				Version:        m.Version,
 				Conn:           &conn,
 				GatewaySession: yamuxSession,
+				WorkConnIsOpen: true,
 				WorkConn:       make(chan net.Conn, 5)}
 			//:TODO 新的登录存储之前先清除旧的同id登录
 			sess.SetSession(token.RunId, gatewaySession)
@@ -217,7 +222,11 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			//	/Users/iotserv/git/server-go/manager/SessionsManager.go:209 +0x4cc
 			//created by github.com/OpenIoTHub/server-go/manager.SessionsManager.listenerHdl in goroutine 12
 			//	/Users/iotserv/git/server-go/manager/listen.go:131 +0x1e5
-			session.WorkConn <- conn
+			session.WorkConnMutex.Lock()
+			if session.WorkConnIsOpen {
+				session.WorkConn <- conn
+			}
+			session.WorkConnMutex.Unlock()
 		}
 
 	case *models.OpenIoTHubLogin:
