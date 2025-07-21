@@ -187,7 +187,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				GatewaySession: yamuxSession,
 				WorkConnIsOpen: true,
 				WorkConn:       make(chan net.Conn, 5)}
-			//:TODO 新的登录存储之前先清除旧的同id登录
+			//新的登录存储之前先清除旧的同id登录
 			sess.SetSession(token.RunId, gatewaySession)
 		}
 
@@ -198,7 +198,7 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			log.Println("获取到一个Gateway主动发起的工作连接")
 			log.Println("GatewayWorkConn:", m.RunId, "@", m.Version)
 			//TODO 验证Secret
-			token, _ = models.DecodeUnverifiedToken(config.ConfigMode.Security.LoginKey)
+			//token, err = models.DecodeToken(config.ConfigMode.Security.LoginKey, m.Secret)
 			//if err != nil {
 			//	log.Println(err.Error())
 			//	conn.Close()
@@ -223,8 +223,10 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 			//created by github.com/OpenIoTHub/server-go/manager.SessionsManager.listenerHdl in goroutine 12
 			//	/Users/iotserv/git/server-go/manager/listen.go:131 +0x1e5
 			session.WorkConnMutex.Lock()
-			if session.WorkConnIsOpen {
+			if session.WorkConnIsOpen && session.WorkConn != nil {
 				session.WorkConn <- conn
+			} else {
+				conn.Close()
 			}
 			session.WorkConnMutex.Unlock()
 		}
@@ -237,8 +239,8 @@ func (sess *SessionsManager) connHdl(conn net.Conn) {
 				conn.Close()
 				return
 			}
-			if !token.IfContainPermission(models.PermissionOpenIoTHubLogin) {
-				log.Println("token type err ,not 2")
+			if token == nil || !token.IfContainPermission(models.PermissionOpenIoTHubLogin) {
+				log.Println("token type err ,not PermissionOpenIoTHubLogin")
 				conn.Close()
 				return
 			}
