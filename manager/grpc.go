@@ -3,6 +3,9 @@ package manager
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
+
 	pb "github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/server"
 	"github.com/OpenIoTHub/server-go/config"
 	"google.golang.org/grpc"
@@ -11,8 +14,6 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"log"
-	"net"
 )
 
 // grpc
