@@ -8,12 +8,12 @@ require (
 	github.com/OpenIoTHub/openiothub_grpc_api v1.1.8
 	github.com/OpenIoTHub/utils v0.0.73
 	github.com/gomodule/redigo v2.0.0+incompatible
+	github.com/gorilla/websocket v1.5.3
 	github.com/libp2p/go-yamux v1.4.1
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
 	github.com/urfave/cli/v2 v2.27.4
 	github.com/xtaci/kcp-go v5.4.20+incompatible
 	golang.org/x/crypto v0.26.0
-	golang.org/x/net v0.28.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/yaml.v2 v2.4.0
@@ -43,6 +43,7 @@ require (
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	github.com/xtaci/kcp-go/v5 v5.6.14 // indirect
 	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
