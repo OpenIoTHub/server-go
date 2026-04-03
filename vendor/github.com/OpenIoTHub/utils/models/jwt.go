@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/OpenIoTHub/utils/net/ip"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	uuid "github.com/satori/go.uuid"
 	"log"
 	"time"
@@ -20,7 +20,7 @@ type TokenClaims struct {
 	KCPApiPort int
 	Permission []string
 	Txts       map[string]string
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 func (t *TokenClaims) IfContainPermission(permission string) bool {
@@ -56,9 +56,9 @@ func GetToken(loginWithServer *LoginWithServer, permission []string, expiresecd 
 		loginWithServer.Server.KcpApiPort,
 		permission,
 		map[string]string{},
-		jwt.StandardClaims{
-			NotBefore: time.Now().Unix() - 8*60*60,
-			ExpiresAt: time.Now().Unix() + expiresecd,
+		jwt.RegisteredClaims{
+			NotBefore: jwt.NewNumericDate(time.Now().Add(time.Hour * -24)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
 		},
 	})
 	tokenStr, err := tokenModel.SignedString([]byte(loginWithServer.Server.LoginKey))
@@ -108,9 +108,9 @@ func GetTokenByServerConfig(serverConfig *ServerConfig, expiresecd int64) (gatew
 
 func DecodeToken(salt, tokenStr string) (*TokenClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
+		//if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		//	return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		//}
 		return []byte(salt), nil
 	})
 	if err != nil {
@@ -127,9 +127,9 @@ func DecodeToken(salt, tokenStr string) (*TokenClaims, error) {
 
 func DecodeUnverifiedToken(tokenStr string) (*TokenClaims, error) {
 	token, _ := jwt.ParseWithClaims(tokenStr, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
+		//if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		//	return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		//}
 		return []byte(""), nil
 	})
 	//不校验是否是正确加密的signature
