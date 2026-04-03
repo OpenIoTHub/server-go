@@ -20,7 +20,7 @@ func (sm *SessionsManager) ConnectToTcp(runId, remoteIp string, remotePort int) 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -37,7 +37,7 @@ func (sm *SessionsManager) ConnectToTls(runId, remoteIp string, remotePort int) 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -55,7 +55,7 @@ func (sm *SessionsManager) ConnectToUdp(runId, remoteIp string, remotePort int) 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -76,7 +76,7 @@ func (sm *SessionsManager) ConnectToSerialPort(runId string, msgsd *models.Conne
 	//}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -92,7 +92,7 @@ func (sm *SessionsManager) ConnectToTapTun(runId string) (net.Conn, error) {
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -111,7 +111,7 @@ func (sm *SessionsManager) ConnectToSSH(runId, remoteIP string, remotePort int, 
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -129,7 +129,7 @@ func (sm *SessionsManager) ConnectToWs(runId, targetUrl, protocol, origin string
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil
@@ -147,7 +147,7 @@ func (sm *SessionsManager) ListenMulticastUDP(runId, ip string, port uint) (net.
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return nil, err
 	}
 	return stream, nil

@@ -78,7 +78,7 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		w.Write([]byte(err.Error()))
 		return
 	}
@@ -95,7 +95,7 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				conn, err := sm.ConnectToWs(hostInfo.RunId, fmt.Sprintf("%s://%s:%d%s", pro, hostInfo.RemoteIP, hostInfo.RemotePort, r.URL.String()),
 					"", fmt.Sprintf("%s://%s:%d%s", orgpro, hostInfo.RemoteIP, hostInfo.RemotePort, r.URL.String()))
 				if err != nil {
-					log.Printf(err.Error())
+					log.Printf("%s", err.Error())
 					ws.Write([]byte(err.Error()))
 					return
 				}

@@ -41,7 +41,7 @@ func (sm *SessionsManager) StartgRpcListenAndServ() {
 func (sm *SessionsManager) CreateOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.HTTPConfig, error) {
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
-		return in, status.Errorf(codes.Unauthenticated, err.Error())
+		return in, status.Errorf(codes.Unauthenticated, "%s", err.Error())
 	}
 	log.Println("CreateOneHTTP:", in.Domain)
 	return in, sm.AddOrUpdateHttpProxy(&HttpProxy{
@@ -59,7 +59,7 @@ func (sm *SessionsManager) CreateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 func (sm *SessionsManager) UpdateOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.HTTPConfig, error) {
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
-		return in, status.Errorf(codes.Unauthenticated, err.Error())
+		return in, status.Errorf(codes.Unauthenticated, "%s", err.Error())
 	}
 	log.Println("UpdateOneHTTP:", in.Domain)
 	h := &HttpProxy{
@@ -79,7 +79,7 @@ func (sm *SessionsManager) UpdateOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*emptypb.Empty, error) {
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
-		return &emptypb.Empty{}, status.Errorf(codes.Unauthenticated, err.Error())
+		return &emptypb.Empty{}, status.Errorf(codes.Unauthenticated, "%s", err.Error())
 	}
 	log.Println("DeleteOneHTTP:", in.Domain)
 	//TODO 验证要删除的域名的所属id是否和token的id一致
@@ -91,7 +91,7 @@ func (sm *SessionsManager) DeleteOneHTTP(ctx context.Context, in *pb.HTTPConfig)
 func (sm *SessionsManager) GetOneHTTP(ctx context.Context, in *pb.HTTPConfig) (*pb.HTTPConfig, error) {
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
-		return in, status.Errorf(codes.Unauthenticated, err.Error())
+		return in, status.Errorf(codes.Unauthenticated, "%s", err.Error())
 	}
 	config, err := sm.GetOneHttpProxy(in.Domain)
 	if err != nil {
@@ -114,7 +114,7 @@ func (sm *SessionsManager) GetAllHTTP(ctx context.Context, in *pb.Device) (*pb.H
 	var cfgs []*pb.HTTPConfig
 	err := authOpenIoTHubGrpc(ctx, in.RunId)
 	if err != nil {
-		return &pb.HTTPList{HTTPConfigs: cfgs}, status.Errorf(codes.Unauthenticated, err.Error())
+		return &pb.HTTPList{HTTPConfigs: cfgs}, status.Errorf(codes.Unauthenticated, "%s", err.Error())
 	}
 	for _, config := range sm.GetAllHttpProxy() {
 		if config.RunId == in.RunId && config.RemoteIP == in.Addr {

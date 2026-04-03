@@ -25,7 +25,7 @@ func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string,
 		}
 	}()
 	if err != nil {
-		log.Printf("get stream err: " + err.Error())
+		log.Printf("get stream err: %v", err)
 		return false, err
 	}
 	msgsd := &models.CheckStatusRequest{
@@ -34,7 +34,7 @@ func (sm *SessionsManager) CheckRemoteStatus(targetType, runId, remoteIp string,
 	}
 	err = msg.WriteMsg(stream, msgsd)
 	if err != nil {
-		log.Printf(err.Error())
+		log.Printf("%s", err.Error())
 		return false, err
 	}
 	//:TODO 可能不会及时返还
@@ -98,7 +98,7 @@ func authOpenIoTHubGrpc(ctx context.Context, id string) (err error) {
 
 	_, err = checkOpenIoTHubToken(config.ConfigMode.Security.LoginKey, jwt, id)
 	if err != nil {
-		return status.Errorf(codes.Unauthenticated, err.Error())
+		return status.Errorf(codes.Unauthenticated, "%s", err.Error())
 	}
 	return nil
 }
