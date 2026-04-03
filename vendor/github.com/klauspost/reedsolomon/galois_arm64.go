@@ -17,8 +17,12 @@ func getVectorLength() (vl, pl uint64)
 
 func init() {
 	if defaultOptions.useSVE {
-		if vl, _ := getVectorLength(); vl != 256 {
-			defaultOptions.useSVE = false // Temp fix: disable SVE for non-256 vector widths (ie Graviton4)
+		if vl, _ := getVectorLength(); vl <= 256 {
+			// set vector length in bytes
+			defaultOptions.vectorLength = int(vl) >> 3
+		} else {
+			// disable SVE for hardware implementatons over 256 bits (only know to be Fujitsu A64FX atm)
+			defaultOptions.useSVE = false
 		}
 	}
 }
@@ -29,8 +33,12 @@ func galMulSlice(c byte, in, out []byte, o *options) {
 		return
 	}
 	var done int
-	galMulNEON(mulTableLow[c][:], mulTableHigh[c][:], in, out)
 	done = (len(in) >> 5) << 5
+	if raceEnabled {
+		raceReadSlice(in[:done])
+		raceWriteSlice(out[:done])
+	}
+	galMulNEON(mulTableLow[c][:], mulTableHigh[c][:], in, out)
 
 	remain := len(in) - done
 	if remain > 0 {
@@ -46,9 +54,12 @@ func galMulSliceXor(c byte, in, out []byte, o *options) {
 		sliceXor(in, out, o)
 		return
 	}
-	var done int
+	done := (len(in) >> 5) << 5
+	if raceEnabled {
+		raceReadSlice(in[:done])
+		raceWriteSlice(out[:done])
+	}
 	galMulXorNEON(mulTableLow[c][:], mulTableHigh[c][:], in, out)
-	done = (len(in) >> 5) << 5
 
 	remain := len(in) - done
 	if remain > 0 {
@@ -137,4 +148,15 @@ func mulgf8(out, in []byte, log_m ffe8, o *options) {
 			out[i] ^= byte(mt[in[i]])
 		}
 	}
+}
+
+// 4-way butterfly with separate destination
+func ifftDIT4Dst(dst, work [][]byte, dist int, log_m01, log_m23, log_m02 ffe, o *options) {
+	ifftDIT4DstRef(dst, work, dist, log_m01, log_m23, log_m02, o)
+}
+
+// 4-way butterfly with separate destination
+func ifftDIT48Dst(dst, work [][]byte, dist int, log_m01, log_m23, log_m02 ffe8, o *options) {
+	// Fall back. Should not be called.
+	ifftDIT4DstRef8(dst, work, dist, log_m01, log_m23, log_m02, o)
 }
