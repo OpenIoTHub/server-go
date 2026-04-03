@@ -7,7 +7,6 @@ github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/manager
 github.com/OpenIoTHub/openiothub_grpc_api/pb-go/proto/server
 # github.com/OpenIoTHub/utils v0.0.73
 ## explicit; go 1.13
-github.com/OpenIoTHub/utils/file
 github.com/OpenIoTHub/utils/io
 github.com/OpenIoTHub/utils/models
 github.com/OpenIoTHub/utils/msg
@@ -30,6 +29,9 @@ github.com/golang/snappy
 ## explicit
 github.com/gomodule/redigo/internal
 github.com/gomodule/redigo/redis
+# github.com/gorilla/websocket v1.5.3
+## explicit; go 1.12
+github.com/gorilla/websocket
 # github.com/grandcat/zeroconf v1.0.0
 ## explicit; go 1.13
 github.com/grandcat/zeroconf
@@ -122,7 +124,6 @@ golang.org/x/net/internal/timeseries
 golang.org/x/net/ipv4
 golang.org/x/net/ipv6
 golang.org/x/net/trace
-golang.org/x/net/websocket
 # golang.org/x/sync v0.8.0
 ## explicit; go 1.18
 golang.org/x/sync/errgroup

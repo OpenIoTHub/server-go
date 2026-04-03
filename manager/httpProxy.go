@@ -7,6 +7,8 @@ import (
 	"net/http/httputil"
 	"strings"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 // 服务结构
@@ -36,17 +38,12 @@ func (hp *HttpProxy) UpdateRemotePortStatus() {
 //type Handle struct{}
 
 func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//:TODO 当前不支持websocket的代理（websocket支持basic Auth），或者从beego分发？
-	//：TODO 非80端口r.Host的支持情况
-	//log.Println("host:", r.Host)
-	//log.Println("hostRequestURI:", r.RequestURI)
-	//log.Println("hostRequestHEADER:", r.Header)
-	//log.Println("r.URL.Scheme:", r.URL.Scheme)
-	//if r.URL.Scheme == "http" {
-	//	log.Println("是http请求")
-	//} else if r.URL.Scheme == "https" {
-	//	log.Println("是https请求")
-	//}
+	// WebSocket upgrade for gateway login (gateway-chrome connects via wss://)
+	// Only allow on *.iothub.cloud subdomains with the gateway path; others fall through to proxy.
+	if websocket.IsWebSocketUpgrade(r) && isIoTHubDomain(r.Host) && r.URL.Path == "/api/v1/ws/gateway" {
+		sm.handleWebSocketLogin(w, r)
+		return
+	}
 	hostInfo, err := sm.GetOneHttpProxy(strings.Split(r.Host, ":")[0])
 	if err != nil {
 		_, _ = w.Write([]byte(err.Error()))
@@ -77,6 +74,14 @@ func (sm *SessionsManager) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	proxy.ServeHTTP(w, r)
+}
+
+const iotHubDomainSuffix = ".iothub.cloud"
+
+func isIoTHubDomain(host string) bool {
+	h := strings.Split(host, ":")[0]
+	h = strings.ToLower(h)
+	return h == "iothub.cloud" || strings.HasSuffix(h, iotHubDomainSuffix)
 }
 
 func (sm *SessionsManager) dialTcp(ctx context.Context, network, address string) (net.Conn, error) {
